@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduKart – Empowering Education Through Resources</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d1b2a;
+    --cream: #fdf8f0;
+    --saffron: #e87722;
+    --saffron-light: #ffecd8;
+    --green: #1a7a4a;
+    --green-light: #e6f4ed;
+    --sky: #1e6fa3;
+    --sky-light: #e3f0fa;
+    --muted: #6b7280;
+    --border: #e5e0d8;
+    --white: #ffffff;
+    --shadow: 0 4px 24px rgba(13,27,42,0.10);
+    --radius: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 68px;
+    background: rgba(253,248,240,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem; font-weight: 900;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--saffron); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 0.95rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--saffron); }
+  .nav-cta {
+    background: var(--saffron); color: var(--white);
+    border: none; padding: 0.55rem 1.4rem;
+    border-radius: 50px; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: #c9621a; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 100px 5% 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 40%, rgba(232,119,34,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 10% 80%, rgba(26,122,74,0.09) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 60% 90%, rgba(30,111,163,0.08) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: radial-gradient(circle, rgba(13,27,42,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 680px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--saffron-light); color: var(--saffron);
+    border: 1px solid rgba(232,119,34,0.3);
+    padding: 0.35rem 1rem; border-radius: 50px;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase; margin-bottom: 1.6rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge::before { content: "●"; font-size: 0.6rem; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    font-weight: 900; line-height: 1.1;
+    letter-spacing: -1.5px; margin-bottom: 1.4rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero h1 em { font-style: normal; color: var(--saffron); }
+  .hero p {
+    font-size: 1.15rem; color: var(--muted); line-height: 1.75;
+    max-width: 520px; margin-bottom: 2.4rem;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .hero-btns {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--saffron); color: var(--white);
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-size: 1rem; font-weight: 600; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover { background: #c9621a; transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent; color: var(--ink);
+    border: 1.5px solid var(--border);
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-size: 1rem; font-weight: 600; text-decoration: none;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-secondary:hover { border-color: var(--saffron); transform: translateY(-2px); }
+
+  .hero-stats {
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 1.2rem; z-index: 1;
+    animation: fadeLeft 0.8s 0.4s ease both;
+  }
+  .stat-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 1.2rem 1.6rem; box-shadow: var(--shadow);
+    text-align: center; min-width: 150px;
+    border-top: 3px solid var(--saffron);
+  }
+  .stat-card:nth-child(2) { border-top-color: var(--green); }
+  .stat-card:nth-child(3) { border-top-color: var(--sky); }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900; color: var(--ink);
+  }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 90px 5%; }
+  .section-tag {
+    display: inline-block;
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--saffron);
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 900; letter-spacing: -0.8px;
+    margin-bottom: 1rem; line-height: 1.15;
+  }
+  .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 560px; line-height: 1.75; }
+
+  /* ── WHO WE SERVE ── */
+  .serve { background: var(--white); }
+  .serve-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem; margin-top: 3rem;
+  }
+  .serve-card {
+    background: var(--cream); border-radius: var(--radius);
+    padding: 1.8rem 1.4rem; text-align: center;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    cursor: default;
+  }
+  .serve-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--saffron); }
+  .serve-icon { font-size: 2.4rem; margin-bottom: 0.8rem; }
+  .serve-card h3 { font-size: 1rem; font-weight: 600; }
+  .serve-card p { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.4rem; margin-top: 3rem;
+  }
+  .feature-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 2rem; border: 1px solid var(--border);
+    transition: box-shadow 0.2s;
+  }
+  .feature-card:hover { box-shadow: var(--shadow); }
+  .feature-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1rem;
+  }
+  .fi-orange { background: var(--saffron-light); }
+  .fi-green { background: var(--green-light); }
+  .fi-blue { background: var(--sky-light); }
+  .feature-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+
+  /* ── REGISTER FORM ── */
+  #register {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1a3a5c 100%);
+    color: var(--white); position: relative; overflow: hidden;
+  }
+  #register .hero-dots {
+    opacity: 0.3;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+  }
+  #register .section-title { color: var(--white); }
+  #register .section-sub { color: rgba(255,255,255,0.65); }
+  #register .section-tag { color: var(--saffron); }
+
+  .form-wrap {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px; padding: 3rem;
+    max-width: 900px; margin: 3rem auto 0;
+    backdrop-filter: blur(8px);
+  }
+
+  .form-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 0.45rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 0.82rem; font-weight: 600;
+    color: rgba(255,255,255,0.75); letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    color: var(--white);
+    font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+    width: 100%;
+  }
+  .form-group select option { background: #1a3a5c; color: var(--white); }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--saffron);
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* Role selector */
+  .role-group { grid-column: 1 / -1; }
+  .role-group label {
+    font-size: 0.82rem; font-weight: 600;
+    color: rgba(255,255,255,0.75); letter-spacing: 0.03em;
+    text-transform: uppercase; display: block; margin-bottom: 0.8rem;
+  }
+  .role-pills {
+    display: flex; flex-wrap: wrap; gap: 0.7rem;
+  }
+  .role-pill {
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 50px; padding: 0.5rem 1.2rem;
+    color: rgba(255,255,255,0.75); font-size: 0.88rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .role-pill:hover { border-color: var(--saffron); color: var(--white); }
+  .role-pill.active {
+    background: var(--saffron); border-color: var(--saffron);
+    color: var(--white); font-weight: 600;
+  }
+
+  /* conditional org field */
+  #org-field { display: none; }
+  #org-field.show { display: flex; }
+
+  .form-submit {
+    margin-top: 2rem; text-align: center;
+  }
+  .form-submit button {
+    background: var(--saffron); color: var(--white);
+    border: none; padding: 1rem 3rem;
+    border-radius: 50px; font-size: 1.05rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.01em;
+  }
+  .form-submit button:hover { background: #c9621a; transform: translateY(-2px); }
+
+  /* success */
+  #success-msg {
+    display: none; text-align: center; padding: 2rem;
+    font-size: 1.2rem; color: #6ee7b7;
+    font-weight: 600;
+  }
+  #success-msg .checkmark { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+
+  /* ── ADMIN PANEL ── */
+  #admin {
+    background: var(--cream);
+  }
+  .admin-table-wrap {
+    margin-top: 2.5rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .admin-toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+  }
+  .admin-count { font-size: 0.9rem; font-weight: 600; color: var(--muted); }
+  .admin-count span { color: var(--saffron); font-size: 1.1rem; }
+  .btn-export {
+    background: var(--green); color: var(--white);
+    border: none; padding: 0.5rem 1.2rem;
+    border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .btn-export:hover { background: #155f39; }
+
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  th {
+    background: var(--ink); color: var(--white);
+    padding: 0.75rem 1rem; text-align: left;
+    font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  td {
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+    color: var(--ink); vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(0,0,0,0.018); }
+  .role-badge {
+    display: inline-block; padding: 0.22rem 0.7rem;
+    border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+    white-space: nowrap;
+  }
+  .rb-teacher { background: var(--sky-light); color: var(--sky); }
+  .rb-student { background: var(--green-light); color: var(--green); }
+  .rb-seller { background: var(--saffron-light); color: var(--saffron); }
+  .rb-buyer { background: #f0e6ff; color: #7c3aed; }
+  .rb-publication { background: #fce7f3; color: #be185d; }
+  .empty-state {
+    text-align: center; padding: 3rem;
+    color: var(--muted); font-size: 0.95rem;
+  }
+  .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,0.6);
+    padding: 3rem 5%; text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 900; color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+  .footer-logo span { color: var(--saffron); }
+  footer p { font-size: 0.88rem; line-height: 1.8; }
+  .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin: 1.2rem 0; flex-wrap: wrap; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--saffron); }
+  .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 1.5rem 0; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(28px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-stats { display: none; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full, .role-group { grid-column: 1; }
+  }
+  @media (max-width: 600px) {
+    nav { padding: 0 4%; }
+    .nav-links { display: none; }
+    .form-wrap { padding: 1.8rem 1.2rem; }
+    section { padding: 60px 4%; }
+    .hero { padding: 90px 4% 50px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Edu<span>Kart</span></div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#serve">Who We Serve</a>
+    <a href="#register">Register</a>
+    <a href="#admin">Dashboard</a>
+  </div>
+  <a href="#register" class="nav-cta">Join Now →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">India's Education Marketplace</div>
+    <h1>Empowering <em>Education</em><br>Through Resources</h1>
+    <p>EduKart bridges teachers, students, schools, and publishers on one powerful platform — making quality educational resources accessible for every learner across India.</p>
+    <div class="hero-btns">
+      <a href="#register" class="btn-primary">Register Now →</a>
+      <a href="#serve" class="btn-secondary">Explore Platform</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-num">10K+</div>
+      <div class="stat-label">Educators</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">50K+</div>
+      <div class="stat-label">Students</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">500+</div>
+      <div class="stat-label">Publishers</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO WE SERVE -->
+<section class="serve" id="serve">
+  <div class="section-tag">Community</div>
+  <h2 class="section-title">Who We Serve</h2>
+  <p class="section-sub">EduKart is built for every stakeholder in the education ecosystem — from classrooms to boardrooms.</p>
+  <div class="serve-grid">
+    <div class="serve-card"><div class="serve-icon">👩‍🏫</div><h3>Teachers</h3><p>Access and share teaching resources, lesson plans & more</p></div>
+    <div class="serve-card"><div class="serve-icon">🎓</div><h3>Students</h3><p>Discover study materials, guides, and tools for every grade</p></div>
+    <div class="serve-card"><div class="serve-icon">🛒</div><h3>Sellers</h3><p>List and sell educational products to a massive audience</p></div>
+    <div class="serve-card"><div class="serve-icon">🛍️</div><h3>Buyers</h3><p>Source quality edu-materials from verified sellers & publishers</p></div>
+    <div class="serve-card"><div class="serve-icon">📚</div><h3>Publication Houses</h3><p>Distribute books, e-books, and curriculum content directly</p></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-tag">Platform</div>
+  <h2 class="section-title">Why Choose EduKart?</h2>
+  <p class="section-sub">Everything you need to learn, teach, buy, and sell educational resources — in one place.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon fi-orange">📖</div>
+      <h3>Vast Resource Library</h3>
+      <p>Thousands of curated books, guides, question banks, and teaching aids from verified publishers and educators.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">🤝</div>
+      <h3>Direct Connect</h3>
+      <p>Schools connect directly with publishers. Teachers connect with resource creators. No middlemen, lower costs.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-blue">🇮🇳</div>
+      <h3>Made for India</h3>
+      <p>Supporting all major state boards and CBSE/ICSE curriculum. Available in multiple languages across all states.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-orange">🔒</div>
+      <h3>Verified & Trusted</h3>
+      <p>All content and sellers are verified for quality and authenticity before listing on the platform.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">📦</div>
+      <h3>Easy Procurement</h3>
+      <p>Bulk ordering for schools and institutions with dedicated support and fast pan-India delivery.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-blue">📊</div>
+      <h3>Analytics & Insights</h3>
+      <p>Track orders, usage, and performance with real-time dashboards for institutions and sellers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER FORM -->
+<section id="register">
+  <div class="hero-dots"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="section-tag">Join EduKart</div>
+    <h2 class="section-title">Register & Connect</h2>
+    <p class="section-sub">Tell us about yourself so we can personalise your EduKart experience.</p>
+
+    <div class="form-wrap">
+      <form id="audience-form" autocomplete="off">
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="f-name">Full Name *</label>
+            <input type="text" id="f-name" placeholder="e.g. Priya Sharma" required>
+          </div>
+
+          <div class="form-group">
+            <label for="f-email">Email Address *</label>
+            <input type="email" id="f-email" placeholder="you@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="f-mobile">Mobile Number *</label>
+            <input type="tel" id="f-mobile" placeholder="+91 98765 43210" required>
+          </div>
+
+          <div class="form-group">
+            <label for="f-state">State *</label>
+            <select id="f-state" required>
+              <option value="" disabled selected>Select your state</option>
+              <option>Andhra Pradesh</option><option>Arunachal Pradesh</option>
+              <option>Assam</option><option>Bihar</option><option>Chhattisgarh</option>
+              <option>Goa</option><option>Gujarat</option><option>Haryana</option>
+              <option>Himachal Pradesh</option><option>Jharkhand</option>
+              <option>Karnataka</option><option>Kerala</option>
+              <option>Madhya Pradesh</option><option>Maharashtra</option>
+              <option>Manipur</option><option>Meghalaya</option><option>Mizoram</option>
+              <option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+              <option>Rajasthan</option><option>Sikkim</option>
+              <option>Tamil Nadu</option><option>Telangana</option>
+              <option>Tripura</option><option>Uttar Pradesh</option>
+              <option>Uttarakhand</option><option>West Bengal</option>
+              <option>Delhi</option><option>Other / Outside India</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="f-country">Country *</label>
+            <select id="f-country" required>
+              <option value="" disabled selected>Select country</option>
+              <option selected>India</option>
+              <option>United States</option><option>United Kingdom</option>
+              <option>Canada</option><option>Australia</option>
+              <option>UAE</option><option>Singapore</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <!-- ROLE PILLS -->
+          <div class="role-group full">
+            <label>I am a… *</label>
+            <div class="role-pills" id="role-pills">
+              <div class="role-pill" data-role="Teacher">👩‍🏫 Teacher</div>
+              <div class="role-pill" data-role="Student">🎓 Student</div>
+              <div class="role-pill" data-role="Seller">🛒 Seller</div>
+              <div class="role-pill" data-role="Buyer">🛍️ Buyer</div>
+              <div class="role-pill" data-role="Publication House">📚 Publication House</div>
+            </div>
+            <input type="hidden" id="f-role" required>
+          </div>
+
+          <!-- CONDITIONAL ORG FIELD -->
+          <div class="form-group full" id="org-field">
+            <label for="f-org" id="org-label">School / Company Name *</label>
+            <input type="text" id="f-org" placeholder="Enter your school or company name">
+          </div>
+
+        </div><!-- /form-grid -->
+
+        <div class="form-submit">
+          <button type="submit">Submit Registration ✓</button>
+        </div>
+      </form>
+
+      <div id="success-msg">
+        <span class="checkmark">🎉</span>
+        Thank you for registering! We'll be in touch soon.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN PANEL -->
+<section id="admin">
+  <div class="section-tag">Admin</div>
+  <h2 class="section-title">Audience Dashboard</h2>
+  <p class="section-sub">All registered visitors in one place. Export anytime.</p>
+
+  <div class="admin-table-wrap">
+    <div class="admin-toolbar">
+      <div class="admin-count">Total Registrations: <span id="reg-count">0</span></div>
+      <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+    <div class="table-scroll">
+      <table id="reg-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Role</th>
+            <th>School / Company</th>
+            <th>Registered At</th>
+          </tr>
+        </thead>
+        <tbody id="reg-tbody">
+          <tr><td colspan="9"><div class="empty-state"><div class="empty-icon">📋</div>No registrations yet. Be the first!</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Edu<span>Kart</span></div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#serve">Services</a>
+    <a href="#register">Register</a>
+    <a href="mailto:hello@edukart.co.in">Contact</a>
+  </div>
+  <hr class="footer-divider">
+  <p>© 2026 EduKart — Empowering Education Through Resources. All rights reserved.</p>
+</footer>
+
+<script>
+  // ── Role pill interaction ──
+  const pills = document.querySelectorAll('.role-pill');
+  const roleInput = document.getElementById('f-role');
+  const orgField = document.getElementById('org-field');
+  const orgLabel = document.getElementById('org-label');
+
+  const orgRoles = {
+    'Teacher': 'School / Institution Name',
+    'Student': 'School / College Name',
+    'Seller': 'Company / Business Name',
+    'Buyer': 'School / Company Name',
+    'Publication House': 'Publication House Name'
+  };
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const role = pill.dataset.role;
+      roleInput.value = role;
+      orgLabel.textContent = (orgRoles[role] || 'School / Company Name') + ' *';
+      orgField.classList.add('show');
+      document.getElementById('f-org').required = true;
+    });
+  });
+
+  // ── Form submission ──
+  const registrations = [];
+
+  document.getElementById('audience-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name    = document.getElementById('f-name').value.trim();
+    const email   = document.getElementById('f-email').value.trim();
+    const mobile  = document.getElementById('f-mobile').value.trim();
+    const state   = document.getElementById('f-state').value;
+    const country = document.getElementById('f-country').value;
+    const role    = document.getElementById('f-role').value;
+    const org     = document.getElementById('f-org').value.trim();
+
+    if (!role) { alert('Please select your role.'); return; }
+
+    const entry = {
+      name, email, mobile, state, country, role, org,
+      time: new Date().toLocaleString('en-IN')
+    };
+
+    registrations.push(entry);
+    renderTable();
+    document.getElementById('audience-form').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+
+    setTimeout(() => {
+      document.getElementById('success-msg').style.display = 'none';
+      document.getElementById('audience-form').style.display = 'block';
+      document.getElementById('audience-form').reset();
+      pills.forEach(p => p.classList.remove('active'));
+      roleInput.value = '';
+      orgField.classList.remove('show');
+    }, 3500);
+  });
+
+  function roleClass(role) {
+    const map = {
+      'Teacher': 'rb-teacher',
+      'Student': 'rb-student',
+      'Seller':  'rb-seller',
+      'Buyer':   'rb-buyer',
+      'Publication House': 'rb-publication'
+    };
+    return map[role] || '';
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('reg-tbody');
+    document.getElementById('reg-count').textContent = registrations.length;
+    if (!registrations.length) {
+      tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">📋</div>No registrations yet.</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = registrations.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td><strong>${r.name}</strong></td>
+        <td>${r.email}</td>
+        <td>${r.mobile}</td>
+        <td>${r.state}</td>
+        <td>${r.country}</td>
+        <td><span class="role-badge ${roleClass(r.role)}">${r.role}</span></td>
+        <td>${r.org || '—'}</td>
+        <td style="white-space:nowrap;color:#6b7280;font-size:0.8rem">${r.time}</td>
+      </tr>
+    `).join('');
+  }
+
+  function exportCSV() {
+    if (!registrations.length) { alert('No data to export yet.'); return; }
+    const headers = ['#','Name','Email','Mobile','State','Country','Role','School/Company','Registered At'];
+    const rows = registrations.map((r, i) =>
+      [i+1, r.name, r.email, r.mobile, r.state, r.country, r.role, r.org, r.time]
+        .map(v => `"${String(v).replace(/"/g,'""')}"`)
+        .join(',')
+    );
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = 'edukart_registrations.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
