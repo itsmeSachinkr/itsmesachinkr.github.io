@@ -3,761 +3,1127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduKart – Empowering Education Through Resources</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>EduKart – Books Delivered. Knowledge Unlocked.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #0d1b2a;
-    --cream: #fdf8f0;
-    --saffron: #e87722;
-    --saffron-light: #ffecd8;
-    --green: #1a7a4a;
-    --green-light: #e6f4ed;
-    --sky: #1e6fa3;
-    --sky-light: #e3f0fa;
-    --muted: #6b7280;
-    --border: #e5e0d8;
-    --white: #ffffff;
-    --shadow: 0 4px 24px rgba(13,27,42,0.10);
-    --radius: 16px;
-  }
+:root{
+  --ink:#1a1a2e;
+  --ink2:#2d2d44;
+  --muted:#6b7280;
+  --bg:#fafaf8;
+  --white:#ffffff;
+  --border:#e8e6e0;
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  --orange:#f4721e;
+  --orange-d:#d85e0e;
+  --orange-l:#fff4ec;
+  --orange-m:#fddcbd;
 
-  html { scroll-behavior: smooth; }
+  --teal:#0e8c7a;
+  --teal-d:#0a6e60;
+  --teal-l:#e6f7f4;
+  --teal-m:#9fe0d4;
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--ink);
-    overflow-x: hidden;
-  }
+  --sand:#f5f0e8;
+  --sand-d:#ede5d4;
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 5%;
-    height: 68px;
-    background: rgba(253,248,240,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.7rem; font-weight: 900;
-    color: var(--ink);
-    letter-spacing: -0.5px;
-  }
-  .nav-logo span { color: var(--saffron); }
-  .nav-links { display: flex; gap: 2rem; }
-  .nav-links a {
-    text-decoration: none; color: var(--muted);
-    font-size: 0.95rem; font-weight: 500;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--saffron); }
-  .nav-cta {
-    background: var(--saffron); color: var(--white);
-    border: none; padding: 0.55rem 1.4rem;
-    border-radius: 50px; font-size: 0.9rem; font-weight: 600;
-    cursor: pointer; transition: background 0.2s, transform 0.15s;
-    text-decoration: none;
-  }
-  .nav-cta:hover { background: #c9621a; transform: translateY(-1px); }
+  --yellow:#f5c842;
+  --yellow-l:#fffbea;
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; align-items: center;
-    padding: 100px 5% 60px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-bg {
-    position: absolute; inset: 0; z-index: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 80% 40%, rgba(232,119,34,0.12) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 60% at 10% 80%, rgba(26,122,74,0.09) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 40% at 60% 90%, rgba(30,111,163,0.08) 0%, transparent 60%);
-  }
-  .hero-dots {
-    position: absolute; inset: 0; z-index: 0;
-    background-image: radial-gradient(circle, rgba(13,27,42,0.06) 1px, transparent 1px);
-    background-size: 28px 28px;
-  }
-  .hero-content { position: relative; z-index: 1; max-width: 680px; }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: var(--saffron-light); color: var(--saffron);
-    border: 1px solid rgba(232,119,34,0.3);
-    padding: 0.35rem 1rem; border-radius: 50px;
-    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
-    text-transform: uppercase; margin-bottom: 1.6rem;
-    animation: fadeUp 0.6s ease both;
-  }
-  .hero-badge::before { content: "●"; font-size: 0.6rem; }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 6vw, 4.5rem);
-    font-weight: 900; line-height: 1.1;
-    letter-spacing: -1.5px; margin-bottom: 1.4rem;
-    animation: fadeUp 0.7s 0.1s ease both;
-  }
-  .hero h1 em { font-style: normal; color: var(--saffron); }
-  .hero p {
-    font-size: 1.15rem; color: var(--muted); line-height: 1.75;
-    max-width: 520px; margin-bottom: 2.4rem;
-    animation: fadeUp 0.7s 0.2s ease both;
-  }
-  .hero-btns {
-    display: flex; gap: 1rem; flex-wrap: wrap;
-    animation: fadeUp 0.7s 0.3s ease both;
-  }
-  .btn-primary {
-    background: var(--saffron); color: var(--white);
-    padding: 0.85rem 2rem; border-radius: 50px;
-    font-size: 1rem; font-weight: 600; text-decoration: none;
-    transition: background 0.2s, transform 0.15s;
-    display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-primary:hover { background: #c9621a; transform: translateY(-2px); }
-  .btn-secondary {
-    background: transparent; color: var(--ink);
-    border: 1.5px solid var(--border);
-    padding: 0.85rem 2rem; border-radius: 50px;
-    font-size: 1rem; font-weight: 600; text-decoration: none;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-  .btn-secondary:hover { border-color: var(--saffron); transform: translateY(-2px); }
+  --red-l:#fff1f0;
 
-  .hero-stats {
-    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 1.2rem; z-index: 1;
-    animation: fadeLeft 0.8s 0.4s ease both;
-  }
-  .stat-card {
-    background: var(--white); border-radius: var(--radius);
-    padding: 1.2rem 1.6rem; box-shadow: var(--shadow);
-    text-align: center; min-width: 150px;
-    border-top: 3px solid var(--saffron);
-  }
-  .stat-card:nth-child(2) { border-top-color: var(--green); }
-  .stat-card:nth-child(3) { border-top-color: var(--sky); }
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem; font-weight: 900; color: var(--ink);
-  }
-  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+  --shadow:0 2px 16px rgba(26,26,46,0.07);
+  --shadow-md:0 6px 28px rgba(26,26,46,0.10);
+  --shadow-lg:0 16px 48px rgba(26,26,46,0.13);
+  --r:12px;--rl:18px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;line-height:1.6;}
+img{max-width:100%;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--orange-m);border-radius:4px;}
 
-  /* ── SECTION SHARED ── */
-  section { padding: 90px 5%; }
-  .section-tag {
-    display: inline-block;
-    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--saffron);
-    margin-bottom: 0.8rem;
-  }
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 4vw, 2.8rem);
-    font-weight: 900; letter-spacing: -0.8px;
-    margin-bottom: 1rem; line-height: 1.15;
-  }
-  .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 560px; line-height: 1.75; }
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:62px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.logo{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;color:var(--ink);text-decoration:none;letter-spacing:-0.4px;}
+.logo span{color:var(--orange);}
+.nav-links{display:flex;gap:1.6rem;}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:0.88rem;font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:var(--orange);}
+.nav-r{display:flex;gap:.6rem;align-items:center;}
+.nb{padding:.44rem 1.1rem;border-radius:50px;font-size:.85rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;text-decoration:none;transition:all .2s;border:none;}
+.nb-o{background:transparent;color:var(--ink);border:1.5px solid var(--border);}
+.nb-o:hover{border-color:var(--orange);color:var(--orange);}
+.nb-s{background:var(--orange);color:#fff;}
+.nb-s:hover{background:var(--orange-d);transform:translateY(-1px);}
 
-  /* ── WHO WE SERVE ── */
-  .serve { background: var(--white); }
-  .serve-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.2rem; margin-top: 3rem;
-  }
-  .serve-card {
-    background: var(--cream); border-radius: var(--radius);
-    padding: 1.8rem 1.4rem; text-align: center;
-    border: 1px solid var(--border);
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    cursor: default;
-  }
-  .serve-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--saffron); }
-  .serve-icon { font-size: 2.4rem; margin-bottom: 0.8rem; }
-  .serve-card h3 { font-size: 1rem; font-weight: 600; }
-  .serve-card p { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:100px 5% 64px;
+  background:var(--white);
+  position:relative;overflow:hidden;
+}
+.hero-wave{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 90% 20%, rgba(244,114,30,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 5% 80%, rgba(14,140,122,0.06) 0%, transparent 60%);
+}
+.hero-dots{
+  position:absolute;inset:0;
+  background-image:radial-gradient(var(--border) 1.2px,transparent 1.2px);
+  background-size:28px 28px;opacity:.8;
+}
+.hero-content{position:relative;z-index:1;max-width:620px;}
+.h-eyebrow{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--orange-l);color:var(--orange);
+  border:1px solid var(--orange-m);
+  padding:.26rem .9rem;border-radius:50px;
+  font-size:.73rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:1.5rem;
+  animation:fadeUp .5s ease both;
+}
+.live-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.6rem,5.5vw,4.1rem);
+  font-weight:800;line-height:1.07;letter-spacing:-2px;
+  margin-bottom:1.3rem;
+  animation:fadeUp .6s .1s ease both;
+}
+.h-accent{color:var(--orange);}
+.hero-p{
+  font-size:1.06rem;color:var(--muted);line-height:1.82;
+  max-width:490px;margin-bottom:2.2rem;
+  animation:fadeUp .6s .2s ease both;
+}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:2.4rem;animation:fadeUp .6s .3s ease both;}
+.btn-p{
+  background:var(--orange);color:#fff;
+  padding:.86rem 1.9rem;border-radius:50px;
+  font-size:.96rem;font-weight:600;text-decoration:none;
+  transition:all .2s;border:none;font-family:'Outfit',sans-serif;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.45rem;
+}
+.btn-p:hover{background:var(--orange-d);transform:translateY(-2px);box-shadow:0 8px 22px rgba(244,114,30,.32);}
+.btn-g{
+  background:transparent;color:var(--ink);
+  padding:.86rem 1.9rem;border-radius:50px;
+  font-size:.96rem;font-weight:600;text-decoration:none;
+  border:1.5px solid var(--border);transition:all .2s;
+}
+.btn-g:hover{border-color:var(--teal);color:var(--teal);}
+.hero-tags{display:flex;gap:.6rem;flex-wrap:wrap;animation:fadeUp .6s .4s ease both;}
+.htag{
+  display:inline-flex;align-items:center;gap:.35rem;
+  background:var(--sand);border:1px solid var(--sand-d);
+  border-radius:50px;padding:.3rem .85rem;
+  font-size:.78rem;font-weight:500;color:var(--ink2);
+}
+.hero-cards{
+  position:absolute;right:5%;top:50%;transform:translateY(-50%);
+  z-index:1;display:flex;flex-direction:column;gap:.9rem;
+  animation:fadeLeft .7s .3s ease both;
+}
+.hcard{
+  background:var(--white);border-radius:var(--r);
+  padding:1rem 1.3rem;box-shadow:var(--shadow-md);
+  border:1px solid var(--border);min-width:178px;
+}
+.hc-l{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.22rem;}
+.hc-v{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--ink);}
+.hc-s{font-size:.7rem;font-weight:600;margin-top:.12rem;}
+.hbar{height:3px;background:var(--border);border-radius:2px;margin-top:.5rem;overflow:hidden;}
+.hfill{height:100%;border-radius:2px;}
 
-  /* ── FEATURES ── */
-  .features-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.4rem; margin-top: 3rem;
-  }
-  .feature-card {
-    background: var(--white); border-radius: var(--radius);
-    padding: 2rem; border: 1px solid var(--border);
-    transition: box-shadow 0.2s;
-  }
-  .feature-card:hover { box-shadow: var(--shadow); }
-  .feature-icon {
-    width: 48px; height: 48px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; margin-bottom: 1rem;
-  }
-  .fi-orange { background: var(--saffron-light); }
-  .fi-green { background: var(--green-light); }
-  .fi-blue { background: var(--sky-light); }
-  .feature-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
-  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+/* ── TRUST STRIP ── */
+.trust{background:var(--ink);padding:20px 5%;}
+.trust-row{display:flex;align-items:center;justify-content:center;gap:2.8rem;flex-wrap:wrap;}
+.titem{display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.7);font-size:.82rem;font-weight:500;}
+.titem span:first-child{font-size:1rem;}
 
-  /* ── REGISTER FORM ── */
-  #register {
-    background: linear-gradient(135deg, #0d1b2a 0%, #1a3a5c 100%);
-    color: var(--white); position: relative; overflow: hidden;
-  }
-  #register .hero-dots {
-    opacity: 0.3;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
-  }
-  #register .section-title { color: var(--white); }
-  #register .section-sub { color: rgba(255,255,255,0.65); }
-  #register .section-tag { color: var(--saffron); }
+/* ── SHARED SECTION STYLES ── */
+section{padding:80px 5%;}
+.stag{
+  display:inline-block;font-size:.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;
+  padding:.22rem .85rem;border-radius:50px;margin-bottom:.85rem;
+}
+.tag-o{background:var(--orange-l);color:var(--orange);}
+.tag-t{background:var(--teal-l);color:var(--teal);}
+.tag-s{background:var(--sand);color:var(--ink2);}
+.stitle{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.85rem,3.2vw,2.5rem);
+  font-weight:800;letter-spacing:-1px;line-height:1.14;
+  margin-bottom:.85rem;
+}
+.ssub{color:var(--muted);font-size:.98rem;line-height:1.78;max-width:510px;}
 
-  .form-wrap {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 24px; padding: 3rem;
-    max-width: 900px; margin: 3rem auto 0;
-    backdrop-filter: blur(8px);
-  }
+/* ── PROBLEM ── */
+.problem{background:var(--sand);}
+.prob-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-top:2.4rem;}
+.pc{
+  background:var(--white);border-radius:var(--r);
+  padding:1.5rem;border:1.5px solid var(--border);
+  transition:all .25s;
+}
+.pc:hover{box-shadow:var(--shadow-md);transform:translateY(-3px);border-color:var(--orange-m);}
+.pc-ico{
+  width:44px;height:44px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.25rem;margin-bottom:.9rem;
+}
+.pi1{background:var(--red-l);}
+.pi2{background:var(--orange-l);}
+.pi3{background:var(--yellow-l);}
+.pi4{background:var(--teal-l);}
+.pc h3{font-size:.94rem;font-weight:700;margin-bottom:.35rem;}
+.pc p{font-size:.82rem;color:var(--muted);line-height:1.6;}
 
-  .form-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-  }
-  .form-group { display: flex; flex-direction: column; gap: 0.45rem; }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-group label {
-    font-size: 0.82rem; font-weight: 600;
-    color: rgba(255,255,255,0.75); letter-spacing: 0.03em;
-    text-transform: uppercase;
-  }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    background: rgba(255,255,255,0.08);
-    border: 1.5px solid rgba(255,255,255,0.15);
-    border-radius: 10px;
-    padding: 0.8rem 1rem;
-    color: var(--white);
-    font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
-    transition: border-color 0.2s, background 0.2s;
-    outline: none;
-    width: 100%;
-  }
-  .form-group select option { background: #1a3a5c; color: var(--white); }
-  .form-group input::placeholder,
-  .form-group textarea::placeholder { color: rgba(255,255,255,0.35); }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    border-color: var(--saffron);
-    background: rgba(255,255,255,0.12);
-  }
+/* ── SOLUTION ── */
+.solution{background:var(--white);}
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:2.4rem;}
+.sol-card{
+  border-radius:var(--rl);padding:2rem;
+  border:2px solid var(--border);
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.sol-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);}
+.sol-card.phy{background:linear-gradient(140deg,var(--orange-l) 0%,#fff6f0 100%);border-color:var(--orange-m);}
+.sol-card.dig{background:linear-gradient(140deg,var(--teal-l) 0%,#f0faf8 100%);border-color:var(--teal-m);}
+.sol-pill{display:inline-block;padding:.26rem .85rem;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.1rem;}
+.sp-o{background:var(--orange);color:#fff;}
+.sp-t{background:var(--teal);color:#fff;}
+.sol-card h3{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;margin-bottom:.35rem;color:var(--ink);}
+.sol-card .sol-sub{font-size:.84rem;color:var(--muted);margin-bottom:1.3rem;}
+.sol-feats{display:flex;flex-direction:column;gap:.55rem;}
+.sf{display:flex;align-items:flex-start;gap:.55rem;font-size:.84rem;color:var(--ink2);}
+.sfd{
+  width:17px;height:17px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;font-size:.6rem;font-weight:700;
+}
+.sfd-o{background:var(--orange);color:#fff;}
+.sfd-t{background:var(--teal);color:#fff;}
+.sol-bottom{
+  margin-top:1.3rem;padding-top:1.1rem;
+  border-top:1px solid rgba(0,0,0,.07);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.6rem;
+}
+.sol-price-lbl{font-size:.72rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;}
+.sol-price-val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;}
+.spv-o{color:var(--orange);}
+.spv-t{color:var(--teal);}
+.sol-price-sub{font-size:.76rem;font-weight:400;color:var(--muted);}
+.sol-btn{
+  padding:.52rem 1.3rem;border-radius:50px;
+  font-size:.84rem;font-weight:700;font-family:'Outfit',sans-serif;
+  cursor:pointer;text-decoration:none;border:none;transition:all .2s;
+}
+.sb-o{background:var(--orange);color:#fff;}
+.sb-o:hover{background:var(--orange-d);}
+.sb-t{background:var(--teal);color:#fff;}
+.sb-t:hover{background:var(--teal-d);}
 
-  /* Role selector */
-  .role-group { grid-column: 1 / -1; }
-  .role-group label {
-    font-size: 0.82rem; font-weight: 600;
-    color: rgba(255,255,255,0.75); letter-spacing: 0.03em;
-    text-transform: uppercase; display: block; margin-bottom: 0.8rem;
-  }
-  .role-pills {
-    display: flex; flex-wrap: wrap; gap: 0.7rem;
-  }
-  .role-pill {
-    background: rgba(255,255,255,0.07);
-    border: 1.5px solid rgba(255,255,255,0.18);
-    border-radius: 50px; padding: 0.5rem 1.2rem;
-    color: rgba(255,255,255,0.75); font-size: 0.88rem; font-weight: 500;
-    cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; gap: 0.4rem;
-  }
-  .role-pill:hover { border-color: var(--saffron); color: var(--white); }
-  .role-pill.active {
-    background: var(--saffron); border-color: var(--saffron);
-    color: var(--white); font-weight: 600;
-  }
+/* ── HOW IT WORKS ── */
+.how{background:var(--sand);}
+.how-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;margin-top:2.5rem;position:relative;
+}
+.how-grid::before{
+  content:'';position:absolute;
+  top:27px;left:12.5%;right:12.5%;
+  height:2px;background:var(--orange-m);z-index:0;
+}
+.hw{padding:0 .9rem;text-align:center;position:relative;z-index:1;}
+.hw-num{
+  width:54px;height:54px;border-radius:50%;
+  background:var(--orange);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;
+  margin:0 auto 1.1rem;
+  box-shadow:0 0 0 5px var(--white),0 0 0 6px var(--orange-m);
+}
+.hw h3{font-size:.92rem;font-weight:700;margin-bottom:.35rem;color:var(--ink);}
+.hw p{font-size:.8rem;color:var(--muted);line-height:1.6;}
 
-  /* conditional org field */
-  #org-field { display: none; }
-  #org-field.show { display: flex; }
+/* ── NUMBERS ── */
+.numbers{background:var(--ink);padding:48px 5%;}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;text-align:center;}
+.nv{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:#fff;}
+.nl{font-size:.82rem;color:rgba(255,255,255,.6);margin-top:.25rem;}
 
-  .form-submit {
-    margin-top: 2rem; text-align: center;
-  }
-  .form-submit button {
-    background: var(--saffron); color: var(--white);
-    border: none; padding: 1rem 3rem;
-    border-radius: 50px; font-size: 1.05rem; font-weight: 700;
-    cursor: pointer; transition: background 0.2s, transform 0.15s;
-    font-family: 'DM Sans', sans-serif;
-    letter-spacing: 0.01em;
-  }
-  .form-submit button:hover { background: #c9621a; transform: translateY(-2px); }
+/* ── SCHOOLS ── */
+.schools{background:var(--white);}
+.schools-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;margin-top:.8rem;}
+.why-list{display:flex;flex-direction:column;gap:.9rem;margin-top:1.5rem;}
+.witem{
+  display:flex;gap:.9rem;align-items:flex-start;
+  background:var(--sand);border-radius:var(--r);
+  padding:1.1rem;border:1px solid var(--border);
+  transition:all .2s;
+}
+.witem:hover{border-color:var(--orange-m);background:var(--orange-l);}
+.wico{
+  width:38px;height:38px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.05rem;flex-shrink:0;
+}
+.wi1{background:var(--orange-l);}
+.wi2{background:var(--teal-l);}
+.wi3{background:var(--yellow-l);}
+.wi4{background:var(--sand-d);}
+.witem h4{font-size:.9rem;font-weight:700;margin-bottom:.22rem;color:var(--ink);}
+.witem p{font-size:.8rem;color:var(--muted);line-height:1.55;}
 
-  /* success */
-  #success-msg {
-    display: none; text-align: center; padding: 2rem;
-    font-size: 1.2rem; color: #6ee7b7;
-    font-weight: 600;
-  }
-  #success-msg .checkmark { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+/* SCHOOL FORM */
+.sform-box{
+  background:var(--white);border-radius:var(--rl);
+  padding:1.9rem;border:1.5px solid var(--border);
+  box-shadow:var(--shadow-md);
+}
+.sform-title{font-family:'Syne',sans-serif;font-size:1.08rem;font-weight:800;margin-bottom:1.3rem;color:var(--ink);}
+.fg{display:flex;flex-direction:column;gap:.32rem;margin-bottom:.9rem;}
+.fg label{font-size:.73rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.fg input,.fg select,.fg textarea{
+  padding:.7rem .92rem;
+  border:1.5px solid var(--border);border-radius:9px;
+  font-size:.9rem;font-family:'Outfit',sans-serif;
+  outline:none;transition:border-color .2s;width:100%;
+  background:var(--bg);color:var(--ink);
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--orange);background:var(--white);}
+.fg textarea{resize:vertical;min-height:72px;}
+.form-2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.cfbtn{
+  width:100%;background:var(--orange);color:#fff;
+  border:none;padding:.8rem;border-radius:50px;
+  font-size:.92rem;font-weight:700;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .2s;
+  margin-top:.4rem;
+}
+.cfbtn:hover{background:var(--orange-d);}
+.cf-ok{display:none;text-align:center;padding:1.2rem;color:var(--teal);font-weight:600;font-size:.92rem;}
 
-  /* ── ADMIN PANEL ── */
-  #admin {
-    background: var(--cream);
-  }
-  .admin-table-wrap {
-    margin-top: 2.5rem;
-    background: var(--white);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-  .admin-toolbar {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--cream);
-  }
-  .admin-count { font-size: 0.9rem; font-weight: 600; color: var(--muted); }
-  .admin-count span { color: var(--saffron); font-size: 1.1rem; }
-  .btn-export {
-    background: var(--green); color: var(--white);
-    border: none; padding: 0.5rem 1.2rem;
-    border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-    cursor: pointer; transition: background 0.2s;
-  }
-  .btn-export:hover { background: #155f39; }
+/* ── FAQ ── */
+.faq{background:var(--white);}
+.faq-list{max-width:660px;margin-top:2.3rem;}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.95rem 0;cursor:pointer;font-weight:600;font-size:.92rem;
+  transition:color .2s;
+}
+.faq-q:hover{color:var(--orange);}
+.faq-ico{
+  width:21px;height:21px;border-radius:50%;
+  background:var(--orange-l);color:var(--orange);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;flex-shrink:0;transition:transform .25s;
+}
+.faq-item.open .faq-ico{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:.88rem;}
+.faq-a p{font-size:.85rem;color:var(--muted);line-height:1.72;}
 
-  .table-scroll { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
-  th {
-    background: var(--ink); color: var(--white);
-    padding: 0.75rem 1rem; text-align: left;
-    font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em;
-    white-space: nowrap;
-  }
-  td {
-    padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
-    color: var(--ink); vertical-align: middle;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:nth-child(even) td { background: rgba(0,0,0,0.018); }
-  .role-badge {
-    display: inline-block; padding: 0.22rem 0.7rem;
-    border-radius: 50px; font-size: 0.75rem; font-weight: 600;
-    white-space: nowrap;
-  }
-  .rb-teacher { background: var(--sky-light); color: var(--sky); }
-  .rb-student { background: var(--green-light); color: var(--green); }
-  .rb-seller { background: var(--saffron-light); color: var(--saffron); }
-  .rb-buyer { background: #f0e6ff; color: #7c3aed; }
-  .rb-publication { background: #fce7f3; color: #be185d; }
-  .empty-state {
-    text-align: center; padding: 3rem;
-    color: var(--muted); font-size: 0.95rem;
-  }
-  .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+/* ── REGISTER ── */
+#register{
+  background:linear-gradient(148deg,#0f172a 0%,#1a2e1c 50%,#0a1628 100%);
+  position:relative;overflow:hidden;
+  padding:80px 5%;
+}
+.reg-grain{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.045) 1px,transparent 1px);background-size:20px 20px;}
+.reg-glow1{position:absolute;top:-80px;right:-80px;width:440px;height:440px;background:radial-gradient(circle,rgba(244,114,30,.16) 0%,transparent 70%);}
+.reg-glow2{position:absolute;bottom:-60px;left:-60px;width:360px;height:360px;background:radial-gradient(circle,rgba(14,140,122,.14) 0%,transparent 70%);}
+#register .stag{background:rgba(244,114,30,.18);color:#fdba74;}
+#register .stitle{color:#fff;}
+#register .ssub{color:rgba(255,255,255,.56);}
+.rbox{
+  position:relative;z-index:1;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:2.2rem;
+  max-width:800px;margin:2.2rem auto 0;
+  backdrop-filter:blur(10px);
+}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:.95rem;}
+.rfg{display:flex;flex-direction:column;gap:.32rem;}
+.rfg.full{grid-column:1/-1;}
+.rfg label{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.58);text-transform:uppercase;letter-spacing:.05em;}
+.rfg input,.rfg select{
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.11);
+  border-radius:9px;padding:.72rem .92rem;
+  color:#fff;font-size:.9rem;font-family:'Outfit',sans-serif;
+  outline:none;transition:all .2s;width:100%;
+}
+.rfg select option{background:#1a1a2e;color:#fff;}
+.rfg input::placeholder{color:rgba(255,255,255,.27);}
+.rfg input:focus,.rfg select:focus{border-color:#fdba74;background:rgba(255,255,255,.1);}
+.pill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.48rem;}
+.rpill{
+  background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);
+  border-radius:50px;padding:.38rem .9rem;
+  color:rgba(255,255,255,.66);font-size:.8rem;font-weight:500;
+  cursor:pointer;transition:all .2s;user-select:none;
+}
+.rpill:hover{border-color:#fdba74;color:#fff;}
+.rpill.active{background:#f4721e;border-color:#f4721e;color:#fff;font-weight:600;}
+.ipill{
+  background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:50px;padding:.34rem .82rem;
+  color:rgba(255,255,255,.6);font-size:.77rem;
+  cursor:pointer;transition:all .2s;user-select:none;
+}
+.ipill:hover{border-color:var(--teal-m);color:#fff;}
+.ipill.active{background:var(--teal);border-color:var(--teal);color:#fff;}
+#org-row{display:none;grid-column:1/-1;flex-direction:column;gap:.32rem;}
+#org-row.show{display:flex;}
+.rf-foot{margin-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.rf-note{font-size:.73rem;color:rgba(255,255,255,.36);}
+.rfbtn{
+  background:#f4721e;color:#fff;border:none;
+  padding:.82rem 2.1rem;border-radius:50px;
+  font-size:.93rem;font-weight:700;cursor:pointer;
+  font-family:'Outfit',sans-serif;transition:all .2s;
+}
+.rfbtn:hover{background:var(--orange-d);transform:translateY(-2px);box-shadow:0 8px 20px rgba(244,114,30,.38);}
+.rfbtn:disabled{background:rgba(255,255,255,.14);cursor:not-allowed;transform:none;box-shadow:none;}
+#rfsuccess{display:none;text-align:center;padding:2.5rem;}
+#rfsuccess .ck{font-size:2.8rem;margin-bottom:.6rem;}
+#rfsuccess h3{font-family:'Syne',sans-serif;color:#fff;font-size:1.35rem;margin-bottom:.4rem;}
+#rfsuccess p{color:rgba(255,255,255,.56);font-size:.88rem;}
 
-  /* ── FOOTER ── */
-  footer {
-    background: var(--ink); color: rgba(255,255,255,0.6);
-    padding: 3rem 5%; text-align: center;
-  }
-  .footer-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem; font-weight: 900; color: var(--white);
-    margin-bottom: 0.8rem;
-  }
-  .footer-logo span { color: var(--saffron); }
-  footer p { font-size: 0.88rem; line-height: 1.8; }
-  .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin: 1.2rem 0; flex-wrap: wrap; }
-  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
-  .footer-links a:hover { color: var(--saffron); }
-  .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 1.5rem 0; }
+/* ── CTA BAND ── */
+.ctaband{background:var(--orange);padding:60px 5%;text-align:center;}
+.ctaband h2{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3.2vw,2.4rem);font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:.65rem;}
+.ctaband p{color:rgba(255,255,255,.8);font-size:.96rem;margin-bottom:1.7rem;}
+.ctabtn{
+  background:#fff;color:var(--orange);
+  padding:.86rem 2.1rem;border-radius:50px;
+  font-size:.96rem;font-weight:700;text-decoration:none;
+  transition:all .2s;display:inline-block;
+}
+.ctabtn:hover{background:var(--orange-l);transform:translateY(-2px);}
 
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeLeft {
-    from { opacity: 0; transform: translateX(28px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
+/* ── FOOTER ── */
+footer{background:#0e0e1a;color:rgba(255,255,255,.5);padding:3rem 5% 1.8rem;}
+.ftop{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;padding-bottom:1.9rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.fbrand p{font-size:.81rem;margin-top:.65rem;line-height:1.75;max-width:235px;}
+.fbrand .contact-info{margin-top:.9rem;font-size:.79rem;color:rgba(255,255,255,.5);}
+.fbrand .contact-info div{margin-bottom:.3rem;}
+.fcol h4{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);margin-bottom:.85rem;}
+.fcol a{display:block;font-size:.81rem;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:.4rem;transition:color .2s;}
+.fcol a:hover{color:#fff;}
+.fbot{display:flex;justify-content:space-between;align-items:center;padding-top:1.3rem;font-size:.78rem;flex-wrap:wrap;gap:.5rem;}
+.fbot a{color:rgba(255,255,255,.3);text-decoration:none;margin-left:1rem;transition:color .2s;}
+.fbot a:hover{color:#fff;}
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .hero-stats { display: none; }
-    .form-grid { grid-template-columns: 1fr; }
-    .form-group.full, .role-group { grid-column: 1; }
-  }
-  @media (max-width: 600px) {
-    nav { padding: 0 4%; }
-    .nav-links { display: none; }
-    .form-wrap { padding: 1.8rem 1.2rem; }
-    section { padding: 60px 4%; }
-    .hero { padding: 90px 4% 50px; }
-  }
+/* ── ADMIN LOGIN ── */
+#aov{display:none;position:fixed;inset:0;z-index:500;background:rgba(10,10,20,.96);backdrop-filter:blur(10px);align-items:center;justify-content:center;}
+#aov.show{display:flex;}
+.albox{background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:340px;position:relative;}
+.alclose{position:absolute;top:.8rem;right:.8rem;background:var(--bg);border:none;width:28px;height:28px;border-radius:6px;cursor:pointer;color:var(--muted);font-size:.88rem;}
+.albox h2{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;margin-bottom:.2rem;}
+.albox p{font-size:.81rem;color:var(--muted);margin-bottom:1.3rem;}
+.albox input{width:100%;padding:.72rem .92rem;border:1.5px solid var(--border);border-radius:9px;font-size:.9rem;font-family:'Outfit',sans-serif;outline:none;margin-bottom:.7rem;transition:border-color .2s;}
+.albox input:focus{border-color:var(--orange);}
+.albtn{width:100%;background:var(--orange);color:#fff;border:none;padding:.78rem;border-radius:9px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s;}
+.albtn:hover{background:var(--orange-d);}
+.al-err{color:#e11d48;font-size:.78rem;margin-top:.4rem;display:none;}
+
+/* ── ADMIN DASHBOARD ── */
+#adash{display:none;position:fixed;inset:0;z-index:499;background:var(--bg);overflow-y:auto;}
+#adash.show{display:block;}
+.dnav{background:var(--white);border-bottom:1px solid var(--border);padding:0 5%;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.dnavr{display:flex;gap:.55rem;}
+.dbtn{padding:.38rem .95rem;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;border:none;transition:all .2s;}
+.de{background:var(--teal);color:#fff;}.de:hover{background:var(--teal-d);}
+.dl{background:var(--bg);color:var(--muted);border:1px solid var(--border);}.dl:hover{color:#e11d48;border-color:#e11d48;}
+.dbody{padding:1.7rem 5%;}
+.dstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:.85rem;margin-bottom:1.7rem;}
+.dsc{background:var(--white);border-radius:var(--r);padding:1.05rem 1.2rem;border:1px solid var(--border);}
+.dsn{font-family:'Syne',sans-serif;font-size:1.85rem;font-weight:800;}
+.dsl{font-size:.73rem;color:var(--muted);margin-top:.12rem;}
+.c0 .dsn{color:var(--orange)}.c1 .dsn{color:var(--teal)}.c2 .dsn{color:#7c3aed}.c3 .dsn{color:var(--ink)}.c4 .dsn{color:#059669}
+.dtbl{background:var(--white);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;}
+.dtbar{display:flex;gap:.6rem;padding:.8rem 1.1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.dtbar input,.dtbar select{
+  padding:.38rem .8rem;border:1px solid var(--border);border-radius:7px;
+  font-size:.8rem;font-family:'Outfit',sans-serif;outline:none;
+  background:var(--bg);
+}
+.dtbar input{flex:1;min-width:180px;}
+.dtbar input:focus,.dtbar select:focus{border-color:var(--orange);}
+.tscroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.8rem;}
+thead th{background:var(--ink);color:#fff;padding:.6rem .88rem;text-align:left;font-size:.69rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+tbody td{padding:.6rem .88rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--orange-l);}
+.rb{display:inline-block;padding:.14rem .55rem;border-radius:50px;font-size:.68rem;font-weight:700;white-space:nowrap;}
+.rb-pa{background:var(--orange-l);color:var(--orange);}
+.rb-st{background:var(--teal-l);color:var(--teal);}
+.rb-te{background:var(--yellow-l);color:#92400e;}
+.rb-sc{background:var(--sand);color:var(--ink);}
+.rb-pu{background:#f5f3ff;color:#7c3aed;}
+.rb-bu{background:var(--teal-l);color:var(--teal-d);}
+.et{text-align:center;padding:2.5rem;color:var(--muted);font-size:.88rem;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .hero-cards{display:none;}
+  .nums{grid-template-columns:repeat(2,1fr);}
+  .schools-grid{grid-template-columns:1fr;}
+  .sol-grid{grid-template-columns:1fr;}
+  .how-grid{grid-template-columns:repeat(2,1fr);}
+  .how-grid::before{display:none;}
+  .ftop{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  nav{padding:0 4%;}
+  .nav-links{display:none;}
+  .rgrid,.rfg.full{grid-template-columns:1fr;}
+  .full{grid-column:1;}
+  .ftop{grid-template-columns:1fr;}
+  .nums{grid-template-columns:repeat(2,1fr);}
+  section,#register{padding:60px 4%;}
+  .numbers{padding:40px 4%;}
+  .trust{padding:16px 4%;}
+  .ctaband{padding:48px 4%;}
+  .form-2{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">Edu<span>Kart</span></div>
+  <a href="#" class="logo">Edu<span>Kart</span></a>
   <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#serve">Who We Serve</a>
+    <a href="#solution">Our Solution</a>
+    <a href="#how">How It Works</a>
+    <a href="#schools">For Schools</a>
     <a href="#register">Register</a>
-    <a href="#admin">Dashboard</a>
+    <a href="#faq">FAQ</a>
   </div>
-  <a href="#register" class="nav-cta">Join Now →</a>
+  <div class="nav-r">
+    <a href="#register" class="nb nb-o">Login</a>
+    <a href="#register" class="nb nb-s">Order Books →</a>
+  </div>
 </nav>
 
 <!-- HERO -->
-<section class="hero" id="about">
-  <div class="hero-bg"></div>
+<section class="hero" id="home">
+  <div class="hero-wave"></div>
   <div class="hero-dots"></div>
   <div class="hero-content">
-    <div class="hero-badge">India's Education Marketplace</div>
-    <h1>Empowering <em>Education</em><br>Through Resources</h1>
-    <p>EduKart bridges teachers, students, schools, and publishers on one powerful platform — making quality educational resources accessible for every learner across India.</p>
+    <div class="h-eyebrow"><div class="live-dot"></div>India's First Home Book Delivery Platform</div>
+    <h1>Books Delivered.<br><span class="h-accent">Knowledge Unlocked.</span></h1>
+    <p class="hero-p">We partner with schools and publishers to deliver your child's complete book set straight to your doorstep — plus instant access to a full eBook library. No more running around shops.</p>
     <div class="hero-btns">
-      <a href="#register" class="btn-primary">Register Now →</a>
-      <a href="#serve" class="btn-secondary">Explore Platform</a>
+      <a href="#register" class="btn-p">📦 Order Your Book Set</a>
+      <a href="#how" class="btn-g">See How It Works</a>
+    </div>
+    <div class="hero-tags">
+      <div class="htag">🏫 CBSE · ICSE · State Boards</div>
+      <div class="htag">🚚 2–4 Day Home Delivery</div>
+      <div class="htag">📱 eBooks Included</div>
+      <div class="htag">🎓 K-12 & College Content</div>
     </div>
   </div>
-  <div class="hero-stats">
-    <div class="stat-card">
-      <div class="stat-num">10K+</div>
-      <div class="stat-label">Educators</div>
+  <div class="hero-cards">
+    <div class="hcard">
+      <div class="hc-l">Book Sets Delivered</div>
+      <div class="hc-v">12,000+</div>
+      <div class="hc-s" style="color:var(--teal)">↑ Growing fast</div>
+      <div class="hbar"><div class="hfill" style="width:75%;background:var(--orange)"></div></div>
     </div>
-    <div class="stat-card">
-      <div class="stat-num">50K+</div>
-      <div class="stat-label">Students</div>
+    <div class="hcard">
+      <div class="hc-l">School Partners</div>
+      <div class="hc-v">50+</div>
+      <div class="hc-s" style="color:var(--orange)">Mumbai & beyond</div>
+      <div class="hbar"><div class="hfill" style="width:50%;background:var(--teal)"></div></div>
     </div>
-    <div class="stat-card">
-      <div class="stat-num">500+</div>
-      <div class="stat-label">Publishers</div>
-    </div>
-  </div>
-</section>
-
-<!-- WHO WE SERVE -->
-<section class="serve" id="serve">
-  <div class="section-tag">Community</div>
-  <h2 class="section-title">Who We Serve</h2>
-  <p class="section-sub">EduKart is built for every stakeholder in the education ecosystem — from classrooms to boardrooms.</p>
-  <div class="serve-grid">
-    <div class="serve-card"><div class="serve-icon">👩‍🏫</div><h3>Teachers</h3><p>Access and share teaching resources, lesson plans & more</p></div>
-    <div class="serve-card"><div class="serve-icon">🎓</div><h3>Students</h3><p>Discover study materials, guides, and tools for every grade</p></div>
-    <div class="serve-card"><div class="serve-icon">🛒</div><h3>Sellers</h3><p>List and sell educational products to a massive audience</p></div>
-    <div class="serve-card"><div class="serve-icon">🛍️</div><h3>Buyers</h3><p>Source quality edu-materials from verified sellers & publishers</p></div>
-    <div class="serve-card"><div class="serve-icon">📚</div><h3>Publication Houses</h3><p>Distribute books, e-books, and curriculum content directly</p></div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section id="features">
-  <div class="section-tag">Platform</div>
-  <h2 class="section-title">Why Choose EduKart?</h2>
-  <p class="section-sub">Everything you need to learn, teach, buy, and sell educational resources — in one place.</p>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon fi-orange">📖</div>
-      <h3>Vast Resource Library</h3>
-      <p>Thousands of curated books, guides, question banks, and teaching aids from verified publishers and educators.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon fi-green">🤝</div>
-      <h3>Direct Connect</h3>
-      <p>Schools connect directly with publishers. Teachers connect with resource creators. No middlemen, lower costs.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon fi-blue">🇮🇳</div>
-      <h3>Made for India</h3>
-      <p>Supporting all major state boards and CBSE/ICSE curriculum. Available in multiple languages across all states.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon fi-orange">🔒</div>
-      <h3>Verified & Trusted</h3>
-      <p>All content and sellers are verified for quality and authenticity before listing on the platform.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon fi-green">📦</div>
-      <h3>Easy Procurement</h3>
-      <p>Bulk ordering for schools and institutions with dedicated support and fast pan-India delivery.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon fi-blue">📊</div>
-      <h3>Analytics & Insights</h3>
-      <p>Track orders, usage, and performance with real-time dashboards for institutions and sellers.</p>
+    <div class="hcard">
+      <div class="hc-l">Publishers On-board</div>
+      <div class="hc-v">30+</div>
+      <div class="hc-s" style="color:var(--teal)">All major names</div>
+      <div class="hbar"><div class="hfill" style="width:60%;background:var(--yellow)"></div></div>
     </div>
   </div>
 </section>
 
-<!-- REGISTER FORM -->
-<section id="register">
-  <div class="hero-dots"></div>
-  <div style="position:relative;z-index:1;">
-    <div class="section-tag">Join EduKart</div>
-    <h2 class="section-title">Register & Connect</h2>
-    <p class="section-sub">Tell us about yourself so we can personalise your EduKart experience.</p>
+<!-- TRUST STRIP -->
+<div class="trust">
+  <div class="trust-row">
+    <div class="titem"><span>🏫</span> 50+ School Partners</div>
+    <div class="titem"><span>📚</span> All Major Publishers</div>
+    <div class="titem"><span>🚚</span> Pan-India Delivery</div>
+    <div class="titem"><span>⭐</span> 4.8 / 5 Rating</div>
+    <div class="titem"><span>📖</span> All Major Boards Covered</div>
+  </div>
+</div>
 
-    <div class="form-wrap">
-      <form id="audience-form" autocomplete="off">
-        <div class="form-grid">
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="stag tag-s">The Problem We Solve</div>
+  <h2 class="stitle">Every Year, Millions of<br>Parents Face This Pain</h2>
+  <p class="ssub">The school book buying experience in India is completely broken — and nobody had fixed it. Until now.</p>
+  <div class="prob-grid">
+    <div class="pc">
+      <div class="pc-ico pi1">🏃</div>
+      <h3>Running Around Shops</h3>
+      <p>Parents visit 4–6 different shops to find all school books — often spread across the city. Hours wasted every single year.</p>
+    </div>
+    <div class="pc">
+      <div class="pc-ico pi2">📦</div>
+      <h3>Out-of-Stock Chaos</h3>
+      <p>New academic year books sell out fast. Many students start school without their full book set, falling behind from day one.</p>
+    </div>
+    <div class="pc">
+      <div class="pc-ico pi3">💸</div>
+      <h3>No Buying Guidance</h3>
+      <p>No standard information on what to buy. Parents struggle to figure out the correct books, editions and publishers every year.</p>
+    </div>
+    <div class="pc">
+      <div class="pc-ico pi4">📱</div>
+      <h3>No Digital Alternative</h3>
+      <p>No integrated eBook platform for Indian K-12 students with regional content, offline access and proper syllabus coverage.</p>
+    </div>
+  </div>
+</section>
 
-          <div class="form-group">
-            <label for="f-name">Full Name *</label>
-            <input type="text" id="f-name" placeholder="e.g. Priya Sharma" required>
-          </div>
-
-          <div class="form-group">
-            <label for="f-email">Email Address *</label>
-            <input type="email" id="f-email" placeholder="you@example.com" required>
-          </div>
-
-          <div class="form-group">
-            <label for="f-mobile">Mobile Number *</label>
-            <input type="tel" id="f-mobile" placeholder="+91 98765 43210" required>
-          </div>
-
-          <div class="form-group">
-            <label for="f-state">State *</label>
-            <select id="f-state" required>
-              <option value="" disabled selected>Select your state</option>
-              <option>Andhra Pradesh</option><option>Arunachal Pradesh</option>
-              <option>Assam</option><option>Bihar</option><option>Chhattisgarh</option>
-              <option>Goa</option><option>Gujarat</option><option>Haryana</option>
-              <option>Himachal Pradesh</option><option>Jharkhand</option>
-              <option>Karnataka</option><option>Kerala</option>
-              <option>Madhya Pradesh</option><option>Maharashtra</option>
-              <option>Manipur</option><option>Meghalaya</option><option>Mizoram</option>
-              <option>Nagaland</option><option>Odisha</option><option>Punjab</option>
-              <option>Rajasthan</option><option>Sikkim</option>
-              <option>Tamil Nadu</option><option>Telangana</option>
-              <option>Tripura</option><option>Uttar Pradesh</option>
-              <option>Uttarakhand</option><option>West Bengal</option>
-              <option>Delhi</option><option>Other / Outside India</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="f-country">Country *</label>
-            <select id="f-country" required>
-              <option value="" disabled selected>Select country</option>
-              <option selected>India</option>
-              <option>United States</option><option>United Kingdom</option>
-              <option>Canada</option><option>Australia</option>
-              <option>UAE</option><option>Singapore</option>
-              <option>Other</option>
-            </select>
-          </div>
-
-          <!-- ROLE PILLS -->
-          <div class="role-group full">
-            <label>I am a… *</label>
-            <div class="role-pills" id="role-pills">
-              <div class="role-pill" data-role="Teacher">👩‍🏫 Teacher</div>
-              <div class="role-pill" data-role="Student">🎓 Student</div>
-              <div class="role-pill" data-role="Seller">🛒 Seller</div>
-              <div class="role-pill" data-role="Buyer">🛍️ Buyer</div>
-              <div class="role-pill" data-role="Publication House">📚 Publication House</div>
-            </div>
-            <input type="hidden" id="f-role" required>
-          </div>
-
-          <!-- CONDITIONAL ORG FIELD -->
-          <div class="form-group full" id="org-field">
-            <label for="f-org" id="org-label">School / Company Name *</label>
-            <input type="text" id="f-org" placeholder="Enter your school or company name">
-          </div>
-
-        </div><!-- /form-grid -->
-
-        <div class="form-submit">
-          <button type="submit">Submit Registration ✓</button>
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="stag tag-o">Our Solution</div>
+  <h2 class="stitle">One Platform.<br>Two Powerful Offerings.</h2>
+  <p class="ssub">EduKart eliminates the book buying hassle completely — with a physical home delivery service and a digital eBook library.</p>
+  <div class="sol-grid">
+    <div class="sol-card phy">
+      <div class="sol-pill sp-o">📦 Physical Book Delivery</div>
+      <h3>Complete Book Set<br>to Your Doorstep</h3>
+      <p class="sol-sub">Select your child's class and board. We source, pack, and deliver the complete curated book set to your home.</p>
+      <div class="sol-feats">
+        <div class="sf"><div class="sfd sfd-o">✓</div>Partner with schools & publishers directly</div>
+        <div class="sf"><div class="sfd sfd-o">✓</div>Full set curated by class, board & syllabus</div>
+        <div class="sf"><div class="sfd sfd-o">✓</div>Free standard delivery in 2–4 days</div>
+        <div class="sf"><div class="sfd sfd-o">✓</div>Express same-day/next-day delivery available</div>
+        <div class="sf"><div class="sfd sfd-o">✓</div>Completely transparent — no hidden surprises</div>
+        <div class="sf"><div class="sfd sfd-o">✓</div>Bulk school contracts for B2B institutions</div>
+      </div>
+      <div class="sol-bottom">
+        <div>
+          <div class="sol-price-lbl">Delivery</div>
+          <div class="sol-price-val spv-o">Free <span class="sol-price-sub">standard delivery included</span></div>
         </div>
-      </form>
-
-      <div id="success-msg">
-        <span class="checkmark">🎉</span>
-        Thank you for registering! We'll be in touch soon.
+        <a href="#register" class="sol-btn sb-o">Order Now →</a>
+      </div>
+    </div>
+    <div class="sol-card dig">
+      <div class="sol-pill sp-t">📱 eBook Platform</div>
+      <h3>Full Digital Library.<br>Read Anywhere, Anytime.</h3>
+      <p class="sol-sub">Get instant access to your entire textbook library in digital form — for the full academic year, all in one app.</p>
+      <div class="sol-feats">
+        <div class="sf"><div class="sfd sfd-t">✓</div>Full digital textbook library for all subjects</div>
+        <div class="sf"><div class="sfd sfd-t">✓</div>K-12 and college content covered</div>
+        <div class="sf"><div class="sfd sfd-t">✓</div>Read online or download for offline access</div>
+        <div class="sf"><div class="sfd sfd-t">✓</div>All major boards — CBSE, ICSE & State</div>
+        <div class="sf"><div class="sfd sfd-t">✓</div>Licensed content from top publishers</div>
+        <div class="sf"><div class="sfd sfd-t">✓</div>Regional language books available</div>
+      </div>
+      <div class="sol-bottom">
+        <div>
+          <div class="sol-price-lbl">Access</div>
+          <div class="sol-price-val spv-t">Instant <span class="sol-price-sub">read on any device</span></div>
+        </div>
+        <a href="#register" class="sol-btn sb-t">Explore eBooks →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ADMIN PANEL -->
-<section id="admin">
-  <div class="section-tag">Admin</div>
-  <h2 class="section-title">Audience Dashboard</h2>
-  <p class="section-sub">All registered visitors in one place. Export anytime.</p>
-
-  <div class="admin-table-wrap">
-    <div class="admin-toolbar">
-      <div class="admin-count">Total Registrations: <span id="reg-count">0</span></div>
-      <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="stag tag-o">How It Works</div>
+  <h2 class="stitle">School Booklist to Doorstep<br>in 4 Simple Steps</h2>
+  <p class="ssub">We've made the entire process seamless for parents, students and schools alike.</p>
+  <div class="how-grid">
+    <div class="hw">
+      <div class="hw-num">01</div>
+      <h3>School Signs Up</h3>
+      <p>School shares their annual booklist with EduKart. We build curated bundles per grade, board and syllabus.</p>
     </div>
-    <div class="table-scroll">
-      <table id="reg-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>State</th>
-            <th>Country</th>
-            <th>Role</th>
-            <th>School / Company</th>
-            <th>Registered At</th>
-          </tr>
-        </thead>
-        <tbody id="reg-tbody">
-          <tr><td colspan="9"><div class="empty-state"><div class="empty-icon">📋</div>No registrations yet. Be the first!</div></td></tr>
-        </tbody>
-      </table>
+    <div class="hw">
+      <div class="hw-num">02</div>
+      <h3>Parent Orders Online</h3>
+      <p>Parent visits EduKart, selects child's class and board, places the order and chooses physical books with optional eBook access.</p>
+    </div>
+    <div class="hw">
+      <div class="hw-num">03</div>
+      <h3>We Source & Pack</h3>
+      <p>We source directly from publishers, quality-check, pack and label each order per student.</p>
+    </div>
+    <div class="hw">
+      <div class="hw-num">04</div>
+      <h3>Home Delivery</h3>
+      <p>Full book set delivered in 2–4 days via our logistics partners. Track your order in real time.</p>
     </div>
   </div>
 </section>
 
+<!-- NUMBERS -->
+<div class="numbers">
+  <div class="nums">
+    <div><div class="nv">260M+</div><div class="nl">School Students in India</div></div>
+    <div><div class="nv">500+</div><div class="nl">Publisher Partners</div></div>
+    <div><div class="nv">2–4 Days</div><div class="nl">Delivery Across India</div></div>
+    <div><div class="nv">12%</div><div class="nl">EdTech CAGR 2024–28</div></div>
+  </div>
+</div>
+
+<!-- FOR SCHOOLS -->
+<section class="schools" id="schools">
+  <div class="stag tag-t">For Schools & Institutions</div>
+  <h2 class="stitle">Partner With EduKart.<br>Serve Your Students Better.</h2>
+  <p class="ssub">When your school joins EduKart, every family benefits — seamless book delivery handled end-to-end, every academic year.</p>
+  <div class="schools-grid">
+    <div>
+      <div class="why-list">
+        <div class="witem">
+          <div class="wico wi1">🏫</div>
+          <div><h4>Zero Effort for Your School</h4><p>Just share your annual booklist. We handle sourcing, packing and delivery for every student — automatically.</p></div>
+        </div>
+        <div class="witem">
+          <div class="wico wi2">📋</div>
+          <div><h4>Curated Bundles Per Grade</h4><p>We build customised book sets for every class and section, curated to your exact syllabus and publisher preferences.</p></div>
+        </div>
+        <div class="witem">
+          <div class="wico wi3">📦</div>
+          <div><h4>Direct Publisher Sourcing</h4><p>We source directly from publishers and deliver to every student's home — no middlemen, no confusion, no delays.</p></div>
+        </div>
+        <div class="witem">
+          <div class="wico wi4">🔄</div>
+          <div><h4>Automatic Every Year</h4><p>Once your school is on EduKart, it becomes the default for all families — automatically recurring every academic year.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="sform-box">
+      <div class="sform-title">📩 Send Us a Partnership Request</div>
+      <form id="sform">
+        <div class="fg"><label>School Name *</label><input type="text" id="sc-name" placeholder="e.g. Delhi Public School" required></div>
+        <div class="form-2">
+          <div class="fg"><label>Contact Person *</label><input type="text" id="sc-contact" placeholder="Your name" required></div>
+          <div class="fg"><label>Mobile *</label><input type="tel" id="sc-mobile" placeholder="+91 98765 43210" required></div>
+        </div>
+        <div class="form-2">
+          <div class="fg"><label>City *</label><input type="text" id="sc-city" placeholder="e.g. Mumbai" required></div>
+          <div class="fg"><label>Students Count</label>
+            <select id="sc-size">
+              <option value="" disabled selected>Approx. count</option>
+              <option>Under 200</option><option>200–500</option>
+              <option>500–1000</option><option>1000–2000</option><option>2000+</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg"><label>Message (optional)</label><textarea id="sc-msg" placeholder="Tell us about your requirements…"></textarea></div>
+        <button type="submit" class="cfbtn">Send Request →</button>
+      </form>
+      <div class="cf-ok" id="sc-ok">🎉 Request received! We'll contact you within 24 hours.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="stag tag-o">FAQ</div>
+  <h2 class="stitle">Frequently Asked Questions</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">How does EduKart know which books my child needs? <div class="faq-ico">+</div></div>
+      <div class="faq-a"><p>When your school partners with EduKart, they share the annual booklist with us and we build a curated bundle for each class. If your school isn't a partner yet, you can manually select books by class, board and subject when registering.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How long does delivery take? <div class="faq-ico">+</div></div>
+      <div class="faq-a"><p>Standard delivery takes 2–4 working days across major cities in India. Express delivery (same day or next day) is available in select cities. All orders come with real-time tracking.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is EduKart available across all of India? <div class="faq-ico">+</div></div>
+      <div class="faq-a"><p>We currently serve Mumbai and are rapidly expanding to other major cities across India. Register your interest and we'll notify you as soon as EduKart launches in your city.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Which boards and classes are supported? <div class="faq-ico">+</div></div>
+      <div class="faq-a"><p>We support CBSE, ICSE and all major State Boards for Class 1 through Class 12, plus select college programmes. Regional language content is available for 15+ Indian languages.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How does my school partner with EduKart? <div class="faq-ico">+</div></div>
+      <div class="faq-a"><p>Fill in the partnership form on this page and our team will contact you within 24 hours. The onboarding process is very simple — just share your booklist and we handle everything else for your students.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I get only eBooks without physical delivery? <div class="faq-ico">+</div></div>
+      <div class="faq-a"><p>Yes! You can register for eBook-only access and get the full digital textbook library for your class and board. Books can be downloaded for offline reading on any device.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="reg-grain"></div>
+  <div class="reg-glow1"></div>
+  <div class="reg-glow2"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="stag tag-o" style="background:rgba(244,114,30,.18);color:#fdba74;">Join EduKart</div>
+    <h2 class="stitle" style="color:#fff;">Register & Get Your<br>Books Delivered</h2>
+    <p class="ssub" style="color:rgba(255,255,255,.56);">Sign up today — tell us about yourself and we'll personalise your EduKart experience.</p>
+    <div class="rbox">
+      <form id="rform" autocomplete="off">
+        <div class="rgrid">
+          <div class="rfg"><label>Full Name *</label><input type="text" id="r-name" placeholder="e.g. Priya Sharma" required></div>
+          <div class="rfg"><label>Email Address *</label><input type="email" id="r-email" placeholder="you@example.com" required></div>
+          <div class="rfg"><label>Mobile Number *</label><input type="tel" id="r-mobile" placeholder="+91 98765 43210" required></div>
+          <div class="rfg"><label>City *</label><input type="text" id="r-city" placeholder="e.g. Mumbai" required></div>
+          <div class="rfg"><label>State *</label>
+            <select id="r-state" required>
+              <option value="" disabled selected>Select state</option>
+              <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option><option>Delhi</option><option>Other</option>
+            </select>
+          </div>
+          <div class="rfg"><label>Country *</label>
+            <select id="r-country" required>
+              <option value="" disabled selected>Select country</option>
+              <option>India</option><option>UAE</option><option>Singapore</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>Other</option>
+            </select>
+          </div>
+
+          <div class="rfg full">
+            <label>I am a… *</label>
+            <div class="pill-row" id="role-pills">
+              <div class="rpill" data-role="Parent">👨‍👩‍👧 Parent</div>
+              <div class="rpill" data-role="Student">🎓 Student</div>
+              <div class="rpill" data-role="Teacher">👩‍🏫 Teacher</div>
+              <div class="rpill" data-role="School / Principal">🏫 School / Principal</div>
+              <div class="rpill" data-role="Publication House">📚 Publication House</div>
+              <div class="rpill" data-role="Buyer / Reseller">🛒 Buyer / Reseller</div>
+            </div>
+            <input type="hidden" id="r-role">
+          </div>
+
+          <div id="org-row">
+            <label id="org-lbl" style="font-size:.72rem;font-weight:600;color:rgba(255,255,255,.58);text-transform:uppercase;letter-spacing:.05em;">Organisation Name *</label>
+            <input type="text" id="r-org" placeholder="Enter name" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.11);border-radius:9px;padding:.72rem .92rem;color:#fff;font-size:.9rem;font-family:'Outfit',sans-serif;outline:none;width:100%;margin-top:.38rem;transition:all .2s;">
+          </div>
+
+          <div class="rfg full">
+            <label>What interests you? (pick all)</label>
+            <div class="pill-row">
+              <div class="ipill" data-int="Physical Book Delivery">📦 Book Delivery</div>
+              <div class="ipill" data-int="eBook Access">📱 eBooks</div>
+              <div class="ipill" data-int="School Partnership">🏫 School Partnership</div>
+              <div class="ipill" data-int="Bulk / B2B Orders">📋 Bulk Orders</div>
+              <div class="ipill" data-int="Publisher Listing">📚 Publisher Listing</div>
+            </div>
+          </div>
+
+          <div class="rfg">
+            <label>Class / Grade</label>
+            <select id="r-class">
+              <option value="" disabled selected>Select class</option>
+              <option>Nursery / KG</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option><option>College / University</option><option>Not Applicable</option>
+            </select>
+          </div>
+
+          <div class="rfg">
+            <label>How did you hear about us?</label>
+            <select id="r-src">
+              <option value="" disabled selected>Select</option>
+              <option>School circular</option><option>Google Search</option><option>Instagram / Facebook</option><option>Friend / Family</option><option>WhatsApp</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="rf-foot">
+          <span class="rf-note">🔒 Your data is safe. We never spam or share your details.</span>
+          <button type="submit" class="rfbtn" id="rfbtn">Submit & Get Started →</button>
+        </div>
+      </form>
+      <div id="rfsuccess">
+        <div class="ck">🎉</div>
+        <h3>You're on the list!</h3>
+        <p>Welcome to EduKart! We'll reach out soon with your personalised experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="ctaband">
+  <h2>Let's Bring Every Student's<br>Books to Their Doorstep.</h2>
+  <p>Join EduKart — India's first all-in-one school book delivery and eBook platform.</p>
+  <a href="#register" class="ctabtn">Register for Free →</a>
+</div>
+
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Edu<span>Kart</span></div>
-  <div class="footer-links">
-    <a href="#about">About</a>
-    <a href="#serve">Services</a>
-    <a href="#register">Register</a>
-    <a href="mailto:hello@edukart.co.in">Contact</a>
+  <div class="ftop">
+    <div class="fbrand">
+      <div class="logo" style="color:#fff;">Edu<span style="color:var(--orange)">Kart</span></div>
+      <p>India's first home book delivery platform for schools — physical delivery + eBook library in one place.</p>
+      <div class="contact-info">
+        <div>📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="365e535a5a59765352435d574442185559185f58">[email&#160;protected]</a></div>
+        <div>📍 Mumbai, India</div>
+      </div>
+    </div>
+    <div class="fcol">
+      <h4>Platform</h4>
+      <a href="#solution">Book Delivery</a>
+      <a href="#solution">eBook Library</a>
+      <a href="#schools">School Partners</a>
+      <a href="#how">How It Works</a>
+    </div>
+    <div class="fcol">
+      <h4>Company</h4>
+      <a href="#">About Us</a>
+      <a href="#">Publisher Partners</a>
+      <a href="#">Careers</a>
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="fcol">
+      <h4>Support</h4>
+      <a href="#faq">FAQ</a>
+      <a href="#">Track My Order</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+    </div>
   </div>
-  <hr class="footer-divider">
-  <p>© 2026 EduKart — Empowering Education Through Resources. All rights reserved.</p>
+  <div class="fbot">
+    <span>© 2026 EduKart — All rights reserved. Mumbai, India.</span>
+    <div>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#" onclick="openAdmin(event)">Admin</a>
+    </div>
+  </div>
 </footer>
 
-<script>
-  // ── Role pill interaction ──
-  const pills = document.querySelectorAll('.role-pill');
-  const roleInput = document.getElementById('f-role');
-  const orgField = document.getElementById('org-field');
-  const orgLabel = document.getElementById('org-label');
+<!-- ADMIN LOGIN -->
+<div id="aov">
+  <div class="albox">
+    <button class="alclose" onclick="closeAdmin()">✕</button>
+    <h2>Admin Login</h2>
+    <p>Enter password to view the registrations dashboard.</p>
+    <input type="password" id="apass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="albtn" onclick="doLogin()">Login →</button>
+    <div class="al-err" id="aerr">Incorrect password. Try again.</div>
+  </div>
+</div>
 
-  const orgRoles = {
-    'Teacher': 'School / Institution Name',
-    'Student': 'School / College Name',
-    'Seller': 'Company / Business Name',
-    'Buyer': 'School / Company Name',
-    'Publication House': 'Publication House Name'
+<!-- ADMIN DASHBOARD -->
+<div id="adash">
+  <div class="dnav">
+    <div class="logo">Edu<span>Kart</span> <span style="font-size:.68rem;font-weight:400;color:var(--muted);margin-left:.35rem">Admin</span></div>
+    <div class="dnavr">
+      <button class="dbtn de" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="dbtn dl" onclick="logoutAdmin()">Logout</button>
+    </div>
+  </div>
+  <div class="dbody">
+    <div class="dstats">
+      <div class="dsc c0"><div class="dsn" id="s0">0</div><div class="dsl">Total Registrations</div></div>
+      <div class="dsc c1"><div class="dsn" id="s1">0</div><div class="dsl">Parents</div></div>
+      <div class="dsc c2"><div class="dsn" id="s2">0</div><div class="dsl">Students</div></div>
+      <div class="dsc c3"><div class="dsn" id="s3">0</div><div class="dsl">Schools</div></div>
+      <div class="dsc c4"><div class="dsn" id="s4">0</div><div class="dsl">Publishers</div></div>
+    </div>
+    <div class="dtbl">
+      <div class="dtbar">
+        <input type="text" id="srch" placeholder="Search name, email, city, role…" oninput="rTbl()">
+        <select id="rfilt" onchange="rTbl()">
+          <option value="">All Roles</option>
+          <option>Parent</option><option>Student</option><option>Teacher</option>
+          <option>School / Principal</option><option>Publication House</option><option>Buyer / Reseller</option>
+        </select>
+      </div>
+      <div class="tscroll">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Name</th><th>Email</th><th>Mobile</th>
+              <th>City</th><th>State</th><th>Country</th><th>Role</th>
+              <th>Organisation</th><th>Class</th><th>Interests</th>
+              <th>Source</th><th>Registered At</th>
+            </tr>
+          </thead>
+          <tbody id="rtbd"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const PASS='EduKart@2026';
+const SHEET_URL='';
+/*
+GOOGLE SHEETS BACKEND SETUP (FREE):
+1. sheets.google.com → New sheet → name it "EduKart Registrations"
+2. Extensions → Apps Script → paste this → save:
+
+function doPost(e){
+  var s=SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var d=JSON.parse(e.postData.contents);
+  if(s.getLastRow()===0) s.appendRow(["Name","Email","Mobile","City","State","Country","Role","Org","Class","Interests","Source","Time"]);
+  s.appendRow([d.name,d.email,d.mobile,d.city,d.state,d.country,d.role,d.org,d.cls,d.interests,d.source,d.time]);
+  return ContentService.createTextOutput('ok');
+}
+
+3. Deploy → New Deployment → Web App → Anyone → Deploy → copy URL → paste above as SHEET_URL
+*/
+
+// ROLE PILLS
+const orgMap={Parent:"Child's School Name",Student:"School / College Name *",Teacher:"School Name *","School / Principal":"School Name *","Publication House":"Publication House Name *","Buyer / Reseller":"Company Name *"};
+document.querySelectorAll('.rpill').forEach(p=>p.addEventListener('click',()=>{
+  document.querySelectorAll('.rpill').forEach(x=>x.classList.remove('active'));
+  p.classList.add('active');
+  document.getElementById('r-role').value=p.dataset.role;
+  document.getElementById('org-lbl').textContent=orgMap[p.dataset.role]||'Organisation *';
+  document.getElementById('org-row').classList.add('show');
+  document.getElementById('r-org').required=true;
+}));
+document.querySelectorAll('.ipill').forEach(p=>p.addEventListener('click',()=>p.classList.toggle('active')));
+function getInts(){return[...document.querySelectorAll('.ipill.active')].map(p=>p.dataset.int).join(', ');}
+
+// REGISTER FORM
+document.getElementById('rform').addEventListener('submit',async function(e){
+  e.preventDefault();
+  if(!document.getElementById('r-role').value){alert('Please select your role.');return;}
+  const btn=document.getElementById('rfbtn');
+  btn.disabled=true;btn.textContent='Submitting…';
+  const entry={
+    name:document.getElementById('r-name').value.trim(),
+    email:document.getElementById('r-email').value.trim(),
+    mobile:document.getElementById('r-mobile').value.trim(),
+    city:document.getElementById('r-city').value.trim(),
+    state:document.getElementById('r-state').value,
+    country:document.getElementById('r-country').value,
+    role:document.getElementById('r-role').value,
+    org:document.getElementById('r-org').value.trim(),
+    cls:document.getElementById('r-class').value||'—',
+    interests:getInts(),
+    source:document.getElementById('r-src').value||'—',
+    time:new Date().toLocaleString('en-IN')
   };
+  const all=JSON.parse(localStorage.getItem('ek_r')||'[]');
+  all.push(entry);localStorage.setItem('ek_r',JSON.stringify(all));
+  if(SHEET_URL){try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});}catch(err){console.log(err);}}
+  document.getElementById('rform').style.display='none';
+  document.getElementById('rfsuccess').style.display='block';
+  setTimeout(()=>{
+    document.getElementById('rfsuccess').style.display='none';
+    document.getElementById('rform').style.display='block';
+    document.getElementById('rform').reset();
+    document.querySelectorAll('.rpill,.ipill').forEach(x=>x.classList.remove('active'));
+    document.getElementById('r-role').value='';
+    document.getElementById('org-row').classList.remove('show');
+    document.getElementById('r-org').required=false;
+    btn.disabled=false;btn.textContent='Submit & Get Started →';
+  },4500);
+});
 
-  pills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      pills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      const role = pill.dataset.role;
-      roleInput.value = role;
-      orgLabel.textContent = (orgRoles[role] || 'School / Company Name') + ' *';
-      orgField.classList.add('show');
-      document.getElementById('f-org').required = true;
-    });
+// SCHOOL FORM
+document.getElementById('sform').addEventListener('submit',function(e){
+  e.preventDefault();
+  const entry={
+    name:document.getElementById('sc-name').value.trim(),
+    email:'—',
+    mobile:document.getElementById('sc-mobile').value.trim(),
+    city:document.getElementById('sc-city').value.trim(),
+    state:'—',country:'India',
+    role:'School / Principal',
+    org:document.getElementById('sc-name').value.trim(),
+    cls:'—',interests:'School Partnership',
+    source:'Partnership Form',
+    time:new Date().toLocaleString('en-IN')
+  };
+  const all=JSON.parse(localStorage.getItem('ek_r')||'[]');
+  all.push(entry);localStorage.setItem('ek_r',JSON.stringify(all));
+  document.getElementById('sform').style.display='none';
+  document.getElementById('sc-ok').style.display='block';
+});
+
+// FAQ
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const i=q.parentElement,w=i.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('open'));
+    if(!w)i.classList.add('open');
   });
+});
 
-  // ── Form submission ──
-  const registrations = [];
+// ADMIN
+function openAdmin(e){e.preventDefault();document.getElementById('aov').classList.add('show');setTimeout(()=>document.getElementById('apass').focus(),100);}
+function closeAdmin(){document.getElementById('aov').classList.remove('show');document.getElementById('aerr').style.display='none';document.getElementById('apass').value='';}
+function doLogin(){
+  if(document.getElementById('apass').value===PASS){closeAdmin();document.getElementById('adash').classList.add('show');rDash();}
+  else document.getElementById('aerr').style.display='block';
+}
+function logoutAdmin(){document.getElementById('adash').classList.remove('show');}
 
-  document.getElementById('audience-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const name    = document.getElementById('f-name').value.trim();
-    const email   = document.getElementById('f-email').value.trim();
-    const mobile  = document.getElementById('f-mobile').value.trim();
-    const state   = document.getElementById('f-state').value;
-    const country = document.getElementById('f-country').value;
-    const role    = document.getElementById('f-role').value;
-    const org     = document.getElementById('f-org').value.trim();
-
-    if (!role) { alert('Please select your role.'); return; }
-
-    const entry = {
-      name, email, mobile, state, country, role, org,
-      time: new Date().toLocaleString('en-IN')
-    };
-
-    registrations.push(entry);
-    renderTable();
-    document.getElementById('audience-form').style.display = 'none';
-    document.getElementById('success-msg').style.display = 'block';
-
-    setTimeout(() => {
-      document.getElementById('success-msg').style.display = 'none';
-      document.getElementById('audience-form').style.display = 'block';
-      document.getElementById('audience-form').reset();
-      pills.forEach(p => p.classList.remove('active'));
-      roleInput.value = '';
-      orgField.classList.remove('show');
-    }, 3500);
+function rcls(r){return{Parent:'rb-pa',Student:'rb-st',Teacher:'rb-te','School / Principal':'rb-sc','Publication House':'rb-pu','Buyer / Reseller':'rb-bu'}[r]||'';}
+function rDash(){
+  const d=JSON.parse(localStorage.getItem('ek_r')||'[]');
+  document.getElementById('s0').textContent=d.length;
+  document.getElementById('s1').textContent=d.filter(r=>r.role==='Parent').length;
+  document.getElementById('s2').textContent=d.filter(r=>r.role==='Student').length;
+  document.getElementById('s3').textContent=d.filter(r=>r.role==='School / Principal').length;
+  document.getElementById('s4').textContent=d.filter(r=>r.role==='Publication House').length;
+  rTbl();
+}
+function rTbl(){
+  const d=JSON.parse(localStorage.getItem('ek_r')||'[]');
+  const s=document.getElementById('srch').value.toLowerCase();
+  const rf=document.getElementById('rfilt').value;
+  const f=d.filter(r=>{
+    const ms=!s||[r.name,r.email,r.role,r.org,r.city,r.state].some(v=>(v||'').toLowerCase().includes(s));
+    return ms&&(!rf||r.role===rf);
   });
-
-  function roleClass(role) {
-    const map = {
-      'Teacher': 'rb-teacher',
-      'Student': 'rb-student',
-      'Seller':  'rb-seller',
-      'Buyer':   'rb-buyer',
-      'Publication House': 'rb-publication'
-    };
-    return map[role] || '';
-  }
-
-  function renderTable() {
-    const tbody = document.getElementById('reg-tbody');
-    document.getElementById('reg-count').textContent = registrations.length;
-    if (!registrations.length) {
-      tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">📋</div>No registrations yet.</div></td></tr>';
-      return;
-    }
-    tbody.innerHTML = registrations.map((r, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td><strong>${r.name}</strong></td>
-        <td>${r.email}</td>
-        <td>${r.mobile}</td>
-        <td>${r.state}</td>
-        <td>${r.country}</td>
-        <td><span class="role-badge ${roleClass(r.role)}">${r.role}</span></td>
-        <td>${r.org || '—'}</td>
-        <td style="white-space:nowrap;color:#6b7280;font-size:0.8rem">${r.time}</td>
-      </tr>
-    `).join('');
-  }
-
-  function exportCSV() {
-    if (!registrations.length) { alert('No data to export yet.'); return; }
-    const headers = ['#','Name','Email','Mobile','State','Country','Role','School/Company','Registered At'];
-    const rows = registrations.map((r, i) =>
-      [i+1, r.name, r.email, r.mobile, r.state, r.country, r.role, r.org, r.time]
-        .map(v => `"${String(v).replace(/"/g,'""')}"`)
-        .join(',')
-    );
-    const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url;
-    a.download = 'edukart_registrations.csv'; a.click();
-    URL.revokeObjectURL(url);
-  }
-</script>
-</body>
-</html>
+  const tb=document.getElementById('rtbd');
+  if(!f.length){tb.innerHTML='<tr><td colspan="13" class="et">No registrations yet. Fill in the form above!</td></tr>';return;}
+  tb.innerHTML=f.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${r.name}</strong></td>
+      <td style="color:var(--orange)">${r.email}</td>
+      <td>${r.mobile}</td>
+      <td>${r.city||'—'}</td><td>${r.state||'—'}</td><td>${r.country||'—'}</td>
+      <td><span class="rb ${rcls(r.role)}">${r.role}</span></td>
+      <td>${r.org||'—'}</td>
+      <td>${r.cls||'—'}</td>
+      <td style="font-size:.73rem;color:var(--muted)">${r.interests||'—'}</td>
+      <td style="font-size:.73rem">${r.source||'—'}</td>
+      <td style="font-size:.71rem;color:var(--muted);white-space:nowrap">${r.time}</td>
+    </tr>`).join('');
+}
+function exportCSV(){
+  const d=JSON.parse(localStorage.getItem('ek_r')||'[]');
+  if(!d.length){alert('No registrations yet.');return;}
+  const h=['#','Name','Email','Mobile','City','State','Country','Role','Organisation','Class','Interests','Source','Registered At'];
+  const rows=d.map((r,i)=>[i+1,r.name,r.email,r.mobile,r.city,r.state,r.country,r.role,r.org,r.cls,r.interests,r.source,r.time].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  const a=docu
