@@ -404,6 +404,7 @@ section{padding:80px 5%;}
 .rfbtn:hover{background:var(--orange-d);transform:translateY(-2px);box-shadow:0 8px 20px rgba(244,114,30,.38);}
 .rfbtn:disabled{background:rgba(255,255,255,.14);cursor:not-allowed;transform:none;box-shadow:none;}
 #rfsuccess{display:none;}
+#rfsuccess.visible{display:block;}
 
 /* ── CTA BAND ── */
 .ctaband{background:var(--orange);padding:60px 5%;text-align:center;}
@@ -873,7 +874,7 @@ tbody tr:hover td{background:var(--orange-l);}
       </form>
 
       <!-- Success message -->
-      <div id="rfsuccess" style="display:none;">
+      <div id="rfsuccess">
         <div style="text-align:center;padding:3rem 1.5rem;max-width:560px;margin:0 auto;">
 
           <!-- Animated check circle -->
@@ -1144,11 +1145,13 @@ async function handleRegisterSubmit(){
     all.push(entry);
     localStorage.setItem('ek_r', JSON.stringify(all));
 
-    // Show success IMMEDIATELY — don't wait for network
+    // Show success IMMEDIATELY
     document.getElementById('success-email').textContent = emailVal;
     document.getElementById('rform').style.display = 'none';
-    document.getElementById('rfsuccess').style.display = 'block';
-    document.getElementById('rfsuccess').scrollIntoView({behavior:'smooth', block:'center'});
+    document.getElementById('rfsuccess').classList.add('visible');
+    setTimeout(function(){
+      document.getElementById('rfsuccess').scrollIntoView({behavior:'smooth', block:'center'});
+    }, 100);
     btn.disabled = false;
     btn.textContent = 'Submit & Get Started →';
 
@@ -1165,11 +1168,13 @@ async function handleRegisterSubmit(){
   } catch(err) {
     console.log('Submit error:', err);
     // Even if something fails, show success if data was saved
-    const emailVal = document.getElementById('r-email').value.trim().toLowerCase();
-    document.getElementById('success-email').textContent = emailVal;
+    const emailVal2 = document.getElementById('r-email').value.trim().toLowerCase();
+    document.getElementById('success-email').textContent = emailVal2;
     document.getElementById('rform').style.display = 'none';
-    document.getElementById('rfsuccess').style.display = 'block';
-    document.getElementById('rfsuccess').scrollIntoView({behavior:'smooth', block:'center'});
+    document.getElementById('rfsuccess').classList.add('visible');
+    setTimeout(function(){
+      document.getElementById('rfsuccess').scrollIntoView({behavior:'smooth', block:'center'});
+    }, 100);
   }
 }
 
