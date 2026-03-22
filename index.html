@@ -403,10 +403,7 @@ section{padding:80px 5%;}
 }
 .rfbtn:hover{background:var(--orange-d);transform:translateY(-2px);box-shadow:0 8px 20px rgba(244,114,30,.38);}
 .rfbtn:disabled{background:rgba(255,255,255,.14);cursor:not-allowed;transform:none;box-shadow:none;}
-#rfsuccess{display:none;text-align:center;padding:2.5rem;}
-#rfsuccess .ck{font-size:2.8rem;margin-bottom:.6rem;}
-#rfsuccess h3{font-family:'Syne',sans-serif;color:#fff;font-size:1.35rem;margin-bottom:.4rem;}
-#rfsuccess p{color:rgba(255,255,255,.56);font-size:.88rem;}
+#rfsuccess{display:none;}
 
 /* ── CTA BAND ── */
 .ctaband{background:var(--orange);padding:60px 5%;text-align:center;}
@@ -797,7 +794,7 @@ tbody tr:hover td{background:var(--orange-l);}
       <form id="rform" autocomplete="off">
         <div class="rgrid">
           <div class="rfg"><label>Full Name *</label><input type="text" id="r-name" placeholder="e.g. Priya Sharma" required></div>
-          <div class="rfg"><label>Email Address *</label><input type="email" id="r-email" placeholder="you@example.com" required></div>
+          <div class="rfg"><label>Email Address *</label><input type="email" id="r-email" placeholder="you@example.com" required oninput="checkDupEmail(this.value)"></div>
           <div class="rfg"><label>Mobile Number *</label><input type="tel" id="r-mobile" placeholder="+91 98765 43210" required></div>
           <div class="rfg"><label>City *</label><input type="text" id="r-city" placeholder="e.g. Mumbai" required></div>
           <div class="rfg"><label>State *</label>
@@ -864,12 +861,43 @@ tbody tr:hover td{background:var(--orange-l);}
           <span class="rf-note">🔒 Your data is safe. We never spam or share your details.</span>
           <button type="submit" class="rfbtn" id="rfbtn">Submit & Get Started →</button>
         </div>
+
+        <!-- Duplicate email error -->
+        <div id="dup-email-msg" style="display:none;margin-top:1rem;background:rgba(220,38,38,0.12);border:1px solid rgba(220,38,38,0.3);border-radius:10px;padding:1rem 1.2rem;text-align:center;">
+          <div style="font-size:1.4rem;margin-bottom:.4rem;">⚠️</div>
+          <div style="color:#fca5a5;font-size:.95rem;font-weight:700;margin-bottom:.25rem;">Email Already Registered!</div>
+          <div style="color:rgba(255,255,255,.6);font-size:.84rem;">This email is already registered with EduKart. You don't need to register again — we already have your details with us!</div>
+        </div>
+
       </form>
-      <div id="rfsuccess">
-        <div class="ck">🎉</div>
-        <h3>You're on the list!</h3>
-        <p>Welcome to EduKart! We'll reach out soon with your personalised experience.</p>
+
+      <!-- Success message -->
+      <div id="rfsuccess" style="display:none;">
+        <div style="text-align:center;padding:2rem 1rem;">
+          <div style="width:72px;height:72px;background:rgba(16,185,129,0.15);border:2px solid rgba(16,185,129,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.2rem;">🎉</div>
+          <h3 style="font-family:'Syne',sans-serif;color:#fff;font-size:1.5rem;font-weight:800;margin-bottom:.5rem;letter-spacing:-0.5px;">You're registered!</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:1.6rem;line-height:1.75;">Thank you for joining EduKart! We've received your details and will reach out to you soon with updates tailored just for you.</p>
+          <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-align:left;">
+            <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.4);margin-bottom:.7rem;">What happens next?</div>
+            <div style="display:flex;flex-direction:column;gap:.55rem;">
+              <div style="display:flex;align-items:center;gap:.65rem;font-size:.84rem;color:rgba(255,255,255,.72);">
+                <div style="width:22px;height:22px;border-radius:50%;background:#f4721e;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;">1</div>
+                Our team will review your registration
+              </div>
+              <div style="display:flex;align-items:center;gap:.65rem;font-size:.84rem;color:rgba(255,255,255,.72);">
+                <div style="width:22px;height:22px;border-radius:50%;background:#f4721e;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;">2</div>
+                We'll reach out on your mobile or email
+              </div>
+              <div style="display:flex;align-items:center;gap:.65rem;font-size:.84rem;color:rgba(255,255,255,.72);">
+                <div style="width:22px;height:22px;border-radius:50%;background:#f4721e;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;">3</div>
+                Get your books delivered to your doorstep!
+              </div>
+            </div>
+          </div>
+          <div style="font-size:.8rem;color:rgba(255,255,255,.38);">📧 Registered email: <span id="success-email" style="color:rgba(255,255,255,.65);font-weight:600;"></span></div>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -1012,6 +1040,21 @@ function doPost(e) {
 STEPS: 1. Open Apps Script → delete old code → paste above → save → Deploy → New Deployment → Web App → Anyone → Deploy
 */
 
+// LIVE DUPLICATE EMAIL CHECK
+function checkDupEmail(val){
+  const existing=JSON.parse(localStorage.getItem('ek_r')||'[]');
+  const found=existing.some(r=>r.type!=='partnership'&&(r.email||'').toLowerCase()===val.trim().toLowerCase());
+  const msg=document.getElementById('dup-email-msg');
+  const inp=document.getElementById('r-email');
+  if(found && val.trim().length>4){
+    msg.style.display='block';
+    inp.style.borderColor='rgba(220,38,38,0.6)';
+  } else {
+    msg.style.display='none';
+    inp.style.borderColor='';
+  }
+}
+
 // ROLE DROPDOWN
 const orgMap={Parent:"Child's School Name",Student:"School / College Name *",Teacher:"School Name *","School / Principal":"School Name *","Publication House":"Publication House Name *","Buyer / Reseller":"Company Name *"};
 function handleRoleChange(role){
@@ -1028,11 +1071,27 @@ function getInts(){
 document.getElementById('rform').addEventListener('submit',async function(e){
   e.preventDefault();
   if(!document.getElementById('r-role').value){alert('Please select your role.');return;}
+
+  const emailVal = document.getElementById('r-email').value.trim().toLowerCase();
+
+  // ── Duplicate email check ──
+  const existing = JSON.parse(localStorage.getItem('ek_r')||'[]');
+  const alreadyExists = existing.some(r => r.type !== 'partnership' && (r.email||'').toLowerCase() === emailVal);
+  if(alreadyExists){
+    document.getElementById('dup-email-msg').style.display='block';
+    document.getElementById('r-email').style.borderColor='rgba(220,38,38,0.6)';
+    document.getElementById('r-email').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  // Hide duplicate msg if visible
+  document.getElementById('dup-email-msg').style.display='none';
+  document.getElementById('r-email').style.borderColor='';
+
   const btn=document.getElementById('rfbtn');
   btn.disabled=true;btn.textContent='Submitting…';
   const entry={
     name:document.getElementById('r-name').value.trim(),
-    email:document.getElementById('r-email').value.trim(),
+    email:emailVal,
     mobile:document.getElementById('r-mobile').value.trim(),
     city:document.getElementById('r-city').value.trim(),
     state:document.getElementById('r-state').value,
@@ -1047,16 +1106,12 @@ document.getElementById('rform').addEventListener('submit',async function(e){
   const all=JSON.parse(localStorage.getItem('ek_r')||'[]');
   all.push(entry);localStorage.setItem('ek_r',JSON.stringify(all));
   if(SHEET_URL){try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});}catch(err){console.log(err);}}
+
+  // Show success
+  document.getElementById('success-email').textContent = emailVal;
   document.getElementById('rform').style.display='none';
   document.getElementById('rfsuccess').style.display='block';
-  setTimeout(()=>{
-    document.getElementById('rfsuccess').style.display='none';
-    document.getElementById('rform').style.display='block';
-    document.getElementById('rform').reset();
-    document.getElementById('org-row').classList.remove('show');
-    document.getElementById('r-org').required=false;
-    btn.disabled=false;btn.textContent='Submit & Get Started →';
-  },4500);
+  btn.disabled=false;btn.textContent='Submit & Get Started →';
 });
 
 // SCHOOL FORM
