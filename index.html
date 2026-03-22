@@ -791,7 +791,7 @@ tbody tr:hover td{background:var(--orange-l);}
     <h2 class="stitle" style="color:#fff;">Register & Get Your<br>Books Delivered</h2>
     <p class="ssub" style="color:rgba(255,255,255,.56);">Sign up today — tell us about yourself and we'll personalise your EduKart experience.</p>
     <div class="rbox">
-      <form id="rform" autocomplete="off">
+      <form id="rform" autocomplete="off" onsubmit="return false;">
         <div class="rgrid">
           <div class="rfg"><label>Full Name *</label><input type="text" id="r-name" placeholder="e.g. Priya Sharma" required></div>
           <div class="rfg"><label>Email Address *</label><input type="email" id="r-email" placeholder="you@example.com" required oninput="checkDupEmail(this.value)"></div>
@@ -859,7 +859,7 @@ tbody tr:hover td{background:var(--orange-l);}
 
         <div class="rf-foot">
           <span class="rf-note">🔒 Your data is safe. We never spam or share your details.</span>
-          <button type="submit" class="rfbtn" id="rfbtn">Submit & Get Started →</button>
+          <button type="button" class="rfbtn" id="rfbtn" onclick="handleRegisterSubmit()">Submit & Get Started →</button>
         </div>
 
         <!-- Duplicate email error -->
@@ -1068,13 +1068,20 @@ function getInts(){
 }
 
 // REGISTER FORM
-document.getElementById('rform').addEventListener('submit',async function(e){
-  e.preventDefault();
-  if(!document.getElementById('r-role').value){alert('Please select your role.');return;}
+async function handleRegisterSubmit(){
+  const roleVal = document.getElementById('r-role').value;
+  if(!roleVal){ alert('Please select your role.'); return; }
 
   const emailVal = document.getElementById('r-email').value.trim().toLowerCase();
+  if(!emailVal){ alert('Please enter your email address.'); return; }
 
-  // ── Duplicate email check ──
+  const nameVal = document.getElementById('r-name').value.trim();
+  if(!nameVal){ alert('Please enter your full name.'); return; }
+
+  const mobileVal = document.getElementById('r-mobile').value.trim();
+  if(!mobileVal){ alert('Please enter your mobile number.'); return; }
+
+  // Duplicate email check
   const existing = JSON.parse(localStorage.getItem('ek_r')||'[]');
   const alreadyExists = existing.some(r => r.type !== 'partnership' && (r.email||'').toLowerCase() === emailVal);
   if(alreadyExists){
@@ -1083,36 +1090,47 @@ document.getElementById('rform').addEventListener('submit',async function(e){
     document.getElementById('r-email').scrollIntoView({behavior:'smooth',block:'center'});
     return;
   }
-  // Hide duplicate msg if visible
   document.getElementById('dup-email-msg').style.display='none';
   document.getElementById('r-email').style.borderColor='';
 
-  const btn=document.getElementById('rfbtn');
-  btn.disabled=true;btn.textContent='Submitting…';
-  const entry={
-    name:document.getElementById('r-name').value.trim(),
-    email:emailVal,
-    mobile:document.getElementById('r-mobile').value.trim(),
-    city:document.getElementById('r-city').value.trim(),
-    state:document.getElementById('r-state').value,
-    country:document.getElementById('r-country').value,
-    role:document.getElementById('r-role').value,
-    org:document.getElementById('r-org').value.trim(),
-    interests:document.getElementById('r-interests').value||'—',
-    source:document.getElementById('r-src').value||'—',
-    type:'registration',
-    time:new Date().toLocaleString('en-IN')
-  };
-  const all=JSON.parse(localStorage.getItem('ek_r')||'[]');
-  all.push(entry);localStorage.setItem('ek_r',JSON.stringify(all));
-  if(SHEET_URL){try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});}catch(err){console.log(err);}}
+  const btn = document.getElementById('rfbtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
 
-  // Show success
+  const entry = {
+    name: nameVal,
+    email: emailVal,
+    mobile: mobileVal,
+    city: document.getElementById('r-city').value.trim(),
+    state: document.getElementById('r-state').value||'—',
+    country: document.getElementById('r-country').value||'—',
+    role: roleVal,
+    org: document.getElementById('r-org').value.trim(),
+    interests: document.getElementById('r-interests').value||'—',
+    source: document.getElementById('r-src').value||'—',
+    type: 'registration',
+    time: new Date().toLocaleString('en-IN')
+  };
+
+  // Save locally
+  const all = JSON.parse(localStorage.getItem('ek_r')||'[]');
+  all.push(entry);
+  localStorage.setItem('ek_r', JSON.stringify(all));
+
+  // Send to Google Sheets
+  if(SHEET_URL){
+    try{
+      await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});
+    }catch(err){ console.log('Sheet error:',err); }
+  }
+
+  // Show success screen
   document.getElementById('success-email').textContent = emailVal;
-  document.getElementById('rform').style.display='none';
-  document.getElementById('rfsuccess').style.display='block';
-  btn.disabled=false;btn.textContent='Submit & Get Started →';
-});
+  document.getElementById('rform').style.display = 'none';
+  document.getElementById('rfsuccess').style.display = 'block';
+  btn.disabled = false;
+  btn.textContent = 'Submit & Get Started →';
+}
 
 // SCHOOL FORM
 document.getElementById('sform').addEventListener('submit',async function(e){
