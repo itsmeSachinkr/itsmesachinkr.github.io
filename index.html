@@ -815,15 +815,16 @@ tbody tr:hover td{background:var(--orange-l);}
 
           <div class="rfg full">
             <label>I am a… *</label>
-            <div class="pill-row" id="role-pills">
-              <div class="rpill" data-role="Parent">👨‍👩‍👧 Parent</div>
-              <div class="rpill" data-role="Student">🎓 Student</div>
-              <div class="rpill" data-role="Teacher">👩‍🏫 Teacher</div>
-              <div class="rpill" data-role="School / Principal">🏫 School / Principal</div>
-              <div class="rpill" data-role="Publication House">📚 Publication House</div>
-              <div class="rpill" data-role="Buyer / Reseller">🛒 Buyer / Reseller</div>
-            </div>
-            <input type="hidden" id="r-role">
+            <select id="r-role" required onchange="handleRoleChange(this.value)" style="background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.11);border-radius:9px;padding:0.74rem 0.95rem;color:#fff;font-size:0.91rem;font-family:'Outfit',sans-serif;outline:none;transition:all 0.2s;width:100%;cursor:pointer;">
+              <option value="" disabled selected style="background:#0f172a">-- Select your role --</option>
+              <option value="Parent" style="background:#0f172a">👨‍👩‍👧 Parent</option>
+              <option value="Student" style="background:#0f172a">🎓 Student</option>
+              <option value="Teacher" style="background:#0f172a">👩‍🏫 Teacher</option>
+              <option value="School / Principal" style="background:#0f172a">🏫 School / Principal</option>
+              <option value="Publication House" style="background:#0f172a">📚 Publication House</option>
+              <option value="Buyer / Reseller" style="background:#0f172a">🛒 Buyer / Reseller</option>
+              <option value="Other" style="background:#0f172a">👤 Other</option>
+            </select>
           </div>
 
           <div id="org-row">
@@ -832,29 +833,29 @@ tbody tr:hover td{background:var(--orange-l);}
           </div>
 
           <div class="rfg full">
-            <label>What interests you? (pick all)</label>
-            <div class="pill-row">
-              <div class="ipill" data-int="Physical Book Delivery">📦 Book Delivery</div>
-              <div class="ipill" data-int="eBook Access">📱 eBooks</div>
-              <div class="ipill" data-int="School Partnership">🏫 School Partnership</div>
-              <div class="ipill" data-int="Bulk / B2B Orders">📋 Bulk Orders</div>
-              <div class="ipill" data-int="Publisher Listing">📚 Publisher Listing</div>
-            </div>
-          </div>
-
-          <div class="rfg">
-            <label>Class / Grade</label>
-            <select id="r-class">
-              <option value="" disabled selected>Select class</option>
-              <option>Nursery / KG</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option><option>College / University</option><option>Not Applicable</option>
+            <label>What interests you?</label>
+            <select id="r-interests" style="background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.11);border-radius:9px;padding:0.74rem 0.95rem;color:#fff;font-size:0.91rem;font-family:'Outfit',sans-serif;outline:none;transition:all 0.2s;width:100%;cursor:pointer;">
+              <option value="" disabled selected style="background:#0f172a">-- Select your interest --</option>
+              <option value="Physical Book Delivery" style="background:#0f172a">📦 Physical Book Delivery</option>
+              <option value="eBook Access" style="background:#0f172a">📱 eBook Access</option>
+              <option value="Both Book Delivery + eBooks" style="background:#0f172a">📦📱 Both Book Delivery + eBooks</option>
+              <option value="School Partnership" style="background:#0f172a">🏫 School Partnership</option>
+              <option value="Bulk / B2B Orders" style="background:#0f172a">📋 Bulk / B2B Orders</option>
+              <option value="Publisher Listing" style="background:#0f172a">📚 Publisher Listing</option>
             </select>
           </div>
 
-          <div class="rfg">
+          <div class="rfg full">
             <label>How did you hear about us?</label>
-            <select id="r-src">
-              <option value="" disabled selected>Select</option>
-              <option>School circular</option><option>Google Search</option><option>Instagram / Facebook</option><option>Friend / Family</option><option>WhatsApp</option><option>Other</option>
+            <select id="r-src" style="background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.11);border-radius:9px;padding:0.74rem 0.95rem;color:#fff;font-size:0.91rem;font-family:'Outfit',sans-serif;outline:none;transition:all 0.2s;width:100%;cursor:pointer;">
+              <option value="" disabled selected style="background:#0f172a">-- Select an option --</option>
+              <option style="background:#0f172a">School circular / notice</option>
+              <option style="background:#0f172a">Google Search</option>
+              <option style="background:#0f172a">Instagram / Facebook</option>
+              <option style="background:#0f172a">Friend / Family Referral</option>
+              <option style="background:#0f172a">WhatsApp</option>
+              <option style="background:#0f172a">YouTube</option>
+              <option style="background:#0f172a">Other</option>
             </select>
           </div>
         </div>
@@ -964,12 +965,7 @@ tbody tr:hover td{background:var(--orange-l);}
       <div class="tscroll">
         <table>
           <thead>
-            <tr>
-              <th>#</th><th>Name</th><th>Email</th><th>Mobile</th>
-              <th>City</th><th>State</th><th>Country</th><th>Role</th>
-              <th>Organisation</th><th>Class</th><th>Interests</th>
-              <th>Source</th><th>Registered At</th>
-            </tr>
+            <tr><th>#</th><th>Name</th><th>Email</th><th>Mobile</th><th>City</th><th>State</th><th>Country</th><th>Role</th><th>Organisation</th><th>Interests</th><th>Source</th><th>Registered At</th></tr>
           </thead>
           <tbody id="rtbd"></tbody>
         </table>
@@ -979,36 +975,54 @@ tbody tr:hover td{background:var(--orange-l);}
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-const PASS='EduKart@4360';
+const PASS='EduKart@2026';
 const SHEET_URL='https://script.google.com/macros/s/AKfycbxLhFGPGvMdpIoKlMH63c5YMtU9epuBqplIMfns0uPIdIEcL3srF-q5U9BTBkSPFcEO/exec';
 /*
-GOOGLE SHEETS BACKEND SETUP (FREE):
-1. sheets.google.com → New sheet → name it "EduKart Registrations"
-2. Extensions → Apps Script → paste this → save:
+UPDATED GOOGLE APPS SCRIPT — PASTE THIS IN YOUR APPS SCRIPT (replaces old code):
 
-function doPost(e){
-  var s=SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var d=JSON.parse(e.postData.contents);
-  if(s.getLastRow()===0) s.appendRow(["Name","Email","Mobile","City","State","Country","Role","Org","Class","Interests","Source","Time"]);
-  s.appendRow([d.name,d.email,d.mobile,d.city,d.state,d.country,d.role,d.org,d.cls,d.interests,d.source,d.time]);
-  return ContentService.createTextOutput('ok');
+function doPost(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var data = JSON.parse(e.postData.contents);
+    var sheetName = (data.type === 'partnership') ? 'Partnership Requests' : 'Registrations';
+    var sheet = ss.getSheetByName(sheetName);
+    if (!sheet) {
+      sheet = ss.insertSheet(sheetName);
+    }
+    if (sheet.getLastRow() === 0) {
+      if (data.type === 'partnership') {
+        sheet.appendRow(["Timestamp","Contact Name","School Name","Mobile","City","Students Count","Message"]);
+      } else {
+        sheet.appendRow(["Timestamp","Full Name","Email","Mobile","City","State","Country","Role","Organisation","Interests","How They Heard","Submitted At"]);
+      }
+      sheet.getRange(1,1,1,sheet.getLastColumn()).setFontWeight("bold").setBackground("#1a1a2e").setFontColor("#ffffff");
+      sheet.setFrozenRows(1);
+    }
+    if (data.type === 'partnership') {
+      sheet.appendRow([new Date(), data.name, data.schoolName, data.mobile, data.city, data.size||'—', data.msg||'—']);
+    } else {
+      sheet.appendRow([new Date(), data.name, data.email, data.mobile, data.city, data.state, data.country, data.role, data.org, data.interests, data.source, data.time]);
+    }
+    return ContentService.createTextOutput(JSON.stringify({status:"ok"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({status:"error",message:err.message})).setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
-3. Deploy → New Deployment → Web App → Anyone → Deploy → copy URL → paste above as SHEET_URL
+STEPS: 1. Open Apps Script → delete old code → paste above → save → Deploy → New Deployment → Web App → Anyone → Deploy
 */
 
-// ROLE PILLS
+// ROLE DROPDOWN
 const orgMap={Parent:"Child's School Name",Student:"School / College Name *",Teacher:"School Name *","School / Principal":"School Name *","Publication House":"Publication House Name *","Buyer / Reseller":"Company Name *"};
-document.querySelectorAll('.rpill').forEach(p=>p.addEventListener('click',()=>{
-  document.querySelectorAll('.rpill').forEach(x=>x.classList.remove('active'));
-  p.classList.add('active');
-  document.getElementById('r-role').value=p.dataset.role;
-  document.getElementById('org-lbl').textContent=orgMap[p.dataset.role]||'Organisation *';
+function handleRoleChange(role){
+  document.getElementById('org-lbl').textContent=orgMap[role]||'Organisation *';
   document.getElementById('org-row').classList.add('show');
   document.getElementById('r-org').required=true;
-}));
-document.querySelectorAll('.ipill').forEach(p=>p.addEventListener('click',()=>p.classList.toggle('active')));
-function getInts(){return[...document.querySelectorAll('.ipill.active')].map(p=>p.dataset.int).join(', ');}
+}
+function getInts(){
+  const v=document.getElementById('r-interests').value;
+  return v||'—';
+}
 
 // REGISTER FORM
 document.getElementById('rform').addEventListener('submit',async function(e){
@@ -1025,9 +1039,9 @@ document.getElementById('rform').addEventListener('submit',async function(e){
     country:document.getElementById('r-country').value,
     role:document.getElementById('r-role').value,
     org:document.getElementById('r-org').value.trim(),
-    cls:document.getElementById('r-class').value||'—',
-    interests:getInts(),
+    interests:document.getElementById('r-interests').value||'—',
     source:document.getElementById('r-src').value||'—',
+    type:'registration',
     time:new Date().toLocaleString('en-IN')
   };
   const all=JSON.parse(localStorage.getItem('ek_r')||'[]');
@@ -1039,8 +1053,6 @@ document.getElementById('rform').addEventListener('submit',async function(e){
     document.getElementById('rfsuccess').style.display='none';
     document.getElementById('rform').style.display='block';
     document.getElementById('rform').reset();
-    document.querySelectorAll('.rpill,.ipill').forEach(x=>x.classList.remove('active'));
-    document.getElementById('r-role').value='';
     document.getElementById('org-row').classList.remove('show');
     document.getElementById('r-org').required=false;
     btn.disabled=false;btn.textContent='Submit & Get Started →';
@@ -1048,22 +1060,24 @@ document.getElementById('rform').addEventListener('submit',async function(e){
 });
 
 // SCHOOL FORM
-document.getElementById('sform').addEventListener('submit',function(e){
+document.getElementById('sform').addEventListener('submit',async function(e){
   e.preventDefault();
+  const btn=e.target.querySelector('.cfbtn');
+  btn.disabled=true;btn.textContent='Sending…';
   const entry={
-    name:document.getElementById('sc-name').value.trim(),
-    email:'—',
+    type:'partnership',
+    name:document.getElementById('sc-contact').value.trim(),
+    schoolName:document.getElementById('sc-name').value.trim(),
     mobile:document.getElementById('sc-mobile').value.trim(),
     city:document.getElementById('sc-city').value.trim(),
-    state:'—',country:'India',
-    role:'School / Principal',
-    org:document.getElementById('sc-name').value.trim(),
-    cls:'—',interests:'School Partnership',
-    source:'Partnership Form',
+    size:document.getElementById('sc-size').value||'—',
+    msg:document.getElementById('sc-msg').value.trim(),
     time:new Date().toLocaleString('en-IN')
   };
   const all=JSON.parse(localStorage.getItem('ek_r')||'[]');
-  all.push(entry);localStorage.setItem('ek_r',JSON.stringify(all));
+  all.push({name:entry.name,email:'—',mobile:entry.mobile,city:entry.city,state:'—',country:'India',role:'School / Principal',org:entry.schoolName,interests:'School Partnership',source:'Partnership Form',type:'partnership',time:entry.time});
+  localStorage.setItem('ek_r',JSON.stringify(all));
+  if(SHEET_URL){try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});}catch(err){console.log(err);}}
   document.getElementById('sform').style.display='none';
   document.getElementById('sc-ok').style.display='block';
 });
@@ -1115,7 +1129,6 @@ function rTbl(){
       <td>${r.city||'—'}</td><td>${r.state||'—'}</td><td>${r.country||'—'}</td>
       <td><span class="rb ${rcls(r.role)}">${r.role}</span></td>
       <td>${r.org||'—'}</td>
-      <td>${r.cls||'—'}</td>
       <td style="font-size:.73rem;color:var(--muted)">${r.interests||'—'}</td>
       <td style="font-size:.73rem">${r.source||'—'}</td>
       <td style="font-size:.71rem;color:var(--muted);white-space:nowrap">${r.time}</td>
@@ -1124,6 +1137,6 @@ function rTbl(){
 function exportCSV(){
   const d=JSON.parse(localStorage.getItem('ek_r')||'[]');
   if(!d.length){alert('No registrations yet.');return;}
-  const h=['#','Name','Email','Mobile','City','State','Country','Role','Organisation','Class','Interests','Source','Registered At'];
-  const rows=d.map((r,i)=>[i+1,r.name,r.email,r.mobile,r.city,r.state,r.country,r.role,r.org,r.cls,r.interests,r.source,r.time].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  const h=['#','Name','Email','Mobile','City','State','Country','Role','Organisation','Interests','Source','Registered At'];
+  const rows=d.map((r,i)=>[i+1,r.name,r.email,r.mobile,r.city,r.state,r.country,r.role,r.org,r.interests,r.source,r.time].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));
   const a=docu
