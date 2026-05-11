@@ -942,6 +942,7 @@ footer {
       <div class="footer-links">
         <a href="#">Privacy</a>
         <a href="#">Terms</a>
+        <a href="admin.html">Admin</a>
       </div>
     </div>
   </div>
@@ -995,8 +996,41 @@ function toast(el, msg) {
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 4000);
 }
-document.getElementById('schoolForm')?.addEventListener('submit', e => { e.preventDefault(); toast(e.target, '🎉 Request received! We\'ll contact you within 24 hours.'); e.target.reset(); });
-document.getElementById('registerForm')?.addEventListener('submit', e => { e.preventDefault(); toast(e.target, '✅ Registration successful! We\'ll be in touch soon.'); e.target.reset(); });
+const RESPONSES_KEY = 'edukartResponses';
+
+function getResponses() {
+  try {
+    return JSON.parse(localStorage.getItem(RESPONSES_KEY) || '[]');
+  } catch (err) {
+    return [];
+  }
+}
+
+function saveResponse(type, form) {
+  const responses = getResponses();
+  const payload = Object.fromEntries(new FormData(form).entries());
+  responses.push({
+    id: Date.now(),
+    type,
+    submittedAt: new Date().toISOString(),
+    ...payload
+  });
+  localStorage.setItem(RESPONSES_KEY, JSON.stringify(responses));
+}
+
+document.getElementById('schoolForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  saveResponse('School Partnership', e.target);
+  toast(e.target, '🎉 Request received! We\'ll contact you within 24 hours.');
+  e.target.reset();
+});
+
+document.getElementById('registerForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  saveResponse('Student/Parent Registration', e.target);
+  toast(e.target, '✅ Registration successful! We\'ll be in touch soon.');
+  e.target.reset();
+});
 </script>
 </body>
 </html>

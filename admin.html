@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduKart Admin</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background:#f6f8fb; color:#1f2937; }
+    .wrap { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    .card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+    input { width: 100%; padding: 10px; margin: 8px 0 14px; border:1px solid #d1d5db; border-radius: 8px; }
+    button { background:#0D1F3C; color:#fff; border:none; border-radius:8px; padding:10px 16px; cursor:pointer; }
+    button.secondary { background:#E8A020; color:#0D1F3C; }
+    table { width:100%; border-collapse: collapse; margin-top:16px; font-size:14px; }
+    th, td { border:1px solid #e5e7eb; padding:10px; text-align:left; vertical-align:top; }
+    th { background:#f3f4f6; }
+    .toolbar { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+    .hidden { display:none; }
+    .muted { color:#6b7280; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="loginCard" class="card">
+      <h2>Admin Login</h2>
+      <p class="muted">Use credentials provided by developer.</p>
+      <label>Username</label>
+      <input id="username" type="text" placeholder="Enter username" />
+      <label>Password</label>
+      <input id="password" type="password" placeholder="Enter password" />
+      <button id="loginBtn">Login</button>
+      <p id="loginError" class="muted"></p>
+    </div>
+
+    <div id="adminCard" class="card hidden">
+      <div class="toolbar">
+        <h2>All Form Responses</h2>
+        <div>
+          <button class="secondary" id="exportBtn">Export to Excel (CSV)</button>
+          <button id="logoutBtn">Logout</button>
+        </div>
+      </div>
+      <p class="muted" id="count"></p>
+      <div style="overflow:auto;">
+        <table id="responseTable"></table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_USER = 'itsme';
+    const ADMIN_PASS = 'Password';
+    const RESPONSES_KEY = 'edukartResponses';
+
+    const loginCard = document.getElementById('loginCard');
+    const adminCard = document.getElementById('adminCard');
+    const loginError = document.getElementById('loginError');
+
+    function renderTable() {
+      const table = document.getElementById('responseTable');
+      const count = document.getElementById('count');
+      const responses = JSON.parse(localStorage.getItem(RESPONSES_KEY) || '[]');
+      count.textContent = `Total responses: ${responses.length}`;
+
+      if (!responses.length) {
+        table.innerHTML = '<tr><td>No responses found yet.</td></tr>';
+        return;
+      }
+
+      const cols = [...new Set(responses.flatMap(r => Object.keys(r)))];
+      const head = `<tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr>`;
+      const rows = responses.map(r => `<tr>${cols.map(c => `<td>${(r[c] ?? '').toString().replace(/</g, '&lt;')}</td>`).join('')}</tr>`).join('');
+      table.innerHTML = head + rows;
+    }
+
+    function exportCSV() {
+      const responses = JSON.parse(localStorage.getItem(RESPONSES_KEY) || '[]');
+      if (!responses.length) return alert('No data to export.');
+
+      const cols = [...new Set(responses.flatMap(r => Object.keys(r)))];
+      const esc = val => `"${String(val ?? '').replace(/"/g, '""')}"`;
+      const csv = [cols.join(','), ...responses.map(r => cols.map(c => esc(r[c])).join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `edukart-responses-${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value;
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        loginCard.classList.add('hidden');
+        adminCard.classList.remove('hidden');
+        loginError.textContent = '';
+        renderTable();
+      } else {
+        loginError.textContent = 'Invalid username or password.';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      adminCard.classList.add('hidden');
+      loginCard.classList.remove('hidden');
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', exportCSV);
+  </script>
+</body>
+</html>
