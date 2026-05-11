@@ -929,6 +929,7 @@ tbody tr:hover td{background:var(--orange-l);}
     <button class="alclose" onclick="closeAdmin()">✕</button>
     <h2>Admin Login</h2>
     <p>Enter password to view the registrations dashboard.</p>
+    <input type="text" id="auser" placeholder="Username" onkeydown="if(event.key==='Enter')doLogin()">
     <input type="password" id="apass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="albtn" onclick="doLogin()">Login →</button>
     <div class="al-err" id="aerr">Incorrect password. Try again.</div>
@@ -979,25 +980,10 @@ tbody tr:hover td{background:var(--orange-l);}
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-const PASS='EduKart@2026';
+const ADMIN_USER='itsme';
+const ADMIN_PASS='Password';
 const SHEET_URL='';
-/*
-GOOGLE SHEETS BACKEND SETUP (FREE):
-1. sheets.google.com → New sheet → name it "EduKart Registrations"
-2. Extensions → Apps Script → paste this → save:
 
-function doPost(e){
-  var s=SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var d=JSON.parse(e.postData.contents);
-  if(s.getLastRow()===0) s.appendRow(["Name","Email","Mobile","City","State","Country","Role","Org","Class","Interests","Source","Time"]);
-  s.appendRow([d.name,d.email,d.mobile,d.city,d.state,d.country,d.role,d.org,d.cls,d.interests,d.source,d.time]);
-  return ContentService.createTextOutput('ok');
-}
-
-3. Deploy → New Deployment → Web App → Anyone → Deploy → copy URL → paste above as SHEET_URL
-*/
-
-// ROLE PILLS
 const orgMap={Parent:"Child's School Name",Student:"School / College Name *",Teacher:"School Name *","School / Principal":"School Name *","Publication House":"Publication House Name *","Buyer / Reseller":"Company Name *"};
 document.querySelectorAll('.rpill').forEach(p=>p.addEventListener('click',()=>{
   document.querySelectorAll('.rpill').forEach(x=>x.classList.remove('active'));
@@ -1010,120 +996,44 @@ document.querySelectorAll('.rpill').forEach(p=>p.addEventListener('click',()=>{
 document.querySelectorAll('.ipill').forEach(p=>p.addEventListener('click',()=>p.classList.toggle('active')));
 function getInts(){return[...document.querySelectorAll('.ipill.active')].map(p=>p.dataset.int).join(', ');}
 
-// REGISTER FORM
 document.getElementById('rform').addEventListener('submit',async function(e){
   e.preventDefault();
   if(!document.getElementById('r-role').value){alert('Please select your role.');return;}
   const btn=document.getElementById('rfbtn');
   btn.disabled=true;btn.textContent='Submitting…';
-  const entry={
-    name:document.getElementById('r-name').value.trim(),
-    email:document.getElementById('r-email').value.trim(),
-    mobile:document.getElementById('r-mobile').value.trim(),
-    city:document.getElementById('r-city').value.trim(),
-    state:document.getElementById('r-state').value,
-    country:document.getElementById('r-country').value,
-    role:document.getElementById('r-role').value,
-    org:document.getElementById('r-org').value.trim(),
-    cls:document.getElementById('r-class').value||'—',
-    interests:getInts(),
-    source:document.getElementById('r-src').value||'—',
-    time:new Date().toLocaleString('en-IN')
-  };
+  const entry={name:document.getElementById('r-name').value.trim(),email:document.getElementById('r-email').value.trim(),mobile:document.getElementById('r-mobile').value.trim(),city:document.getElementById('r-city').value.trim(),state:document.getElementById('r-state').value,country:document.getElementById('r-country').value,role:document.getElementById('r-role').value,org:document.getElementById('r-org').value.trim(),cls:document.getElementById('r-class').value||'—',interests:getInts(),source:document.getElementById('r-src').value||'—',time:new Date().toLocaleString('en-IN')};
   const all=JSON.parse(localStorage.getItem('ek_r')||'[]');
   all.push(entry);localStorage.setItem('ek_r',JSON.stringify(all));
   if(SHEET_URL){try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(entry)});}catch(err){console.log(err);}}
   document.getElementById('rform').style.display='none';
   document.getElementById('rfsuccess').style.display='block';
-  setTimeout(()=>{
-    document.getElementById('rfsuccess').style.display='none';
-    document.getElementById('rform').style.display='block';
-    document.getElementById('rform').reset();
-    document.querySelectorAll('.rpill,.ipill').forEach(x=>x.classList.remove('active'));
-    document.getElementById('r-role').value='';
-    document.getElementById('org-row').classList.remove('show');
-    document.getElementById('r-org').required=false;
-    btn.disabled=false;btn.textContent='Submit & Get Started →';
-  },4500);
+  setTimeout(()=>{document.getElementById('rfsuccess').style.display='none';document.getElementById('rform').style.display='block';document.getElementById('rform').reset();document.querySelectorAll('.rpill,.ipill').forEach(x=>x.classList.remove('active'));document.getElementById('r-role').value='';document.getElementById('org-row').classList.remove('show');document.getElementById('r-org').required=false;btn.disabled=false;btn.textContent='Submit & Get Started →';},4500);
 });
 
-// SCHOOL FORM
 document.getElementById('sform').addEventListener('submit',function(e){
   e.preventDefault();
-  const entry={
-    name:document.getElementById('sc-name').value.trim(),
-    email:'—',
-    mobile:document.getElementById('sc-mobile').value.trim(),
-    city:document.getElementById('sc-city').value.trim(),
-    state:'—',country:'India',
-    role:'School / Principal',
-    org:document.getElementById('sc-name').value.trim(),
-    cls:'—',interests:'School Partnership',
-    source:'Partnership Form',
-    time:new Date().toLocaleString('en-IN')
-  };
+  const entry={name:document.getElementById('sc-name').value.trim(),email:'—',mobile:document.getElementById('sc-mobile').value.trim(),city:document.getElementById('sc-city').value.trim(),state:'—',country:'India',role:'School / Principal',org:document.getElementById('sc-name').value.trim(),cls:'—',interests:'School Partnership',source:'Partnership Form',time:new Date().toLocaleString('en-IN')};
   const all=JSON.parse(localStorage.getItem('ek_r')||'[]');
   all.push(entry);localStorage.setItem('ek_r',JSON.stringify(all));
   document.getElementById('sform').style.display='none';
   document.getElementById('sc-ok').style.display='block';
 });
 
-// FAQ
-document.querySelectorAll('.faq-q').forEach(q=>{
-  q.addEventListener('click',()=>{
-    const i=q.parentElement,w=i.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('open'));
-    if(!w)i.classList.add('open');
-  });
-});
+document.querySelectorAll('.faq-q').forEach(q=>q.addEventListener('click',()=>{const i=q.parentElement,w=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('open'));if(!w)i.classList.add('open');}));
 
-// ADMIN
-function openAdmin(e){e.preventDefault();document.getElementById('aov').classList.add('show');setTimeout(()=>document.getElementById('apass').focus(),100);}
-function closeAdmin(){document.getElementById('aov').classList.remove('show');document.getElementById('aerr').style.display='none';document.getElementById('apass').value='';}
+function openAdmin(e){e.preventDefault();document.getElementById('aov').classList.add('show');setTimeout(()=>document.getElementById('auser').focus(),100);}
+function closeAdmin(){document.getElementById('aov').classList.remove('show');document.getElementById('aerr').style.display='none';document.getElementById('auser').value='';document.getElementById('apass').value='';}
 function doLogin(){
-  if(document.getElementById('apass').value===PASS){closeAdmin();document.getElementById('adash').classList.add('show');rDash();}
+  const u=document.getElementById('auser').value.trim();
+  const p=document.getElementById('apass').value;
+  if(u===ADMIN_USER && p===ADMIN_PASS){closeAdmin();document.getElementById('adash').classList.add('show');rDash();}
   else document.getElementById('aerr').style.display='block';
 }
 function logoutAdmin(){document.getElementById('adash').classList.remove('show');}
-
 function rcls(r){return{Parent:'rb-pa',Student:'rb-st',Teacher:'rb-te','School / Principal':'rb-sc','Publication House':'rb-pu','Buyer / Reseller':'rb-bu'}[r]||'';}
-function rDash(){
-  const d=JSON.parse(localStorage.getItem('ek_r')||'[]');
-  document.getElementById('s0').textContent=d.length;
-  document.getElementById('s1').textContent=d.filter(r=>r.role==='Parent').length;
-  document.getElementById('s2').textContent=d.filter(r=>r.role==='Student').length;
-  document.getElementById('s3').textContent=d.filter(r=>r.role==='School / Principal').length;
-  document.getElementById('s4').textContent=d.filter(r=>r.role==='Publication House').length;
-  rTbl();
-}
-function rTbl(){
-  const d=JSON.parse(localStorage.getItem('ek_r')||'[]');
-  const s=document.getElementById('srch').value.toLowerCase();
-  const rf=document.getElementById('rfilt').value;
-  const f=d.filter(r=>{
-    const ms=!s||[r.name,r.email,r.role,r.org,r.city,r.state].some(v=>(v||'').toLowerCase().includes(s));
-    return ms&&(!rf||r.role===rf);
-  });
-  const tb=document.getElementById('rtbd');
-  if(!f.length){tb.innerHTML='<tr><td colspan="13" class="et">No registrations yet. Fill in the form above!</td></tr>';return;}
-  tb.innerHTML=f.map((r,i)=>`
-    <tr>
-      <td>${i+1}</td>
-      <td><strong>${r.name}</strong></td>
-      <td style="color:var(--orange)">${r.email}</td>
-      <td>${r.mobile}</td>
-      <td>${r.city||'—'}</td><td>${r.state||'—'}</td><td>${r.country||'—'}</td>
-      <td><span class="rb ${rcls(r.role)}">${r.role}</span></td>
-      <td>${r.org||'—'}</td>
-      <td>${r.cls||'—'}</td>
-      <td style="font-size:.73rem;color:var(--muted)">${r.interests||'—'}</td>
-      <td style="font-size:.73rem">${r.source||'—'}</td>
-      <td style="font-size:.71rem;color:var(--muted);white-space:nowrap">${r.time}</td>
-    </tr>`).join('');
-}
-function exportCSV(){
-  const d=JSON.parse(localStorage.getItem('ek_r')||'[]');
-  if(!d.length){alert('No registrations yet.');return;}
-  const h=['#','Name','Email','Mobile','City','State','Country','Role','Organisation','Class','Interests','Source','Registered At'];
-  const rows=d.map((r,i)=>[i+1,r.name,r.email,r.mobile,r.city,r.state,r.country,r.role,r.org,r.cls,r.interests,r.source,r.time].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));
-  const a=docu
+function rDash(){const d=JSON.parse(localStorage.getItem('ek_r')||'[]');document.getElementById('s0').textContent=d.length;document.getElementById('s1').textContent=d.filter(r=>r.role==='Parent').length;document.getElementById('s2').textContent=d.filter(r=>r.role==='Student').length;document.getElementById('s3').textContent=d.filter(r=>r.role==='School / Principal').length;document.getElementById('s4').textContent=d.filter(r=>r.role==='Publication House').length;rTbl();}
+function rTbl(){const d=JSON.parse(localStorage.getItem('ek_r')||'[]');const s=document.getElementById('srch').value.toLowerCase();const rf=document.getElementById('rfilt').value;const f=d.filter(r=>{const ms=!s||[r.name,r.email,r.role,r.org,r.city,r.state].some(v=>(v||'').toLowerCase().includes(s));return ms&&(!rf||r.role===rf);});const tb=document.getElementById('rtbd');if(!f.length){tb.innerHTML='<tr><td colspan="13" class="et">No registrations yet. Fill in the form above!</td></tr>';return;}tb.innerHTML=f.map((r,i)=>`<tr><td>${i+1}</td><td><strong>${r.name}</strong></td><td style="color:var(--orange)">${r.email}</td><td>${r.mobile}</td><td>${r.city||'—'}</td><td>${r.state||'—'}</td><td>${r.country||'—'}</td><td><span class="rb ${rcls(r.role)}">${r.role}</span></td><td>${r.org||'—'}</td><td>${r.cls||'—'}</td><td style="font-size:.73rem;color:var(--muted)">${r.interests||'—'}</td><td style="font-size:.73rem">${r.source||'—'}</td><td style="font-size:.71rem;color:var(--muted);white-space:nowrap">${r.time}</td></tr>`).join('');}
+function exportCSV(){const d=JSON.parse(localStorage.getItem('ek_r')||'[]');if(!d.length){alert('No registrations yet.');return;}const h=['#','Name','Email','Mobile','City','State','Country','Role','Organisation','Class','Interests','Source','Registered At'];const rows=d.map((r,i)=>[i+1,r.name,r.email,r.mobile,r.city,r.state,r.country,r.role,r.org,r.cls,r.interests,r.source,r.time].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));const csv=[h.join(','),...rows].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download='edukart-registrations.csv';a.click();URL.revokeObjectURL(a.href);} 
+</script>
+</body>
+</html>

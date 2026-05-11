@@ -942,10 +942,35 @@ footer {
       <div class="footer-links">
         <a href="#">Privacy</a>
         <a href="#">Terms</a>
+        <a href="#" onclick="openAdminPanel(event)">Admin</a>
       </div>
     </div>
   </div>
 </footer>
+
+
+<div id="adminLogin" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;align-items:center;justify-content:center;">
+  <div style="width:min(460px,92vw);background:#fff;border-radius:14px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.2)">
+    <h3 style="margin-bottom:10px">Admin Login</h3>
+    <input id="adminUser" placeholder="Username" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;margin-bottom:10px" />
+    <input id="adminPass" type="password" placeholder="Password" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;margin-bottom:12px" />
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button onclick="closeAdminPanel()" style="padding:10px 12px;border-radius:8px;border:1px solid #ddd;background:#fff">Cancel</button><button onclick="doAdminLogin()" style="padding:10px 12px;border:none;border-radius:8px;background:#0D1F3C;color:#fff">Login</button></div>
+    <p id="adminErr" style="color:#b91c1c;font-size:.85rem;margin-top:8px;display:none">Invalid username or password.</p>
+  </div>
+</div>
+
+<div id="adminDashboard" style="display:none;position:fixed;inset:0;background:#f8fafc;z-index:9999;overflow:auto">
+  <div style="max-width:1200px;margin:30px auto;padding:0 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <h3>EduKart Admin - All Responses</h3>
+      <div style="display:flex;gap:8px"><button onclick="downloadResponsesCSV()" style="padding:10px 12px;border:none;border-radius:8px;background:#E8A020;color:#0D1F3C">Export CSV</button><button onclick="hideAdminDashboard()" style="padding:10px 12px;border:none;border-radius:8px;background:#0D1F3C;color:#fff">Close</button></div>
+    </div>
+    <p id="adminCount" style="margin-bottom:10px;color:#555"></p>
+    <div style="background:#fff;border-radius:12px;overflow:auto;border:1px solid #e5e7eb">
+      <table id="adminTable" style="width:100%;border-collapse:collapse;font-size:14px"></table>
+    </div>
+  </div>
+</div>
 
 <script>
 // QR Visual Pattern
@@ -995,8 +1020,85 @@ function toast(el, msg) {
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 4000);
 }
-document.getElementById('schoolForm')?.addEventListener('submit', e => { e.preventDefault(); toast(e.target, '🎉 Request received! We\'ll contact you within 24 hours.'); e.target.reset(); });
-document.getElementById('registerForm')?.addEventListener('submit', e => { e.preventDefault(); toast(e.target, '✅ Registration successful! We\'ll be in touch soon.'); e.target.reset(); });
+const RESPONSES_KEY = 'edukartResponses';
+
+function getResponses() {
+  try {
+    return JSON.parse(localStorage.getItem(RESPONSES_KEY) || '[]');
+  } catch (err) {
+    return [];
+  }
+}
+
+function saveResponse(type, form) {
+  const responses = getResponses();
+  const payload = Object.fromEntries(new FormData(form).entries());
+  responses.push({
+    id: Date.now(),
+    type,
+    submittedAt: new Date().toISOString(),
+    ...payload
+  });
+  localStorage.setItem(RESPONSES_KEY, JSON.stringify(responses));
+}
+
+document.getElementById('schoolForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  saveResponse('School Partnership', e.target);
+  toast(e.target, '🎉 Request received! We\'ll contact you within 24 hours.');
+  e.target.reset();
+});
+
+document.getElementById('registerForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  saveResponse('Student/Parent Registration', e.target);
+  toast(e.target, '✅ Registration successful! We\'ll be in touch soon.');
+  e.target.reset();
+});
+
+const ADMIN_USER = 'itsme';
+const ADMIN_PASS = 'Password';
+
+function openAdminPanel(e){ e.preventDefault(); const m=document.getElementById('adminLogin'); m.style.display='flex'; document.getElementById('adminErr').style.display='none'; }
+function closeAdminPanel(){ document.getElementById('adminLogin').style.display='none'; }
+function doAdminLogin(){
+  const u=document.getElementById('adminUser').value.trim();
+  const p=document.getElementById('adminPass').value;
+  if(u===ADMIN_USER && p===ADMIN_PASS){
+    closeAdminPanel();
+    renderAdminTable();
+    document.getElementById('adminDashboard').style.display='block';
+  } else {
+    document.getElementById('adminErr').style.display='block';
+  }
+}
+function hideAdminDashboard(){ document.getElementById('adminDashboard').style.display='none'; }
+
+function renderAdminTable(){
+  const responses=getResponses();
+  const table=document.getElementById('adminTable');
+  const count=document.getElementById('adminCount');
+  count.textContent=`Total responses: ${responses.length}`;
+  if(!responses.length){ table.innerHTML='<tr><td style="padding:10px">No responses yet.</td></tr>'; return; }
+  const cols=[...new Set(responses.flatMap(r=>Object.keys(r)))];
+  const th='<tr>'+cols.map(c=>`<th style="padding:8px;border-bottom:1px solid #eee;text-align:left;background:#f8fafc">${c}</th>`).join('')+'</tr>'
+  const rows=responses.map(r=>'<tr>'+cols.map(c=>`<td style="padding:8px;border-bottom:1px solid #f1f1f1">${String(r[c]??'').replace(/</g,'&lt;')}</td>`).join('')+'</tr>').join('');
+  table.innerHTML=th+rows;
+}
+
+function downloadResponsesCSV(){
+  const responses=getResponses();
+  if(!responses.length){ alert('No responses to export.'); return; }
+  const cols=[...new Set(responses.flatMap(r=>Object.keys(r)))];
+  const esc=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  const csv=[cols.join(','),...responses.map(r=>cols.map(c=>esc(r[c])).join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='edukart-responses.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 </script>
 </body>
 </html>
