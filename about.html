@@ -5,136 +5,192 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Why EduKart — The Problem We Solve</title>
 <meta name="description" content="Every year parents face wrong editions, bookstore queues and wasted days. Here's why EduKart exists and how it fixes the problem for good.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta property="og:title" content="Why EduKart — The Problem We Solve">
+<meta property="og:description" content="Every year parents face wrong editions, bookstore queues and wasted days. Here's why EduKart exists.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://edukart.co.in/about.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234B3FE4'/%3E%3Cstop offset='1' stop-color='%237B6FFF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M8 10c3-1.6 6.5-1.3 8 .5v11.5c-1.5-1.8-5-2.1-8-.5V10z' fill='white'/%3E%3Cpath d='M24 10c-3-1.6-6.5-1.3-8 .5v11.5c1.5-1.8 5-2.1 8-.5V10z' fill='white' fill-opacity='.82'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to content</a>
 
-<nav>
-  <a href="index.html" class="nav-logo">EduKart</a>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="about.html" class="active">Why EduKart</a>
-    <a href="how-it-works.html">How It Works</a>
-    <a href="who-we-serve.html">Who We Serve</a>
-    <a href="faq.html">FAQ</a>
-    <a href="contact.html">Contact</a>
-  </div>
-  <div class="nav-right">
-    <a class="nav-cta" href="contact.html">Order Books Now</a>
-    <button class="nav-toggle" onclick="toggleNav()" aria-label="Toggle menu"><span></span><span></span><span></span></button>
-  </div>
-</nav>
-<div class="nav-mobile" id="nav-mobile">
-  <a href="index.html">Home</a>
-  <a href="about.html" class="active">Why EduKart</a>
-  <a href="how-it-works.html">How It Works</a>
-  <a href="who-we-serve.html">Who We Serve</a>
-  <a href="faq.html">FAQ</a>
-  <a href="contact.html">Contact</a>
-  <a class="nav-cta" href="contact.html">Order Books Now</a>
-</div>
+<svg style="display:none">
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5c2.5-1.3 5.5-1.1 8 .6v13c-2.5-1.7-5.5-1.9-8-.6V5z"/><path d="M20 5c-2.5-1.3-5.5-1.1-8 .6v13c2.5-1.7 5.5-1.9 8-.6V5z"/></symbol>
+<symbol id="i-truck" viewBox="0 0 24 24"><rect x="1.5" y="7.5" width="13" height="9" rx="1.2"/><path d="M14.5 10.5H18l3.5 3.5v2.5h-7"/><circle cx="6.5" cy="18.5" r="1.8"/><circle cx="17.5" cy="18.5" r="1.8"/></symbol>
+<symbol id="i-phone-device" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.2"/><line x1="10.5" y1="18" x2="13.5" y2="18"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="M12 3 3 7.5v9L12 21l9-4.5v-9L12 3z"/><path d="M3 7.5 12 12l9-4.5"/><line x1="12" y1="12" x2="12" y2="21"/></symbol>
+<symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.3"/><path d="M8 12.3l2.6 2.6L16.2 9"/></symbol>
+<symbol id="i-store" viewBox="0 0 24 24"><path d="M3.5 9 4.5 4h15l1 5"/><path d="M4.2 9v11h15.6V9"/><path d="M9 20v-6.5h6V20"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.3"/><path d="M12 7v5.3l4 2.2"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4.5" width="20" height="15" rx="2.2"/><path d="M3 6.5l9 6.8 9-6.8"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.4 3.6-2 1.7c.9 2.3 2.6 4 4.9 4.9l1.7-2 3.6 1.4v3c0 1-.9 1.8-1.9 1.6-7-1.1-12.6-6.7-13.7-13.7-.2-1 .6-1.9 1.6-1.9z"/></symbol>
+<symbol id="i-chevron-down" viewBox="0 0 24 24"><polyline points="6 9 12 15.5 18 9"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><line x1="3" y1="6.5" x2="21" y2="6.5"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17.5" x2="21" y2="17.5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5 21.5 20h-19L12 3.5z"/><line x1="12" y1="10" x2="12" y2="14.5"/><circle cx="12" cy="17.2" r=".2"/></symbol>
+<symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="M7 18.5H6a4 4 0 0 1-.6-7.95A5.5 5.5 0 0 1 16 8.1a4.5 4.5 0 0 1 2.9 7.7"/><line x1="3" y1="3" x2="21" y2="21"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M4 8h11a4 4 0 0 1 4 4v1"/><polyline points="12 5 16 8 12 11"/><path d="M20 16H9a4 4 0 0 1-4-4v-1"/><polyline points="12 19 8 16 12 13"/></symbol>
+<symbol id="i-rupee" viewBox="0 0 24 24"><line x1="6" y1="4" x2="18" y2="4"/><line x1="6" y1="9" x2="18" y2="9"/><path d="M6 4c6 0 8.5 2 8.5 5.5S12 15 6 15h12"/><line x1="6" y1="15" x2="16" y2="21"/></symbol>
+</svg>
+
+<header class="site-header" id="siteHeader">
+  <nav class="nav container">
+    <a href="index.html" class="nav-logo"><span class="logo-mark"><svg class="icon" viewBox="0 0 24 24"><use href="#i-book"/></svg></span>EduKart</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg class="icon icon-menu" viewBox="0 0 24 24"><use href="#i-menu"/></svg>
+      <svg class="icon icon-x" viewBox="0 0 24 24"><use href="#i-x"/></svg>
+    </button>
+    <div class="nav-panel" id="navPanel">
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html" class="active">Why EduKart</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="who-we-serve.html">Who We Serve</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <a class="btn btn-primary btn-sm" href="contact.html">Order Books Now <svg class="icon icon-sm" viewBox="0 0 24 24"><use href="#i-arrow-right"/></svg></a>
+    </div>
+  </nav>
+</header>
 
 <div class="page-header">
-  <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Why EduKart</div>
-  <div class="section-label" style="display:flex">The Problem We Solve</div>
-  <h2>Every parent knows<br>this pain.</h2>
-  <p class="subtitle" style="margin:12px auto 0">Every year, the same frustrating experience — and it's completely avoidable.</p>
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span>Why EduKart</div>
+    <div class="eyebrow">The Problem We Solve</div>
+    <h2>Every parent knows<br>this pain.</h2>
+    <p class="subtitle max-w">Every year, the same frustrating experience — and it's completely avoidable.</p>
+  </div>
 </div>
 
+<main id="main">
 <!-- PROBLEM -->
-<section style="background:#fff">
-  <div class="prob-grid">
-    <div class="prob-card"><h3>❌ Wrong books every year</h3><p>You buy what you think is the right edition — and on Day 1 the teacher says it's wrong. Time and money wasted.</p></div>
-    <div class="prob-card"><h3>🏪 Long queues at bookstores</h3><p>Crowded shops, no stock, rude queues — all at the busiest time of year when you have a hundred other things to do.</p></div>
-    <div class="prob-card"><h3>📦 No home delivery option</h3><p>There's no service that delivers a complete, curated school book set to your home. Until now.</p></div>
-    <div class="prob-card"><h3>📚 JEE/NEET book chaos</h3><p>25–40 books across different publishers. No single place to get them all. Students waste weeks tracking them down.</p></div>
-    <div class="prob-card"><h3>📱 No digital backup</h3><p>Books get lost or damaged and there's no softcopy fallback. Your child starts the year already behind.</p></div>
-    <div class="prob-card"><h3>⏰ Days wasted every year</h3><p>Parents spend entire days hunting books at the start of every academic year. This happens every single year.</p></div>
+<section class="section">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card problem-card reveal"><div class="icon-badge coral"><svg class="icon" viewBox="0 0 24 24"><use href="#i-alert"/></svg></div><h3>Wrong books every year</h3><p>You buy what you think is the right edition — and on Day 1 the teacher says it's wrong. Time and money wasted.</p></div>
+      <div class="card problem-card reveal reveal-delay-1"><div class="icon-badge coral"><svg class="icon" viewBox="0 0 24 24"><use href="#i-store"/></svg></div><h3>Long queues at bookstores</h3><p>Crowded shops, no stock, rude queues — all at the busiest time of year when you have a hundred other things to do.</p></div>
+      <div class="card problem-card reveal reveal-delay-2"><div class="icon-badge coral"><svg class="icon" viewBox="0 0 24 24"><use href="#i-package"/></svg></div><h3>No home delivery option</h3><p>There's no service that delivers a complete, curated school book set to your home. Until now.</p></div>
+      <div class="card problem-card reveal"><div class="icon-badge coral"><svg class="icon" viewBox="0 0 24 24"><use href="#i-layers"/></svg></div><h3>JEE/NEET book chaos</h3><p>25–40 books across different publishers. No single place to get them all. Students waste weeks tracking them down.</p></div>
+      <div class="card problem-card reveal reveal-delay-1"><div class="icon-badge coral"><svg class="icon" viewBox="0 0 24 24"><use href="#i-cloud-off"/></svg></div><h3>No digital backup</h3><p>Books get lost or damaged and there's no softcopy fallback. Your child starts the year already behind.</p></div>
+      <div class="card problem-card reveal reveal-delay-2"><div class="icon-badge coral"><svg class="icon" viewBox="0 0 24 24"><use href="#i-clock"/></svg></div><h3>Days wasted every year</h3><p>Parents spend entire days hunting books at the start of every academic year. This happens every single year.</p></div>
+    </div>
+    <div class="problem-banner reveal"><strong>EduKart fixes all of this — in one scan.</strong><span>Right books. Right edition. Right at your door.</span></div>
   </div>
-  <div class="prob-stat"><strong>EduKart fixes all of this — in one scan.</strong><span>Right books. Right edition. Right at your door.</span></div>
 </section>
 
 <!-- BENEFITS -->
-<section style="background:var(--gray-light)">
-  <div class="center max-w">
-    <div class="section-label">Why Parents & Students Love EduKart</div>
-    <h2>Everything you need.<br>Nothing you don't.</h2>
-  </div>
-  <div class="benefits-grid">
-    <div class="benefit-card">
-      <div class="benefit-icon">✅</div>
-      <h3>Always the right edition</h3>
-      <p>Book lists come directly from your school — no guesswork, no wrong purchases, no wasted money.</p>
+<section class="section section-alt">
+  <div class="container">
+    <div class="center max-w section-head reveal">
+      <div class="eyebrow">Why Parents & Students Love EduKart</div>
+      <h2>Everything you need.<br>Nothing you don't.</h2>
     </div>
-    <div class="benefit-card">
-      <div class="benefit-icon">🚚</div>
-      <h3>Delivered to your door</h3>
-      <p>No queues, no travel, no stress. Your complete book set arrives at home within 48 hours of ordering.</p>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-icon">📱</div>
-      <h3>Free eBook access</h3>
-      <p>Every physical order includes digital access to your books — so your child is never without their materials.</p>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-icon">💰</div>
-      <h3>Best prices, direct</h3>
-      <p>We source directly from publishers — no middlemen markup. You get fair wholesale-equivalent pricing.</p>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-icon">📦</div>
-      <h3>One box, all subjects</h3>
-      <p>Every subject, every book, packed together in a single order. Nothing missing, nothing extra.</p>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-icon">🔁</div>
-      <h3>Automatic every year</h3>
-      <p>We remind you at the start of each academic year. One scan and your child is set for the year ahead.</p>
+    <div class="grid grid-3">
+      <div class="card center reveal">
+        <div class="icon-badge indigo" style="margin-left:auto;margin-right:auto"><svg class="icon" viewBox="0 0 24 24"><use href="#i-check-circle"/></svg></div>
+        <h3>Always the right edition</h3>
+        <p>Book lists come directly from your school — no guesswork, no wrong purchases, no wasted money.</p>
+      </div>
+      <div class="card center reveal reveal-delay-1">
+        <div class="icon-badge teal" style="margin-left:auto;margin-right:auto"><svg class="icon" viewBox="0 0 24 24"><use href="#i-truck"/></svg></div>
+        <h3>Delivered to your door</h3>
+        <p>No queues, no travel, no stress. Your complete book set arrives at home within 48 hours of ordering.</p>
+      </div>
+      <div class="card center reveal reveal-delay-2">
+        <div class="icon-badge amber" style="margin-left:auto;margin-right:auto"><svg class="icon" viewBox="0 0 24 24"><use href="#i-phone-device"/></svg></div>
+        <h3>Free eBook access</h3>
+        <p>Every physical order includes digital access to your books — so your child is never without their materials.</p>
+      </div>
+      <div class="card center reveal">
+        <div class="icon-badge indigo" style="margin-left:auto;margin-right:auto"><svg class="icon" viewBox="0 0 24 24"><use href="#i-rupee"/></svg></div>
+        <h3>Best prices, direct</h3>
+        <p>We source directly from publishers — no middlemen markup. You get fair wholesale-equivalent pricing.</p>
+      </div>
+      <div class="card center reveal reveal-delay-1">
+        <div class="icon-badge teal" style="margin-left:auto;margin-right:auto"><svg class="icon" viewBox="0 0 24 24"><use href="#i-package"/></svg></div>
+        <h3>One box, all subjects</h3>
+        <p>Every subject, every book, packed together in a single order. Nothing missing, nothing extra.</p>
+      </div>
+      <div class="card center reveal reveal-delay-2">
+        <div class="icon-badge amber" style="margin-left:auto;margin-right:auto"><svg class="icon" viewBox="0 0 24 24"><use href="#i-repeat"/></svg></div>
+        <h3>Automatic every year</h3>
+        <p>We remind you at the start of each academic year. One scan and your child is set for the year ahead.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- TRUST NUMBERS -->
-<section style="background:#fff">
-  <div class="center max-w">
-    <div class="section-label">The Scale of the Problem We're Solving</div>
-    <h2>India's students deserve<br>better. We're fixing it.</h2>
-  </div>
-  <div class="trust-bar">
-    <div class="trust-item"><div class="trust-num">300M+</div><div class="trust-lbl">Students in India</div></div>
-    <div class="trust-item"><div class="trust-num">48 hrs</div><div class="trust-lbl">Delivery commitment</div></div>
-    <div class="trust-item"><div class="trust-num">₹0</div><div class="trust-lbl">Cost to partner schools</div></div>
-    <div class="trust-item"><div class="trust-num">1 scan</div><div class="trust-lbl">To order everything</div></div>
-    <div class="trust-item"><div class="trust-num">100%</div><div class="trust-lbl">Correct editions, always</div></div>
-  </div>
-  <div class="cta-banner">
-    <h2>See exactly how<br>EduKart works.</h2>
-    <p>From scanning the QR code to a box at your door in 48 hours.</p>
-    <div class="hero-btns">
-      <a class="btn-primary" href="how-it-works.html" style="background:#fff;color:var(--indigo)">See How It Works</a>
-      <a class="btn-outline" href="contact.html">Order Books Now</a>
+<section class="section">
+  <div class="container">
+    <div class="center max-w section-head reveal">
+      <div class="eyebrow">The Scale of the Problem We're Solving</div>
+      <h2>India's students deserve<br>better. We're fixing it.</h2>
+    </div>
+    <div class="trust-bar reveal">
+      <div class="trust-item"><div class="trust-num" data-count="300" data-suffix="M+">0</div><div class="trust-lbl">Students in India</div></div>
+      <div class="trust-item"><div class="trust-num" data-count="48" data-suffix=" hrs">0</div><div class="trust-lbl">Delivery commitment</div></div>
+      <div class="trust-item"><div class="trust-num">₹0</div><div class="trust-lbl">Cost to partner schools</div></div>
+      <div class="trust-item"><div class="trust-num" data-count="1" data-suffix=" scan">0</div><div class="trust-lbl">To order everything</div></div>
+      <div class="trust-item"><div class="trust-num" data-count="100" data-suffix="%">0</div><div class="trust-lbl">Correct editions, always</div></div>
+    </div>
+    <div class="cta-banner reveal">
+      <div class="container">
+        <h2>See exactly how<br>EduKart works.</h2>
+        <p>From scanning the QR code to a box at your door in 48 hours.</p>
+        <div class="btn-row">
+          <a class="btn btn-white" href="how-it-works.html">See How It Works <svg class="icon" viewBox="0 0 24 24"><use href="#i-arrow-right"/></svg></a>
+          <a class="btn btn-invert" href="contact.html">Order Books Now</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+</main>
 
 <footer>
-  <div class="footer-logo">EduKart</div>
-  <div class="footer-links">
-    <a href="index.html">Home</a>
-    <a href="about.html">Why EduKart</a>
-    <a href="how-it-works.html">How It Works</a>
-    <a href="who-we-serve.html">Who We Serve</a>
-    <a href="faq.html">FAQ</a>
-    <a href="contact.html">Contact</a>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand"><span class="logo-mark"><svg class="icon" viewBox="0 0 24 24"><use href="#i-book"/></svg></span>EduKart</div>
+        <p class="footer-tag">Complete, correctly-edition book sets — delivered to your door in 48 hours. Built for K-12, JEE/NEET, coaching institutes and colleges.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">Why EduKart</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="who-we-serve.html">Who We Serve</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Get in Touch</h4>
+        <ul>
+          <li><a href="mailto:founder@edukart.co.in"><svg class="icon icon-sm" viewBox="0 0 24 24"><use href="#i-mail"/></svg>founder@edukart.co.in</a></li>
+          <li><a href="tel:+919876543210"><svg class="icon icon-sm" viewBox="0 0 24 24"><use href="#i-phone"/></svg>+91 98765 43210</a></li>
+          <li><a href="contact.html"><svg class="icon icon-sm" viewBox="0 0 24 24"><use href="#i-arrow-right"/></svg>Contact Form</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 EduKart · Mumbai, India</span>
+      <span>K-12 · JEE/NEET · Coaching · College · Scan. Order. Deliver. Learn.</span>
+    </div>
   </div>
-  <div class="footer-contact">
-    <a href="mailto:founder@edukart.co.in">founder@edukart.co.in</a>
-    <a href="tel:+919876543210">+91 98765 43210</a>
-    <a href="https://edukart.co.in" target="_blank">edukart.co.in</a>
-  </div>
-  <p class="footer-copy">K-12 · JEE/NEET · Coaching · College · Scan. Order. Deliver. Learn. · Mumbai, India · 2025</p>
 </footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top"><svg class="icon" viewBox="0 0 24 24" style="transform:rotate(-90deg)"><use href="#i-arrow-right"/></svg></button>
 
 <script src="assets/main.js"></script>
 </body>
