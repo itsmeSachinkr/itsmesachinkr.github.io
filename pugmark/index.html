@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pugmark — A Field Guide to India's National Parks</title>
+<meta name="description" content="Every national park in India — what each is famous for, safari core/buffer zones, seasonal demand, and the field stories behind them.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E3A2B'/%3E%3Cg fill='%23B8862B'%3E%3Cpath d='M32 34c-9 0-17 8-17 16 0 6 4 9 9 9 4 0 7-2 8-2s4 2 8 2c5 0 9-3 9-9 0-8-8-16-17-16z'/%3E%3Cellipse cx='14' cy='24' rx='6.5' ry='8.5'/%3E%3Cellipse cx='26' cy='12' rx='6' ry='8'/%3E%3Cellipse cx='40' cy='12' rx='6' ry='8'/%3E%3Cellipse cx='51' cy='24' rx='6.5' ry='8.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="pawIcon" viewBox="0 0 64 64"><path d="M32 34c-9 0-17 8-17 16 0 6 4 9 9 9 4 0 7-2 8-2s4 2 8 2c5 0 9-3 9-9 0-8-8-16-17-16z"/><ellipse cx="14" cy="24" rx="6.5" ry="8.5"/><ellipse cx="26" cy="12" rx="6" ry="8"/><ellipse cx="40" cy="12" rx="6" ry="8"/><ellipse cx="51" cy="24" rx="6.5" ry="8.5"/></symbol>
+  <symbol id="starIcon" viewBox="0 0 24 24"><path d="M12 2 L14.7 9.3 L22 10.2 L16.6 15.1 L18.2 22 L12 18.3 L5.8 22 L7.4 15.1 L2 10.2 L9.3 9.3 Z"/></symbol>
+</svg>
+
+<header class="site" id="siteHeader">
+  <div class="wrap topbar">
+    <a href="index.html" class="wordmark"><svg class="paw"><use href="#pawIcon"/></svg> Pugmark</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6.5" x2="21" y2="6.5"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17.5" x2="21" y2="17.5"/></svg>
+      <svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="parks.html">Parks</a>
+      <a href="stories.html">Field Stories</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero-band">
+    <div class="wrap hero">
+      <div class="eyebrow reveal"><span class="rule"></span> All-India · State by State</div>
+      <h1 class="reveal reveal-1">Every national park in India, before you <em>pack the jeep.</em></h1>
+      <p class="lead reveal reveal-2">A field guide to India's national parks — what each one is famous for, how its safari zones split into core and buffer, and the stories that made them legendary.</p>
+      <div class="btn-row reveal reveal-3">
+        <a class="btn btn-primary" href="parks.html">Explore the parks →</a>
+        <a class="btn btn-outline" href="stories.html">Read field stories</a>
+      </div>
+      <div class="stats reveal reveal-4">
+        <div><div class="num" id="statTotal">0</div><div class="lbl">Parks Featured</div></div>
+        <div><div class="num" id="statStates">0</div><div class="lbl">States &amp; UTs</div></div>
+        <div><div class="num" id="statStories">0</div><div class="lbl">Field Stories</div></div>
+      </div>
+    </div>
+    <div class="hills" aria-hidden="true">
+      <svg viewBox="0 0 1440 160" preserveAspectRatio="none">
+        <path d="M0,120 L120,90 L260,130 L420,70 L600,115 L760,60 L940,120 L1140,80 L1300,125 L1440,95 L1440,160 L0,160 Z" fill="#2A4E38"/>
+        <path d="M0,150 L180,120 L360,150 L560,110 L760,145 L980,105 L1200,150 L1440,120 L1440,160 L0,160 Z" fill="#12261B"/>
+      </svg>
+    </div>
+  </div>
+
+  <section class="wrap" style="padding:52px 0 10px">
+    <div class="section-heading reveal">
+      <h2>Today's Pick</h2>
+      <span class="sub">A different park, every day</span>
+    </div>
+    <div class="potd reveal reveal-1" id="parkOfDay" style="margin-top:20px"></div>
+  </section>
+
+  <section class="wrap" style="padding:52px 0 10px">
+    <div class="section-heading reveal">
+      <h2>Explore by Region</h2>
+      <span class="sub">Jump straight to a corner of India</span>
+    </div>
+    <div class="region-chips reveal reveal-1" style="margin-top:20px">
+      <a href="parks.html?region=North">North</a>
+      <a href="parks.html?region=West">West</a>
+      <a href="parks.html?region=Central">Central</a>
+      <a href="parks.html?region=South">South</a>
+      <a href="parks.html?region=East">East</a>
+      <a href="parks.html?region=Northeast">Northeast</a>
+      <a href="parks.html?region=Islands">Islands</a>
+    </div>
+  </section>
+
+  <section class="grid-section wrap">
+    <div class="section-head-row reveal">
+      <div class="section-heading">
+        <h2>Featured Parks</h2>
+        <span class="sub">Famous for, at a glance</span>
+      </div>
+      <a class="btn btn-ghost" href="parks.html">View all parks →</a>
+    </div>
+    <div class="grid" id="featuredGrid"></div>
+  </section>
+
+  <section class="stories-section wrap">
+    <div class="section-head-row reveal">
+      <div class="section-heading">
+        <h2>Field Stories</h2>
+        <span class="sub">Notes from the archive</span>
+      </div>
+      <a class="btn btn-ghost" href="stories.html">Read all stories →</a>
+    </div>
+    <div class="story-grid" id="storyPreviewGrid"></div>
+  </section>
+
+  <section class="wrap">
+    <div class="cta-banner reveal">
+      <h2>Ready to plan your first safari?</h2>
+      <p>Browse core &amp; buffer zone maps, check seasonal demand, and read the stories behind India's most famous reserves.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="parks.html">Explore the parks</a>
+        <a class="btn btn-outline" href="about.html">About Pugmark</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="about">
+  <div class="wrap foot-wrap">
+    <div style="max-width:440px">
+      <h4>About Pugmark</h4>
+      <p>Pugmark is an independent trip-planning reference for wildlife tourism across India. Season and demand information is general guidance — always confirm seats and closures on the relevant state forest department's official portal before you travel.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="parks.html">Park Directory</a></li>
+        <li><a href="stories.html">Field Stories</a></li>
+        <li><a href="about.html">About &amp; Booking Portals</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap foot-note">
+    <span>© <span data-year></span> Pugmark. Built for tourists, not affiliated with any State Forest Department or the Government of India.</span>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></button>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>
