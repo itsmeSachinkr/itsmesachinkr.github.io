@@ -96,16 +96,22 @@
 <header class="site" id="siteHeader">
   <div class="wrap topbar">
     <a href="index.html" class="wordmark"><svg class="paw"><use href="#pawIcon"/></svg> Pugmark</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
-      <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6.5" x2="21" y2="6.5"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17.5" x2="21" y2="17.5"/></svg>
-      <svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
-    </button>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="parks.html">Parks</a>
-      <a href="stories.html">Field Stories</a>
-      <a href="about.html">About</a>
-    </nav>
+    <div class="nav-cluster">
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="parks.html">Parks</a>
+        <a href="stories.html">Field Stories</a>
+        <a href="about.html">About</a>
+      </nav>
+      <button class="surprise-btn" id="surpriseBtn" type="button" title="Jump to a random park">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
+        <span>Surprise me</span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6.5" x2="21" y2="6.5"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17.5" x2="21" y2="17.5"/></svg>
+        <svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -125,7 +131,10 @@
         <div><div class="num" id="statStories">0</div><div class="lbl">Field Stories</div></div>
       </div>
     </div>
-    <svg class="hero-art" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-tiger"/></svg>
+    <div class="hero-art-wrap" aria-hidden="true">
+      <svg class="hero-art" viewBox="0 0 100 100"><use href="#icon-tiger"/></svg>
+      <svg class="hero-art-leaf" viewBox="0 0 100 100"><use href="#icon-leaf"/></svg>
+    </div>
   </div>
 
   <section class="wrap" style="padding:52px 0 10px">

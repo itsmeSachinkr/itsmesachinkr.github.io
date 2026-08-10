@@ -288,8 +288,16 @@ function reobserveReveals(){
   const icon = speciesIcon(park.famousFor);
   const narrative = parkNarrative(park);
 
+  const sameState = ALL_PARKS.filter(x => x.state === park.state && x.id !== park.id).slice(0,4);
+  const sameStateBlock = sameState.length ? `
+      <div style="height:30px"></div>
+      <div class="section-label">More parks in ${park.state} <span class="rule"></span></div>
+      <div class="related-strip">${sameState.map(x=>`<a href="park.html?id=${encodeURIComponent(x.id)}"><svg class="paw" style="width:12px;height:12px"><use href="#icon-${speciesIcon(x.famousFor)}"/></svg> ${x.name} →</a>`).join('')}</div>
+    ` : '';
+
   root.innerHTML = `
     <section class="detail-hero">
+      <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
         <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
         <div>
@@ -305,12 +313,15 @@ function reobserveReveals(){
         <div><span class="fc-label">Famous for</span><span class="fc-value">${park.famousFor}</span></div>
       </div>
       <div class="meta-row">
+        <div class="meta-item"><div class="k">Region</div><div class="v">${park.region}</div></div>
         ${park.established ? `<div class="meta-item"><div class="k">Established</div><div class="v">${park.established}</div></div>` : ''}
         ${park.area ? `<div class="meta-item"><div class="k">Area</div><div class="v">${park.area}</div></div>` : ''}
+        <div class="meta-item"><div class="k">Zone Detail</div><div class="v">${park.detailed ? 'Full core/buffer maps' : 'Overview only'}</div></div>
       </div>
       <p class="desc">${narrative}</p>
       ${detailedBlock}
       ${relatedBlock}
+      ${sameStateBlock}
       <div style="height:10px"></div>
       <a class="btn btn-ghost" href="parks.html">← Back to all parks</a>
     </section>`;
@@ -411,6 +422,7 @@ function checkAvailability(park){
 
   root.innerHTML = `
     <section class="detail-hero">
+      <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
         <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
         <div>
