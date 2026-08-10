@@ -1,5 +1,5 @@
 /* ================= PUGMARK — shared app behaviour ================= */
-/* Runs on every page: mobile nav, theme toggle, scroll reveal, back-to-top, active link, footer year. */
+/* Runs on every page: mobile nav, scroll reveal, back-to-top, active link, footer year. */
 
 (function(){
   const header = document.getElementById('siteHeader');
@@ -19,20 +19,6 @@
     const onScroll = ()=> header.classList.toggle('scrolled', window.scrollY > 8);
     onScroll();
     window.addEventListener('scroll', onScroll, {passive:true});
-  }
-
-  /* ---- Theme toggle (persisted) ---- */
-  const THEME_KEY = 'pugmark-theme';
-  const root = document.documentElement;
-  const stored = localStorage.getItem(THEME_KEY);
-  if(stored === 'dark') root.setAttribute('data-theme','dark');
-  const themeBtn = document.getElementById('themeToggle');
-  if(themeBtn){
-    themeBtn.addEventListener('click', ()=>{
-      const isDark = root.getAttribute('data-theme') === 'dark';
-      if(isDark){ root.removeAttribute('data-theme'); localStorage.setItem(THEME_KEY,'light'); }
-      else { root.setAttribute('data-theme','dark'); localStorage.setItem(THEME_KEY,'dark'); }
-    });
   }
 
   /* ---- Active nav link ---- */

@@ -11,6 +11,28 @@ function cardArtGradient(idx){
 function stateAbbrev(state){
   return state.split(' ').map(w=>w[0]).join('').slice(0,3).toUpperCase();
 }
+
+/* Match each park's "famous for" line to a wildlife icon for the card art and detail badge. */
+const SPECIES_ICON_RULES = [
+  [/lion/, 'lion'],
+  [/snow leopard/, 'snowleopard'],
+  [/clouded leopard|leopard/, 'leopard'],
+  [/tiger/, 'tiger'],
+  [/rhino/, 'rhino'],
+  [/elephant/, 'elephant'],
+  [/deer|barasingha|sangai|blackbuck|tahr|antelope|bustard/, 'deer'],
+  [/hornbill|duck|bird|crane|stork/, 'bird'],
+  [/macaque|loris|langur|gibbon|primate/, 'primate'],
+  [/crocodile/, 'crocodile'],
+];
+function speciesIcon(famousFor){
+  const text = famousFor.toLowerCase();
+  for(const [pattern, icon] of SPECIES_ICON_RULES){
+    if(pattern.test(text)) return icon;
+  }
+  return 'leaf';
+}
+
 function parkCardHTML(p, i){
   const zoneLine = p.detailed
     ? `<div class="card-loc" style="opacity:.7">${p.zones.filter(z=>z[1]==='core').length} core zone${p.zones.filter(z=>z[1]==='core').length===1?'':'s'} · ${p.zones.filter(z=>z[1]==='buffer').length} buffer zone${p.zones.filter(z=>z[1]==='buffer').length===1?'':'s'}</div>`
@@ -19,6 +41,7 @@ function parkCardHTML(p, i){
     <a class="card reveal" href="park.html?id=${encodeURIComponent(p.id)}">
       <div class="card-art" style="background:${cardArtGradient(i)}">
         <div class="card-badge">${stateAbbrev(p.state)}</div>
+        <svg class="card-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${speciesIcon(p.famousFor)}"/></svg>
       </div>
       <div class="card-body">
         <h3>${p.name}</h3>
@@ -31,14 +54,32 @@ function parkCardHTML(p, i){
     </a>`;
 }
 function storyCardHTML(s){
+  const linkedPark = ALL_PARKS.find(p => p.name === s.park);
+  const icon = linkedPark ? speciesIcon(linkedPark.famousFor) : 'leaf';
   return `
     <a class="story-card reveal" href="story.html?id=${encodeURIComponent(s.id)}">
-      <div class="story-tag"><svg class="paw" style="width:11px;height:11px"><use href="#starIcon"/></svg>${s.park} · ${s.state}</div>
+      <div class="story-tag"><svg class="paw" style="width:12px;height:12px"><use href="#icon-${icon}"/></svg>${s.park} · ${s.state}</div>
       <h3>${s.title}</h3>
       <div class="story-teaser">${s.teaser}</div>
       <div class="story-read">Read the story <span>→</span></div>
     </a>`;
 }
+/* Combine a park's existing data fields into a fuller, more descriptive paragraph
+   than the single-line "note" alone — no facts beyond what's already in the data. */
+function decapitalize(text){
+  return text.charAt(0).toLowerCase() + text.slice(1);
+}
+function parkNarrative(p){
+  const sentences = [p.note];
+  let s2 = `${p.name} is best known for ${decapitalize(p.famousFor)}`;
+  if(p.established) s2 += `, and has been under protection since ${p.established}`;
+  s2 += '.';
+  sentences.push(s2);
+  if(p.area) sentences.push(`The park spans ${p.area}${p.district ? ` in ${p.district}` : ''}.`);
+  sentences.push(`The nearest access point is ${p.nearest}.`);
+  return sentences.join(' ');
+}
+
 function dayOfYear(d){
   const start = new Date(d.getFullYear(),0,0);
   return Math.floor((d - start) / 86400000);
@@ -244,12 +285,18 @@ function reobserveReveals(){
       <div class="related-strip">${relatedStories.map(s=>`<a href="story.html?id=${encodeURIComponent(s.id)}">${s.title} →</a>`).join('')}</div>
     ` : '';
 
+  const icon = speciesIcon(park.famousFor);
+  const narrative = parkNarrative(park);
+
   root.innerHTML = `
     <section class="detail-hero">
-      <div class="wrap">
-        <span class="badge mono">${park.state}</span>
-        <h1>${park.name}</h1>
-        <div class="loc">${park.district ? park.district + ' · ' : ''}Nearest access: ${park.nearest}</div>
+      <div class="wrap detail-hero-row">
+        <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
+        <div>
+          <span class="badge mono">${park.state}</span>
+          <h1>${park.name}</h1>
+          <div class="loc">${park.district ? park.district + ' · ' : ''}Nearest access: ${park.nearest}</div>
+        </div>
       </div>
     </section>
     <section class="detail-body wrap">
@@ -261,7 +308,7 @@ function reobserveReveals(){
         ${park.established ? `<div class="meta-item"><div class="k">Established</div><div class="v">${park.established}</div></div>` : ''}
         ${park.area ? `<div class="meta-item"><div class="k">Area</div><div class="v">${park.area}</div></div>` : ''}
       </div>
-      <p class="desc">${park.note}</p>
+      <p class="desc">${narrative}</p>
       ${detailedBlock}
       ${relatedBlock}
       <div style="height:10px"></div>
@@ -358,15 +405,19 @@ function checkAvailability(park){
 
   const linkedPark = ALL_PARKS.find(p => p.name === story.park);
   const parkLink = linkedPark ? `<a href="park.html?id=${encodeURIComponent(linkedPark.id)}">${story.park}</a>` : story.park;
+  const icon = linkedPark ? speciesIcon(linkedPark.famousFor) : 'leaf';
 
   const more = STORIES.filter(s => s.id !== story.id).slice(0,3);
 
   root.innerHTML = `
     <section class="detail-hero">
-      <div class="wrap">
-        <span class="badge mono">${story.state}</span>
-        <h1>${story.title}</h1>
-        <div class="loc">${parkLink} · ${story.state}</div>
+      <div class="wrap detail-hero-row">
+        <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
+        <div>
+          <span class="badge mono">${story.state}</span>
+          <h1>${story.title}</h1>
+          <div class="loc">${parkLink} · ${story.state}</div>
+        </div>
       </div>
     </section>
     <section class="detail-body wrap story-body">
