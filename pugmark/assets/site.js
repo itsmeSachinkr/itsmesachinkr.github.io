@@ -342,42 +342,72 @@ function checkAvailability(park){
   }
   const d = new Date(dateVal + 'T00:00:00');
   const month = d.getMonth();
-  let status = PROFILES[park.profile][month];
+  let coreStatus = PROFILES[park.profile][month];
   const day = d.getDay();
   let bumpNote = '';
-  if(status !== 'closed'){
+  if(coreStatus !== 'closed'){
     const isWeekend = (day === 0 || day === 6);
     const holidayWindow = (month === 11 && d.getDate() >= 20) || (month === 0 && d.getDate() <= 2);
     if(isWeekend || holidayWindow){
       const order = ['low','moderate','high','veryhigh'];
-      const idx = order.indexOf(status);
+      const idx = order.indexOf(coreStatus);
       if(idx >= 0 && idx < order.length - 1){
-        status = order[idx+1];
+        coreStatus = order[idx+1];
         bumpNote = isWeekend ? ' Weekend dates typically see extra demand.' : ' This falls in a holiday travel window — extra demand likely.';
       }
     }
   }
-  const meta = STATUS_META[status];
+  const coreMeta = STATUS_META[coreStatus];
   const dateLabel = d.toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-  let bodyNote;
-  if(status === 'closed'){
-    bodyNote = `Core zone safaris are typically suspended for the monsoon around this time. Buffer zones (where the park has them) often stay open — check the portal for buffer-zone slots.${bumpNote}`;
-  } else if(status === 'veryhigh'){
-    bodyNote = `Peak season — this date usually books out weeks in advance, especially popular zones. Book as early as the portal allows.${bumpNote}`;
-  } else if(status === 'high'){
-    bodyNote = `Strong demand expected. Booking 2–4 weeks ahead is a safe bet.${bumpNote}`;
-  } else if(status === 'moderate'){
-    bodyNote = `Moderate demand. A week or two of lead time should be comfortable.${bumpNote}`;
+
+  let coreNote;
+  if(coreStatus === 'closed'){
+    coreNote = `Core zone safaris are typically suspended for the monsoon around this time.${bumpNote}`;
+  } else if(coreStatus === 'veryhigh'){
+    coreNote = `Peak season — this date usually books out weeks in advance, especially popular zones. Book as early as the portal allows.${bumpNote}`;
+  } else if(coreStatus === 'high'){
+    coreNote = `Strong demand expected. Booking 2–4 weeks ahead is a safe bet.${bumpNote}`;
+  } else if(coreStatus === 'moderate'){
+    coreNote = `Moderate demand. A week or two of lead time should be comfortable.${bumpNote}`;
   } else {
-    bodyNote = `Typically quieter season with easier availability — good time to book closer to the date.${bumpNote}`;
+    coreNote = `Typically quieter season with easier availability — good time to book closer to the date.${bumpNote}`;
   }
+
+  // Buffer zones follow a different rhythm from the core zone — often open through
+  // monsoon closures and generally easier to get a permit for at the same time of year.
+  const hasBuffer = park.zones.some(z => z[1] === 'buffer');
+  let bufferDot, bufferLabel, bufferNote;
+  if(!hasBuffer){
+    bufferDot = '#9b8f76';
+    bufferLabel = 'No formal buffer circuit';
+    bufferNote = `${park.name} doesn't run a separate buffer-zone safari circuit — every permit here is for the core zone.`;
+  } else if(coreStatus === 'closed'){
+    bufferDot = STATUS_META.low.dot;
+    bufferLabel = 'Typically open';
+    bufferNote = `Buffer zones usually stay open through the monsoon even when the core zone closes — check the portal for buffer-zone slots.`;
+  } else {
+    bufferDot = coreMeta.dot;
+    bufferLabel = coreMeta.label;
+    bufferNote = `Buffer-zone permits are generally easier to get than core-zone ones at the same time of year.`;
+  }
+
   resultBox.className = 'stamp-result show';
   resultBox.innerHTML = `
     <div class="stamp-card">
       <div class="stamp-watermark">Estimate</div>
-      <div class="stamp-status"><span class="dot" style="background:${meta.dot}"></span><span class="label">${meta.label}</span></div>
-      <div class="mono" style="font-size:0.78rem; color:var(--bark); margin-bottom:10px;">${dateLabel}</div>
-      <div class="stamp-note">${bodyNote}</div>
+      <div class="mono" style="font-size:0.78rem; color:var(--bark); margin-bottom:14px;">${dateLabel}</div>
+      <div class="zone-status-row">
+        <div class="zone-status-item">
+          <div class="zone-status-head"><span class="dot" style="background:${coreMeta.dot}"></span><span class="zone-status-title">Core Zone</span></div>
+          <div class="zone-status-value">${coreMeta.label}</div>
+          <div class="stamp-note">${coreNote}</div>
+        </div>
+        <div class="zone-status-item">
+          <div class="zone-status-head"><span class="dot" style="background:${bufferDot}"></span><span class="zone-status-title">Buffer Zone</span></div>
+          <div class="zone-status-value">${bufferLabel}</div>
+          <div class="stamp-note">${bufferNote}</div>
+        </div>
+      </div>
       <a class="book-btn" href="${park.portal}" target="_blank" rel="noopener">Check live seats &amp; book on official portal ↗</a>
       <div class="disclaimer-line">Based on general seasonal patterns, not live seat data. The official portal is the only source for confirmed availability.</div>
     </div>
