@@ -21,6 +21,16 @@
     window.addEventListener('scroll', onScroll, {passive:true});
   }
 
+  /* ---- Surprise me: jump to a random park ---- */
+  const surpriseBtn = document.getElementById('surpriseBtn');
+  if(surpriseBtn && typeof ALL_PARKS !== 'undefined'){
+    surpriseBtn.addEventListener('click', ()=>{
+      surpriseBtn.classList.add('spin');
+      const pick = ALL_PARKS[Math.floor(Math.random() * ALL_PARKS.length)];
+      setTimeout(()=>{ location.href = `park.html?id=${encodeURIComponent(pick.id)}`; }, 260);
+    });
+  }
+
   /* ---- Active nav link ---- */
   const here = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-links a[href]').forEach(a=>{
