@@ -1,0 +1,384 @@
+/* ================= PUGMARK — page-specific rendering ================= */
+/* Loaded after data.js + app.js. Each init function is guarded by the
+   presence of its page's marker element, so this one file can be
+   included on every page without conflicts. */
+
+function cardArtGradient(idx){
+  const pairs = [['#2A4E38','#3F6B4C'],['#1E3A2B','#5C8A67'],['#33553D','#8E6A22'],['#284A34','#4A3623'],['#204028','#3F6B4C'],['#2E4F3A','#B8862B']];
+  const [a,b] = pairs[idx % pairs.length];
+  return `linear-gradient(135deg, ${a}, ${b})`;
+}
+function stateAbbrev(state){
+  return state.split(' ').map(w=>w[0]).join('').slice(0,3).toUpperCase();
+}
+function parkCardHTML(p, i){
+  const zoneLine = p.detailed
+    ? `<div class="card-loc" style="opacity:.7">${p.zones.filter(z=>z[1]==='core').length} core zone${p.zones.filter(z=>z[1]==='core').length===1?'':'s'} · ${p.zones.filter(z=>z[1]==='buffer').length} buffer zone${p.zones.filter(z=>z[1]==='buffer').length===1?'':'s'}</div>`
+    : '';
+  return `
+    <a class="card reveal" href="park.html?id=${encodeURIComponent(p.id)}">
+      <div class="card-art" style="background:${cardArtGradient(i)}">
+        <div class="card-badge">${stateAbbrev(p.state)}</div>
+      </div>
+      <div class="card-body">
+        <h3>${p.name}</h3>
+        <div class="card-loc">${p.state}${p.district ? ' · ' + p.district : ''}</div>
+        <div class="famous-chip"><svg class="paw"><use href="#starIcon"/></svg>${p.famousFor}</div>
+        <div class="card-note">${p.note}</div>
+        ${zoneLine}
+        <div class="card-cta"><svg class="paw"><use href="#pawIcon"/></svg> ${p.detailed ? 'View field notes & check dates' : 'View field notes'} →</div>
+      </div>
+    </a>`;
+}
+function storyCardHTML(s){
+  return `
+    <a class="story-card reveal" href="story.html?id=${encodeURIComponent(s.id)}">
+      <div class="story-tag"><svg class="paw" style="width:11px;height:11px"><use href="#starIcon"/></svg>${s.park} · ${s.state}</div>
+      <h3>${s.title}</h3>
+      <div class="story-teaser">${s.teaser}</div>
+      <div class="story-read">Read the story <span>→</span></div>
+    </a>`;
+}
+function dayOfYear(d){
+  const start = new Date(d.getFullYear(),0,0);
+  return Math.floor((d - start) / 86400000);
+}
+function reobserveReveals(){
+  const els = document.querySelectorAll('.reveal:not(.in)');
+  if('IntersectionObserver' in window && els.length){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); } });
+    }, {threshold:0.12});
+    els.forEach(el=> io.observe(el));
+    setTimeout(()=> els.forEach(el=> el.classList.add('in')), 4000);
+  } else {
+    els.forEach(el=> el.classList.add('in'));
+  }
+}
+
+/* ================= HOME PAGE ================= */
+(function initHome(){
+  const statTotal = document.getElementById('statTotal');
+  if(!statTotal) return;
+
+  function countUp(el, target){
+    const dur = 900;
+    const start = performance.now();
+    function tick(now){
+      const p = Math.min(1, (now - start) / dur);
+      el.textContent = Math.round(target * (1 - Math.pow(1-p, 3)));
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  countUp(statTotal, ALL_PARKS.length);
+  countUp(document.getElementById('statStates'), new Set(ALL_PARKS.map(p=>p.state)).size);
+  countUp(document.getElementById('statStories'), STORIES.length);
+
+  // Park of the day — deterministic by date, so it's the same all day for every visitor.
+  const potdEl = document.getElementById('parkOfDay');
+  if(potdEl){
+    const idx = dayOfYear(new Date()) % ALL_PARKS.length;
+    const p = ALL_PARKS[idx];
+    potdEl.innerHTML = `
+      <div class="potd-badge mono">Today's Pick</div>
+      <div>
+        <div class="potd-loc">${p.state}${p.district ? ' · ' + p.district : ''}</div>
+        <h3>${p.name}</h3>
+        <p>${p.famousFor} — ${p.note}</p>
+      </div>
+      <a class="btn btn-dark" href="park.html?id=${encodeURIComponent(p.id)}">View field notes →</a>`;
+  }
+
+  // Featured parks — a fixed curated set, falls back gracefully if an id is missing.
+  const featuredIds = ['kaziranga','ranthambore','gir','tadoba','sundarbans','kanha'];
+  const featuredGrid = document.getElementById('featuredGrid');
+  if(featuredGrid){
+    const featured = featuredIds.map(id => ALL_PARKS.find(p=>p.id===id)).filter(Boolean);
+    featuredGrid.innerHTML = featured.map((p,i)=>parkCardHTML(p,i)).join('');
+  }
+
+  // Story preview — first three
+  const storyPreview = document.getElementById('storyPreviewGrid');
+  if(storyPreview){
+    storyPreview.innerHTML = STORIES.slice(0,3).map(storyCardHTML).join('');
+  }
+
+  reobserveReveals();
+})();
+
+/* ================= PARKS DIRECTORY PAGE ================= */
+(function initParksPage(){
+  const grid = document.getElementById('parkGrid');
+  if(!grid) return;
+
+  const resultCount = document.getElementById('resultCount');
+  const stateSelect = document.getElementById('stateSelect');
+  const regionChipsEl = document.getElementById('regionChips');
+  const searchInput = document.getElementById('searchInput');
+  const params = new URLSearchParams(location.search);
+
+  let activeRegion = params.get('region') && REGIONS.includes(params.get('region')) ? params.get('region') : 'All';
+  let activeState = params.get('state') || 'all';
+
+  function populateStateSelect(){
+    const states = [...new Set(ALL_PARKS.map(p=>p.state))].sort();
+    states.forEach(s=>{
+      const opt = document.createElement('option');
+      opt.value = s; opt.textContent = s;
+      if(s === activeState) opt.selected = true;
+      stateSelect.appendChild(opt);
+    });
+  }
+  function populateRegionChips(){
+    REGIONS.forEach(r=>{
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = r;
+      if(r === activeRegion) btn.classList.add('active');
+      btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.region-chips button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        activeRegion = r;
+        applyFilters();
+      });
+      regionChipsEl.appendChild(btn);
+    });
+  }
+  function renderGrid(list){
+    grid.innerHTML = list.map((p,i)=>parkCardHTML(p,i)).join('');
+    resultCount.textContent = `${list.length} of ${ALL_PARKS.length} parks shown`;
+    reobserveReveals();
+  }
+  function applyFilters(){
+    const q = searchInput.value.trim().toLowerCase();
+    const filtered = ALL_PARKS.filter(p=>{
+      const regionMatch = activeRegion === 'All' || p.region === activeRegion;
+      const stateMatch = activeState === 'all' || p.state === activeState;
+      const text = `${p.name} ${p.state} ${p.famousFor} ${p.note}`.toLowerCase();
+      const searchMatch = !q || text.includes(q);
+      return regionMatch && stateMatch && searchMatch;
+    });
+    renderGrid(filtered);
+  }
+
+  populateStateSelect();
+  populateRegionChips();
+  if(params.get('q')) searchInput.value = params.get('q');
+  stateSelect.addEventListener('change', ()=>{ activeState = stateSelect.value; applyFilters(); });
+  searchInput.addEventListener('input', applyFilters);
+  applyFilters();
+})();
+
+/* ================= PARK DETAIL PAGE ================= */
+(function initParkDetail(){
+  const root = document.getElementById('parkDetail');
+  if(!root) return;
+
+  const params = new URLSearchParams(location.search);
+  const park = ALL_PARKS.find(p => p.id === params.get('id'));
+
+  if(!park){
+    root.innerHTML = `
+      <section class="wrap not-found">
+        <h1>Park not found</h1>
+        <p>We couldn't find a park with that ID. It may have been renamed or removed.</p>
+        <a class="btn btn-dark" href="parks.html">← Back to all parks</a>
+      </section>`;
+    document.title = 'Park not found — Pugmark';
+    return;
+  }
+
+  document.title = `${park.name} — Pugmark`;
+  document.getElementById('crumbCurrent').textContent = park.name;
+
+  function fullAlmanac(profile){
+    return PROFILES[profile].map((s,i)=>`<div class="m"><div class="bar s-${s}" title="${STATUS_META[s].label}"></div><div class="lbl">${MONTHS[i]}</div></div>`).join('');
+  }
+  function renderZoneGroups(park){
+    const core = park.zones.filter(z=>z[1]==='core');
+    const buffer = park.zones.filter(z=>z[1]==='buffer');
+    let html = '';
+    if(core.length){
+      html += `<div class="zone-group"><div class="zone-group-title">Core zone <span class="count">(${core.length})</span></div><div class="zones">${core.map(([name],i)=>`<div class="zone-row"><span class="zone-code core">C${i+1}</span><span>${name}</span></div>`).join('')}</div></div>`;
+    }
+    if(buffer.length){
+      html += `<div class="zone-group"><div class="zone-group-title">Buffer zone <span class="count">(${buffer.length})</span></div><div class="zones">${buffer.map(([name],i)=>`<div class="zone-row"><span class="zone-code buffer">B${i+1}</span><span>${name}</span></div>`).join('')}</div></div>`;
+    }
+    return html;
+  }
+
+  const detailedBlock = park.detailed ? `
+      <div class="section-label"><svg class="paw"><use href="#pawIcon"/></svg> Safari zones — core &amp; buffer <span class="rule"></span></div>
+      ${renderZoneGroups(park)}
+      <div class="legend-zone">
+        <div><span class="sw" style="background:var(--canopy)"></span>Core zone — strictly protected, limited permits, best sighting odds</div>
+        <div><span class="sw" style="background:var(--ochre-deep)"></span>Buffer zone — surrounding forest, more flexible permits, often open longer</div>
+      </div>
+      ${park.zoneNote ? `<div class="zone-note">${park.zoneNote}</div>` : ''}
+      <div style="height:26px"></div>
+      <div class="section-label">Seasonal almanac <span class="rule"></span></div>
+      <div class="almanac">
+        <div class="almanac-strip">${fullAlmanac(park.profile)}</div>
+        <div class="legend">${Object.entries(STATUS_META).map(([k,v])=>`<div><span class="dot" style="background:${v.dot}"></span>${v.label}</div>`).join('')}</div>
+      </div>
+      <div class="section-label">Check a date <span class="rule"></span></div>
+      <div class="ledger">
+        <div class="ledger-top">
+          <div><label for="dateInput">Planned visit date</label><input type="date" id="dateInput"></div>
+          <button class="check-btn" id="checkBtn" type="button">Check estimate</button>
+        </div>
+        <div class="stamp-result" id="stampResult"></div>
+      </div>
+    ` : `
+      <div class="section-label">Best time to visit <span class="rule"></span></div>
+      <div class="simple-note">${park.season || 'Season varies — check with the state forest department before travelling.'}</div>
+      <div style="height:18px"></div>
+      <div class="simple-note" style="border-style:dashed">Full core/buffer zone maps and a date-based availability estimate are available for Maharashtra and Madhya Pradesh parks. For ${park.name}, check current zones, permits and live availability directly with the ${park.state} Forest Department or the park's official booking counter.</div>
+    `;
+
+  const relatedStories = STORIES.filter(s => s.park === park.name);
+  const relatedBlock = relatedStories.length ? `
+      <div style="height:26px"></div>
+      <div class="section-label">Field stories about this park <span class="rule"></span></div>
+      <div class="related-strip">${relatedStories.map(s=>`<a href="story.html?id=${encodeURIComponent(s.id)}">${s.title} →</a>`).join('')}</div>
+    ` : '';
+
+  root.innerHTML = `
+    <section class="detail-hero">
+      <div class="wrap">
+        <span class="badge mono">${park.state}</span>
+        <h1>${park.name}</h1>
+        <div class="loc">${park.district ? park.district + ' · ' : ''}Nearest access: ${park.nearest}</div>
+      </div>
+    </section>
+    <section class="detail-body wrap">
+      <div class="famous-callout">
+        <svg class="paw" style="width:20px;height:20px;color:var(--ochre-deep)"><use href="#starIcon"/></svg>
+        <div><span class="fc-label">Famous for</span><span class="fc-value">${park.famousFor}</span></div>
+      </div>
+      <div class="meta-row">
+        ${park.established ? `<div class="meta-item"><div class="k">Established</div><div class="v">${park.established}</div></div>` : ''}
+        ${park.area ? `<div class="meta-item"><div class="k">Area</div><div class="v">${park.area}</div></div>` : ''}
+      </div>
+      <p class="desc">${park.note}</p>
+      ${detailedBlock}
+      ${relatedBlock}
+      <div style="height:10px"></div>
+      <a class="btn btn-ghost" href="parks.html">← Back to all parks</a>
+    </section>`;
+
+  if(park.detailed){
+    document.getElementById('checkBtn').addEventListener('click', ()=>checkAvailability(park));
+  }
+})();
+
+/* ================= AVAILABILITY ESTIMATE (park detail page) ================= */
+function checkAvailability(park){
+  const dateVal = document.getElementById('dateInput').value;
+  const resultBox = document.getElementById('stampResult');
+  if(!dateVal){
+    resultBox.className = 'stamp-result show';
+    resultBox.innerHTML = `<div class="stamp-note" style="color:var(--rust)">Pick a date first.</div>`;
+    return;
+  }
+  const d = new Date(dateVal + 'T00:00:00');
+  const month = d.getMonth();
+  let status = PROFILES[park.profile][month];
+  const day = d.getDay();
+  let bumpNote = '';
+  if(status !== 'closed'){
+    const isWeekend = (day === 0 || day === 6);
+    const holidayWindow = (month === 11 && d.getDate() >= 20) || (month === 0 && d.getDate() <= 2);
+    if(isWeekend || holidayWindow){
+      const order = ['low','moderate','high','veryhigh'];
+      const idx = order.indexOf(status);
+      if(idx >= 0 && idx < order.length - 1){
+        status = order[idx+1];
+        bumpNote = isWeekend ? ' Weekend dates typically see extra demand.' : ' This falls in a holiday travel window — extra demand likely.';
+      }
+    }
+  }
+  const meta = STATUS_META[status];
+  const dateLabel = d.toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  let bodyNote;
+  if(status === 'closed'){
+    bodyNote = `Core zone safaris are typically suspended for the monsoon around this time. Buffer zones (where the park has them) often stay open — check the portal for buffer-zone slots.${bumpNote}`;
+  } else if(status === 'veryhigh'){
+    bodyNote = `Peak season — this date usually books out weeks in advance, especially popular zones. Book as early as the portal allows.${bumpNote}`;
+  } else if(status === 'high'){
+    bodyNote = `Strong demand expected. Booking 2–4 weeks ahead is a safe bet.${bumpNote}`;
+  } else if(status === 'moderate'){
+    bodyNote = `Moderate demand. A week or two of lead time should be comfortable.${bumpNote}`;
+  } else {
+    bodyNote = `Typically quieter season with easier availability — good time to book closer to the date.${bumpNote}`;
+  }
+  resultBox.className = 'stamp-result show';
+  resultBox.innerHTML = `
+    <div class="stamp-card">
+      <div class="stamp-watermark">Estimate</div>
+      <div class="stamp-status"><span class="dot" style="background:${meta.dot}"></span><span class="label">${meta.label}</span></div>
+      <div class="mono" style="font-size:0.78rem; color:var(--bark); margin-bottom:10px;">${dateLabel}</div>
+      <div class="stamp-note">${bodyNote}</div>
+      <a class="book-btn" href="${park.portal}" target="_blank" rel="noopener">Check live seats &amp; book on official portal ↗</a>
+      <div class="disclaimer-line">Based on general seasonal patterns, not live seat data. The official portal is the only source for confirmed availability.</div>
+    </div>
+  `;
+}
+
+/* ================= STORIES DIRECTORY PAGE ================= */
+(function initStoriesPage(){
+  const grid = document.getElementById('storyGrid');
+  if(!grid) return;
+  grid.innerHTML = STORIES.map(storyCardHTML).join('');
+  reobserveReveals();
+})();
+
+/* ================= STORY DETAIL PAGE ================= */
+(function initStoryDetail(){
+  const root = document.getElementById('storyDetail');
+  if(!root) return;
+
+  const params = new URLSearchParams(location.search);
+  const story = STORIES.find(s => s.id === params.get('id'));
+
+  if(!story){
+    root.innerHTML = `
+      <section class="wrap not-found">
+        <h1>Story not found</h1>
+        <p>We couldn't find a field story with that ID.</p>
+        <a class="btn btn-dark" href="stories.html">← Back to all stories</a>
+      </section>`;
+    document.title = 'Story not found — Pugmark';
+    return;
+  }
+
+  document.title = `${story.title} — Pugmark`;
+  document.getElementById('crumbCurrent').textContent = story.title;
+
+  const linkedPark = ALL_PARKS.find(p => p.name === story.park);
+  const parkLink = linkedPark ? `<a href="park.html?id=${encodeURIComponent(linkedPark.id)}">${story.park}</a>` : story.park;
+
+  const more = STORIES.filter(s => s.id !== story.id).slice(0,3);
+
+  root.innerHTML = `
+    <section class="detail-hero">
+      <div class="wrap">
+        <span class="badge mono">${story.state}</span>
+        <h1>${story.title}</h1>
+        <div class="loc">${parkLink} · ${story.state}</div>
+      </div>
+    </section>
+    <section class="detail-body wrap story-body">
+      ${story.body.map(p=>`<p>${p}</p>`).join('')}
+      <div style="height:10px"></div>
+      <a class="btn btn-ghost" href="stories.html">← Back to all stories</a>
+      ${more.length ? `
+        <div style="height:40px"></div>
+        <div class="section-label">More field stories <span class="rule"></span></div>
+        <div class="story-grid">${more.map(storyCardHTML).join('')}</div>
+      ` : ''}
+    </section>`;
+
+  reobserveReveals();
+})();
