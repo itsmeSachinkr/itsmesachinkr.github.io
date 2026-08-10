@@ -3,9 +3,39 @@
    presence of its page's marker element, so this one file can be
    included on every page without conflicts. */
 
-function cardArtGradient(idx){
-  const pairs = [['#2A4E38','#3F6B4C'],['#1E3A2B','#5C8A67'],['#33553D','#8E6A22'],['#284A34','#4A3623'],['#204028','#3F6B4C'],['#2E4F3A','#B8862B']];
-  const [a,b] = pairs[idx % pairs.length];
+/* Read each park's terrain from its own note/famousFor text so the card art and
+   hero background feel like the actual place, not a generic rotating palette. */
+const HABITAT_RULES = [
+  [/mangrove/, 'mangrove'],
+  [/desert|dune|arid/, 'desert'],
+  [/himalay|alpine|snow leopard|trans-himalayan|cold desert|mountain|peak|hill fort|highest peak/, 'mountain'],
+  [/grassland|meadow|savanna/, 'grassland'],
+  [/rainforest|evergreen|western ghats|tropical/, 'rainforest'],
+  [/wetland|marine|coral|lake|backwater|delta|river|floodplain|mudflat|estuary/, 'wetland'],
+];
+const HABITAT_LABEL = {
+  mangrove: 'a tidal mangrove forest', desert: 'an arid desert landscape', mountain: 'high-altitude mountain terrain',
+  grassland: 'open grassland', rainforest: 'dense tropical rainforest', wetland: 'a wetland and riverine landscape',
+  forest: 'deciduous forest',
+};
+const HABITAT_GRADIENT = {
+  mangrove: ['#1b4d3e','#2f7a5f'], desert: ['#8a6238','#c99a52'], mountain: ['#33475b','#6f8ba3'],
+  grassland: ['#5c6b2e','#93a84a'], rainforest: ['#1c3d24','#3f7a4a'], wetland: ['#1e4a5c','#3f8aa3'],
+  forest: ['#2A4E38','#3F6B4C'],
+};
+const HABITAT_PALE = {
+  mangrove: '#E5F2EE', desert: '#F7EEDD', mountain: '#EDF1F5', grassland: '#F1F4E3',
+  rainforest: '#E7F2E8', wetland: '#E6F1F5', forest: '#EAF1EC',
+};
+function habitatTheme(park){
+  const text = `${park.note} ${park.famousFor}`.toLowerCase();
+  for(const [pattern, theme] of HABITAT_RULES){
+    if(pattern.test(text)) return theme;
+  }
+  return 'forest';
+}
+function cardArtGradient(park){
+  const [a,b] = HABITAT_GRADIENT[habitatTheme(park)];
   return `linear-gradient(135deg, ${a}, ${b})`;
 }
 function stateAbbrev(state){
@@ -39,7 +69,7 @@ function parkCardHTML(p, i){
     : '';
   return `
     <a class="card reveal" href="park.html?id=${encodeURIComponent(p.id)}">
-      <div class="card-art" style="background:${cardArtGradient(i)}">
+      <div class="card-art" style="background:${cardArtGradient(p)}">
         <div class="card-badge">${stateAbbrev(p.state)}</div>
         <svg class="card-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${speciesIcon(p.famousFor)}"/></svg>
       </div>
@@ -76,6 +106,7 @@ function parkNarrative(p){
   s2 += '.';
   sentences.push(s2);
   if(p.area) sentences.push(`The park spans ${p.area}${p.district ? ` in ${p.district}` : ''}.`);
+  sentences.push(`It sits within ${HABITAT_LABEL[habitatTheme(p)]}.`);
   sentences.push(`The nearest access point is ${p.nearest}.`);
   return sentences.join(' ');
 }
@@ -286,6 +317,7 @@ function reobserveReveals(){
     ` : '';
 
   const icon = speciesIcon(park.famousFor);
+  const theme = habitatTheme(park);
   const narrative = parkNarrative(park);
 
   const sameState = ALL_PARKS.filter(x => x.state === park.state && x.id !== park.id).slice(0,4);
@@ -296,7 +328,7 @@ function reobserveReveals(){
     ` : '';
 
   root.innerHTML = `
-    <section class="detail-hero">
+    <section class="detail-hero" style="background:linear-gradient(180deg, ${HABITAT_PALE[theme]} 0%, var(--bg) 100%)">
       <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
         <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
