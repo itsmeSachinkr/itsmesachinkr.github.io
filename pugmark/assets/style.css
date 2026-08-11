@@ -146,6 +146,12 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .card{background:var(--surface); border:1px solid var(--paper-line); border-radius:8px; overflow:hidden; cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; display:flex; flex-direction:column; box-shadow:var(--shadow-card);}
 .card:hover{transform:translateY(-4px); box-shadow:var(--shadow-soft); border-color:var(--moss-light);}
 .card-art{height:118px; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:0;}
+/* Real photo (see data.js PARK_IMAGES/SPECIES_IMAGES), hidden until app.js's
+   loader confirms one of the candidate URLs actually loaded. */
+.card-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; display:none;}
+.card-art.has-photo .card-photo{display:block;}
+.card-art.has-photo .card-animal{display:none;}
+.card-art.has-photo::before{opacity:0;}
 /* Always-on dappled-light texture, layered above the habitat gradient (which is
    set inline per-card) so it can't be clobbered by the inline background rule. */
 .card-art::before{content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
@@ -185,11 +191,17 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 /* ---------- Detail pages (park + story) ---------- */
 .detail-hero{background:linear-gradient(180deg, var(--moss-pale) 0%, var(--bg) 100%); padding:36px 0 36px; border-bottom:1px solid var(--paper-line); position:relative; overflow:hidden;}
 .detail-hero-row{display:flex; align-items:center; gap:26px; position:relative; z-index:2;}
-.detail-animal{width:118px; height:118px; flex-shrink:0; color:var(--canopy); background:var(--surface); border:1px solid var(--paper-line); border-radius:50%; padding:22px; box-shadow:var(--shadow-soft); animation:float 5s ease-in-out infinite;}
+.detail-animal-wrap{position:relative; width:118px; height:118px; flex-shrink:0; background:var(--surface); border:1px solid var(--paper-line); border-radius:50%; box-shadow:var(--shadow-soft); overflow:hidden; animation:float 5s ease-in-out infinite;}
+.detail-animal{width:100%; height:100%; display:block; color:var(--canopy); padding:22px;}
+/* Real photo (see data.js PARK_IMAGES/SPECIES_IMAGES), hidden until app.js's
+   loader confirms one of the candidate URLs actually loaded. */
+.detail-animal-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none;}
+.detail-animal-wrap.has-photo .detail-animal-photo{display:block;}
+.detail-animal-wrap.has-photo .detail-animal{display:none;}
 .detail-animal-bg{position:absolute; right:-40px; top:-30px; width:280px; height:280px; color:var(--ochre); opacity:0.08; pointer-events:none; z-index:1;}
-@media (max-width:640px){ .detail-animal{width:80px; height:80px; padding:16px;} .detail-animal-bg{display:none;} }
+@media (max-width:640px){ .detail-animal-wrap{width:80px; height:80px;} .detail-animal{padding:16px;} .detail-animal-bg{display:none;} }
 @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
-@media (prefers-reduced-motion: reduce){ .detail-animal{animation:none;} }
+@media (prefers-reduced-motion: reduce){ .detail-animal-wrap{animation:none;} }
 .detail-hero .badge{font-family:'IBM Plex Mono',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ochre-deep); margin-bottom:8px; display:block;}
 .detail-hero h1{color:var(--canopy-deep); font-size:clamp(1.7rem, 4vw, 2.4rem);}
 .detail-hero .loc{font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--bark); margin-top:8px;}
@@ -297,6 +309,9 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .route-label{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--moss); display:block; margin-bottom:8px;}
 .route-form select, .route-form input[type="text"]{width:100%; padding:12px 14px; border:1.5px solid var(--paper-line); background:var(--bg); border-radius:6px; font-family:'Inter',sans-serif; font-size:0.96rem; color:var(--ink);}
 .route-form select:focus, .route-form input[type="text"]:focus{border-color:var(--moss); outline:none;}
+.vehicle-picker{max-width:320px; margin-bottom:16px;}
+.vehicle-select{width:100%; padding:12px 14px; border:1.5px solid var(--paper-line); background:var(--bg); border-radius:6px; font-family:'Inter',sans-serif; font-size:0.96rem; color:var(--ink);}
+.vehicle-select:focus{border-color:var(--moss); outline:none;}
 .route-form input[type="text"]::placeholder{color:var(--bark); opacity:0.6;}
 @media (max-width:640px){ .route-form{grid-template-columns:1fr;} }
 

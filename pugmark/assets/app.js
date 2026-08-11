@@ -1,6 +1,32 @@
 /* ================= PUGMARK — shared app behaviour ================= */
 /* Runs on every page: mobile nav, scroll reveal, back-to-top, active link, footer year. */
 
+/* ---- Best-effort real photo loader ----
+   Park/wildlife images (see data.js SPECIES_IMAGES / PARK_IMAGES) are
+   pattern-guessed Wikimedia Commons URLs, not verified. This tries each
+   candidate in turn on <img data-urls="url1,url2,..."> and, if one loads,
+   marks its container `.has-photo` so CSS can swap the illustration for the
+   photo. If every candidate 404s, the img just stays hidden and the existing
+   illustration is left exactly as it was — nothing ever shows as broken. */
+function hydratePhotos(scope){
+  (scope || document).querySelectorAll('img[data-urls]').forEach(img=>{
+    if(img.dataset.hydrated) return;
+    img.dataset.hydrated = '1';
+    const urls = (img.dataset.urls || '').split(',').filter(Boolean);
+    if(!urls.length) return;
+    const container = img.closest('.card-art, .detail-animal-wrap') || img.parentElement;
+    let i = 0;
+    function tryNext(){
+      if(i >= urls.length) return;
+      img.src = urls[i++];
+    }
+    img.addEventListener('error', tryNext);
+    img.addEventListener('load', ()=> container.classList.add('has-photo'));
+    tryNext();
+  });
+}
+window.hydratePhotos = hydratePhotos;
+
 (function(){
   const header = document.getElementById('siteHeader');
   const navToggle = document.getElementById('navToggle');
