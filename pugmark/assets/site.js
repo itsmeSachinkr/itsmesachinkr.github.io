@@ -511,32 +511,48 @@ function checkAvailability(park){
 
 /* ================= GETTING THERE PAGE ================= */
 (function initGettingTherePage(){
-  const destSelect = document.getElementById('destSelect');
-  if(!destSelect) return;
+  const destInput = document.getElementById('destInput');
+  if(!destInput) return;
 
-  const originSelect = document.getElementById('originSelect');
+  const originInput = document.getElementById('originInput');
+  const originList = document.getElementById('originList');
+  const destList = document.getElementById('destList');
   const resultEl = document.getElementById('routeResult');
   const params = new URLSearchParams(location.search);
 
+  // label "Park Name — State" -> park id, so the free-text field can resolve
+  // back to the right park even though a datalist only stores plain strings.
+  const parkByLabel = {};
+  function labelFor(park){ return `${park.name} — ${park.state}`; }
+
   function populateOrigins(){
-    ORIGIN_CITIES.forEach(city=>{
+    ALL_CITIES.forEach(city=>{
       const opt = document.createElement('option');
-      opt.value = city; opt.textContent = city;
-      originSelect.appendChild(opt);
+      opt.value = city;
+      originList.appendChild(opt);
     });
   }
   function populateDestinations(){
-    const states = [...new Set(ALL_PARKS.map(p=>p.state))].sort();
-    states.forEach(state=>{
-      const group = document.createElement('optgroup');
-      group.label = state;
-      ALL_PARKS.filter(p=>p.state===state).sort((a,b)=>a.name.localeCompare(b.name)).forEach(p=>{
-        const opt = document.createElement('option');
-        opt.value = p.id; opt.textContent = p.name;
-        group.appendChild(opt);
-      });
-      destSelect.appendChild(group);
+    ALL_PARKS.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(p=>{
+      const label = labelFor(p);
+      parkByLabel[label.toLowerCase()] = p;
+      const opt = document.createElement('option');
+      opt.value = label;
+      destList.appendChild(opt);
     });
+  }
+  function findParkFromInput(){
+    const typed = destInput.value.trim().toLowerCase();
+    if(!typed) return null;
+    if(parkByLabel[typed]) return parkByLabel[typed];
+    // allow matching by park name alone (without the " — State" suffix)
+    return ALL_PARKS.find(p => p.name.toLowerCase() === typed) || null;
+  }
+  function findOriginCity(){
+    const typed = originInput.value.trim();
+    if(!typed) return '';
+    const curated = ORIGIN_CITIES.find(c => c.toLowerCase() === typed.toLowerCase());
+    return curated || typed;
   }
 
   function routeStepHTML(icon, title, text){
@@ -551,8 +567,8 @@ function checkAvailability(park){
   }
 
   function renderRoute(){
-    const originCity = originSelect.value;
-    const park = ALL_PARKS.find(p => p.id === destSelect.value);
+    const originCity = findOriginCity();
+    const park = findParkFromInput();
 
     if(!park){
       resultEl.innerHTML = `<div class="route-prompt">Select a park above to see how to reach it.</div>`;
@@ -601,8 +617,12 @@ function checkAvailability(park){
 
   populateOrigins();
   populateDestinations();
-  if(params.get('park')) destSelect.value = params.get('park');
-  originSelect.addEventListener('change', renderRoute);
-  destSelect.addEventListener('change', renderRoute);
+  const preselectId = params.get('park');
+  if(preselectId){
+    const match = ALL_PARKS.find(p => p.id === preselectId);
+    if(match) destInput.value = labelFor(match);
+  }
+  originInput.addEventListener('input', renderRoute);
+  destInput.addEventListener('input', renderRoute);
   renderRoute();
 })();

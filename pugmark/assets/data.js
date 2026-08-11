@@ -65,6 +65,24 @@ const HUB_ROUTES = {
   },
 };
 
+// ---- All major Indian cities, for the "I'm travelling from" search field ----
+// Curated flight/train guidance above only exists for ORIGIN_CITIES; any other
+// city selected here falls back to the honest generic advice built from each
+// park's own access.airport / access.railway fields.
+const ALL_CITIES = [
+  'Agra','Agartala','Ahmedabad','Aizawl','Ajmer','Allahabad (Prayagraj)','Amaravati','Amritsar',
+  'Asansol','Aurangabad','Bangalore','Bareilly','Bhopal','Bhubaneswar','Bikaner','Chandigarh',
+  'Chennai','Coimbatore','Cuttack','Dehradun','Delhi','Dhanbad','Dibrugarh','Dimapur',
+  'Faridabad','Gandhinagar','Gangtok','Gaya','Ghaziabad','Goa (Panaji)','Gorakhpur','Guwahati',
+  'Gwalior','Hubballi','Hyderabad','Imphal','Indore','Itanagar','Jabalpur','Jaipur',
+  'Jalandhar','Jammu','Jamshedpur','Jodhpur','Jorhat','Kanpur','Kochi','Kohima',
+  'Kolhapur','Kolkata','Kota','Kozhikode','Lucknow','Ludhiana','Madurai','Mangalore',
+  'Meerut','Mumbai','Muzaffarpur','Mysore','Nagpur','Nashik','Panipat','Patna',
+  'Port Blair','Puducherry','Pune','Raipur','Rajkot','Ranchi','Rourkela','Shillong',
+  'Shimla','Siliguri','Silvassa','Srinagar','Surat','Thiruvananthapuram','Tiruchirappalli','Udaipur',
+  'Vadodara','Varanasi','Vijayawada','Visakhapatnam','Warangal',
+].sort();
+
 // ---- Detailed parks (Maharashtra & Madhya Pradesh): full zone + almanac + availability data ----
 const DETAILED_PARKS = [
   { id:'tadoba', name:'Tadoba-Andhari Tiger Reserve', state:'Maharashtra', region:'West', district:'Chandrapur',

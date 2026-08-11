@@ -57,16 +57,14 @@
   <section class="wrap route-finder">
     <div class="route-form">
       <div>
-        <label for="originSelect" class="route-label">I'm travelling from</label>
-        <select id="originSelect">
-          <option value="">Select a city…</option>
-        </select>
+        <label for="originInput" class="route-label">I'm travelling from</label>
+        <input type="text" id="originInput" list="originList" placeholder="Type or pick a city…" autocomplete="off">
+        <datalist id="originList"></datalist>
       </div>
       <div>
-        <label for="destSelect" class="route-label">I want to visit</label>
-        <select id="destSelect">
-          <option value="">Select a park…</option>
-        </select>
+        <label for="destInput" class="route-label">I want to visit</label>
+        <input type="text" id="destInput" list="destList" placeholder="Type or pick a park…" autocomplete="off">
+        <datalist id="destList"></datalist>
       </div>
     </div>
     <div id="routeResult" class="route-result"></div>
