@@ -145,9 +145,19 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:26px; margin-top:20px;}
 .card{background:var(--surface); border:1px solid var(--paper-line); border-radius:8px; overflow:hidden; cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; display:flex; flex-direction:column; box-shadow:var(--shadow-card);}
 .card:hover{transform:translateY(-4px); box-shadow:var(--shadow-soft); border-color:var(--moss-light);}
-.card-art{height:100px; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:0;}
-.card-badge{position:absolute; top:12px; left:12px; z-index:2; font-family:'IBM Plex Mono', monospace; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.06em; background:rgba(18,38,27,0.82); color:var(--on-accent); padding:4px 9px; border-radius:4px;}
-.card-animal{position:absolute; right:-6px; bottom:-10px; width:82px; height:82px; color:rgba(255,255,255,0.92); pointer-events:none; transition:transform .25s ease;}
+.card-art{height:118px; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:0;}
+/* Always-on dappled-light texture, layered above the habitat gradient (which is
+   set inline per-card) so it can't be clobbered by the inline background rule. */
+.card-art::before{content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.16) 1px, transparent 1.6px);
+  background-size:16px 16px;}
+/* Cursor-follow glow, positioned via --mx/--my custom props set by app.js on mousemove. */
+.card-art::after{content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(160px circle at var(--mx,50%) var(--my,25%), rgba(255,255,255,.32), transparent 65%);
+  opacity:0; transition:opacity .3s ease;}
+.card:hover .card-art::after{opacity:1;}
+.card-badge{position:absolute; top:12px; left:12px; z-index:3; font-family:'IBM Plex Mono', monospace; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.06em; background:rgba(18,38,27,0.82); color:var(--on-accent); padding:4px 9px; border-radius:4px; backdrop-filter:blur(3px);}
+.card-animal{position:absolute; right:-6px; bottom:-10px; width:90px; height:90px; color:rgba(255,255,255,0.92); pointer-events:none; z-index:2; transition:transform .25s ease; filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));}
 .card:hover .card-animal{transform:scale(1.08) translateY(-2px);}
 .card-body{padding:18px 20px 20px; display:flex; flex-direction:column; gap:9px; flex:1;}
 .card-body h3{font-size:1.18rem; line-height:1.18;}

@@ -63,6 +63,36 @@
     revealEls.forEach(el=> el.classList.add('in'));
   }
 
+  /* ---- Card art: cursor-follow glow + icon parallax ----
+     Delegated on document (rather than bound per .card-art) because the park
+     cards are injected by site.js after this script runs. */
+  (function(){
+    let activeArt = null;
+    function resetArt(art){
+      if(!art) return;
+      art.style.removeProperty('--mx');
+      art.style.removeProperty('--my');
+      const animal = art.querySelector('.card-animal');
+      if(animal) animal.style.transform = '';
+    }
+    document.addEventListener('mousemove', (e)=>{
+      const art = e.target.closest ? e.target.closest('.card-art') : null;
+      if(art !== activeArt){ resetArt(activeArt); activeArt = art; }
+      if(!art) return;
+      const r = art.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      art.style.setProperty('--mx', `${(px*100).toFixed(1)}%`);
+      art.style.setProperty('--my', `${(py*100).toFixed(1)}%`);
+      const animal = art.querySelector('.card-animal');
+      if(animal){
+        const dx = (px - 0.5) * -10;
+        const dy = (py - 0.5) * -6;
+        animal.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(1.08)`;
+      }
+    });
+  })();
+
   /* ---- Back to top ---- */
   const backBtn = document.getElementById('backToTop');
   if(backBtn){
