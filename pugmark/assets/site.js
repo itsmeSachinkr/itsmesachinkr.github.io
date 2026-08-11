@@ -351,6 +351,7 @@ function reobserveReveals(){
         <div class="meta-item"><div class="k">Zone Detail</div><div class="v">${park.detailed ? 'Full core/buffer maps' : 'Overview only'}</div></div>
       </div>
       <p class="desc">${narrative}</p>
+      <a class="btn btn-dark reach-link" href="getting-there.html?park=${encodeURIComponent(park.id)}"><svg class="paw"><use href="#pawIcon"/></svg> How to reach ${park.name} →</a>
       ${detailedBlock}
       ${relatedBlock}
       ${sameStateBlock}
@@ -506,4 +507,102 @@ function checkAvailability(park){
     </section>`;
 
   reobserveReveals();
+})();
+
+/* ================= GETTING THERE PAGE ================= */
+(function initGettingTherePage(){
+  const destSelect = document.getElementById('destSelect');
+  if(!destSelect) return;
+
+  const originSelect = document.getElementById('originSelect');
+  const resultEl = document.getElementById('routeResult');
+  const params = new URLSearchParams(location.search);
+
+  function populateOrigins(){
+    ORIGIN_CITIES.forEach(city=>{
+      const opt = document.createElement('option');
+      opt.value = city; opt.textContent = city;
+      originSelect.appendChild(opt);
+    });
+  }
+  function populateDestinations(){
+    const states = [...new Set(ALL_PARKS.map(p=>p.state))].sort();
+    states.forEach(state=>{
+      const group = document.createElement('optgroup');
+      group.label = state;
+      ALL_PARKS.filter(p=>p.state===state).sort((a,b)=>a.name.localeCompare(b.name)).forEach(p=>{
+        const opt = document.createElement('option');
+        opt.value = p.id; opt.textContent = p.name;
+        group.appendChild(opt);
+      });
+      destSelect.appendChild(group);
+    });
+  }
+
+  function routeStepHTML(icon, title, text){
+    return `
+      <div class="route-step">
+        <div class="route-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-${icon}"/></svg></div>
+        <div>
+          <div class="route-step-title">${title}</div>
+          <div class="route-step-text">${text}</div>
+        </div>
+      </div>`;
+  }
+
+  function renderRoute(){
+    const originCity = originSelect.value;
+    const park = ALL_PARKS.find(p => p.id === destSelect.value);
+
+    if(!park){
+      resultEl.innerHTML = `<div class="route-prompt">Select a park above to see how to reach it.</div>`;
+      return;
+    }
+
+    const factRow = `
+      <div class="route-fact-row">
+        <div class="route-fact"><div class="k">Nearest Airport</div><div class="v">${park.access ? park.access.airport : 'Not yet documented'}</div></div>
+        <div class="route-fact"><div class="k">Nearest Railway</div><div class="v">${park.access ? park.access.railway : 'Not yet documented'}</div></div>
+      </div>`;
+    const accessNote = park.access && park.access.note ? `<div class="route-note">${park.access.note}</div>` : '';
+
+    if(!originCity){
+      resultEl.innerHTML = `
+        <div class="route-card">
+          <div class="route-card-head"><h3>${park.name}</h3><div class="sub">${park.state}</div></div>
+          <div class="route-card-body">
+            ${factRow}
+            ${accessNote}
+            <div class="route-prompt">Select where you're travelling from above for a suggested route.</div>
+          </div>
+        </div>`;
+      return;
+    }
+
+    let stepsHTML;
+    if(park.hubCity && HUB_ROUTES[park.hubCity] && HUB_ROUTES[park.hubCity][originCity]){
+      stepsHTML = routeStepHTML('plane', `${originCity} → ${park.hubCity}`, HUB_ROUTES[park.hubCity][originCity])
+        + routeStepHTML('road', `${park.hubCity} → ${park.name}`, `From there, continue by road — nearest access is ${park.nearest}.`);
+    } else {
+      stepsHTML = routeStepHTML('plane', `${originCity} → nearest hub`, `Fly or take a train toward the nearest airport or railway station listed above, then arrange local road transport to the park.`)
+        + routeStepHTML('road', `Reaching ${park.name}`, `Nearest access point: ${park.nearest}.`);
+    }
+
+    resultEl.innerHTML = `
+      <div class="route-card">
+        <div class="route-card-head"><h3>${originCity} → ${park.name}</h3><div class="sub">${park.state}</div></div>
+        <div class="route-card-body">
+          ${factRow}
+          ${stepsHTML}
+          ${accessNote}
+        </div>
+      </div>`;
+  }
+
+  populateOrigins();
+  populateDestinations();
+  if(params.get('park')) destSelect.value = params.get('park');
+  originSelect.addEventListener('change', renderRoute);
+  destSelect.addEventListener('change', renderRoute);
+  renderRoute();
 })();
