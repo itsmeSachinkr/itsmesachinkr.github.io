@@ -2,28 +2,97 @@
 /* Runs on every page: mobile nav, scroll reveal, back-to-top, active link, footer year. */
 
 /* ---- Best-effort real photo loader ----
-   Park/wildlife images (see data.js SPECIES_IMAGES / PARK_IMAGES) are
-   pattern-guessed Wikimedia Commons URLs, not verified. This tries each
-   candidate in turn on <img data-urls="url1,url2,..."> and, if one loads,
-   marks its container `.has-photo` so CSS can swap the illustration for the
-   photo. If every candidate 404s, the img just stays hidden and the existing
-   illustration is left exactly as it was — nothing ever shows as broken. */
-function hydratePhotos(scope){
-  (scope || document).querySelectorAll('img[data-urls]').forEach(img=>{
-    if(img.dataset.hydrated) return;
-    img.dataset.hydrated = '1';
-    const urls = (img.dataset.urls || '').split(',').filter(Boolean);
-    if(!urls.length) return;
-    const container = img.closest('.card-art, .detail-animal-wrap') || img.parentElement;
-    let i = 0;
-    function tryNext(){
-      if(i >= urls.length) return;
-      img.src = urls[i++];
+   Tier 1: pattern-guessed Wikimedia Commons URLs (data.js SPECIES_IMAGES /
+   PARK_IMAGES) — free, instant, but unverified; many 404.
+   Tier 2: if every guess 404s and the element carries a data-keyword, ask
+   the Wikimedia Commons search API (from the visitor's own browser, with a
+   localStorage cache) for a real, currently-existing photo instead of
+   another guess — this is the "search the API" approach Commons itself
+   documents for third-party sites, rather than raw file-name hotlinking.
+   Either way, the illustration underneath is only replaced once an image
+   actually finishes loading, so a bad guess or an offline visitor never
+   shows a broken image — the existing art just stays put. */
+const COMMONS_CACHE_PREFIX = 'pugmark_commons_v1_';
+const COMMONS_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function readCommonsCache(keyword){
+  try{
+    const raw = localStorage.getItem(COMMONS_CACHE_PREFIX + keyword);
+    if(!raw) return undefined;
+    const parsed = JSON.parse(raw);
+    if(Date.now() - parsed.ts > COMMONS_CACHE_TTL_MS) return undefined;
+    return parsed.value; // may be null, meaning "searched before, found nothing"
+  } catch(e){ return undefined; }
+}
+function writeCommonsCache(keyword, value){
+  try{ localStorage.setItem(COMMONS_CACHE_PREFIX + keyword, JSON.stringify({ts:Date.now(), value})); } catch(e){ /* storage disabled/full — skip caching */ }
+}
+async function searchCommonsImage(keyword){
+  const cached = readCommonsCache(keyword);
+  if(cached !== undefined) return cached;
+  let result = null;
+  try{
+    const api = 'https://commons.wikimedia.org/w/api.php?action=query&generator=search'
+      + '&gsrnamespace=6&gsrlimit=1&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=640&format=json&origin=*'
+      + '&gsrsearch=' + encodeURIComponent('filetype:bitmap ' + keyword);
+    const res = await fetch(api);
+    if(res.ok){
+      const data = await res.json();
+      const pages = data && data.query && data.query.pages;
+      const page = pages && Object.values(pages)[0];
+      const info = page && page.imageinfo && page.imageinfo[0];
+      if(info && (info.thumburl || info.url)){
+        const artistHtml = info.extmetadata && info.extmetadata.Artist && info.extmetadata.Artist.value;
+        const credit = artistHtml ? artistHtml.replace(/<[^>]+>/g, '').trim() : '';
+        result = { url: info.thumburl || info.url, credit };
+      }
     }
-    img.addEventListener('error', tryNext);
-    img.addEventListener('load', ()=> container.classList.add('has-photo'));
-    tryNext();
-  });
+  } catch(e){ /* offline, blocked, or a malformed API response — fall through with no result */ }
+  writeCommonsCache(keyword, result);
+  return result;
+}
+
+function startPhotoLoad(img){
+  if(img.dataset.hydrated) return;
+  img.dataset.hydrated = '1';
+  const urls = (img.dataset.urls || '').split(',').filter(Boolean);
+  const keyword = img.dataset.keyword || '';
+  const container = img.closest('.card-art, .detail-animal-wrap') || img.parentElement;
+  let i = 0;
+  img.addEventListener('load', ()=> container.classList.add('has-photo'));
+  function trySearchFallback(){
+    if(!keyword) return;
+    searchCommonsImage(keyword).then(result=>{
+      if(!result || !result.url) return;
+      img.src = result.url;
+      if(result.credit){
+        const creditEl = container.querySelector('.photo-credit');
+        if(creditEl) creditEl.textContent = `Photo: ${result.credit} · Wikimedia Commons`;
+      }
+    });
+  }
+  function tryNext(){
+    if(i >= urls.length){ trySearchFallback(); return; }
+    img.src = urls[i++];
+  }
+  img.addEventListener('error', tryNext);
+  tryNext();
+}
+/* Deferred until each image is about to scroll into view, so a 67-card grid
+   doesn't fire dozens of simultaneous Commons API searches on page load. */
+function hydratePhotos(scope){
+  const els = (scope || document).querySelectorAll('img[data-urls], img[data-keyword]');
+  if(!els.length) return;
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){ startPhotoLoad(entry.target); io.unobserve(entry.target); }
+      });
+    }, {rootMargin: '200px'});
+    els.forEach(img=> io.observe(img));
+  } else {
+    els.forEach(startPhotoLoad);
+  }
 }
 window.hydratePhotos = hydratePhotos;
 
