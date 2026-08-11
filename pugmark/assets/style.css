@@ -214,6 +214,7 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .zone-code.core{background:var(--canopy);}
 .zone-code.buffer{background:var(--ochre-deep);}
 .zone-note{font-size:0.85rem; color:var(--bark); font-style:italic; margin-top:10px; padding:10px 14px; background:var(--ochre-pale); border-left:3px solid var(--ochre); border-radius:0 4px 4px 0;}
+.zone-note a{font-style:normal; text-decoration:underline; color:var(--ochre-deep); font-weight:600;}
 .legend-zone{display:flex; gap:18px; margin-top:10px; flex-wrap:wrap;}
 .legend-zone div{display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono', monospace; font-size:0.68rem; color:var(--bark); text-transform:uppercase;}
 .legend-zone .sw{width:22px; height:12px; border-radius:2px; display:inline-block;}

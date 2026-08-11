@@ -352,6 +352,14 @@ function reobserveReveals(){
       </div>
       <p class="desc">${narrative}</p>
       <a class="btn btn-dark reach-link" href="getting-there.html?park=${encodeURIComponent(park.id)}"><svg class="paw"><use href="#pawIcon"/></svg> How to reach ${park.name} →</a>
+      <div class="section-label"><svg class="paw"><use href="#pawIcon"/></svg> Safari &amp; Costs <span class="rule"></span></div>
+      <div class="route-fact-row">
+        <div class="route-fact"><div class="k">Gypsy (open 4x4)</div><div class="v">Seats up to 6</div></div>
+        <div class="route-fact"><div class="k">Canter (shared, open)</div><div class="v">Seats roughly 16–20</div></div>
+      </div>
+      <div class="simple-note">Most parks run two safari slots a day — a dawn drive and a late-afternoon drive, each roughly 3–3.5 hours. Exact gate times shift with sunrise and sunset across the year, so confirm the current slot times when you book.</div>
+      <div class="zone-note">Park entry fee, guide fee, and vehicle fee (Gypsy or Canter) are set by the ${park.state} Forest Department and vary by zone, season, and Indian/foreign-national status — they're revised periodically, so we're not quoting figures here that could go stale. ${park.portal ? `Check current rates and book directly at the <a href="${park.portal}" target="_blank" rel="noopener">official booking portal</a>.` : `Check current rates directly with the ${park.state} Forest Department or the park's official booking counter.`}</div>
+      <div style="height:20px"></div>
       ${detailedBlock}
       ${relatedBlock}
       ${sameStateBlock}
