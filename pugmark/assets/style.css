@@ -284,8 +284,9 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .route-finder{padding:44px 0 70px;}
 .route-form{display:grid; grid-template-columns:1fr 1fr; gap:20px; background:var(--surface); border:1px solid var(--paper-line); border-radius:10px; padding:26px; box-shadow:var(--shadow-card);}
 .route-label{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--moss); display:block; margin-bottom:8px;}
-.route-form select{width:100%; padding:12px 14px; border:1.5px solid var(--paper-line); background:var(--bg); border-radius:6px; font-family:'Inter',sans-serif; font-size:0.96rem; color:var(--ink);}
-.route-form select:focus{border-color:var(--moss);}
+.route-form select, .route-form input[type="text"]{width:100%; padding:12px 14px; border:1.5px solid var(--paper-line); background:var(--bg); border-radius:6px; font-family:'Inter',sans-serif; font-size:0.96rem; color:var(--ink);}
+.route-form select:focus, .route-form input[type="text"]:focus{border-color:var(--moss); outline:none;}
+.route-form input[type="text"]::placeholder{color:var(--bark); opacity:0.6;}
 @media (max-width:640px){ .route-form{grid-template-columns:1fr;} }
 
 .route-result{margin-top:26px;}
