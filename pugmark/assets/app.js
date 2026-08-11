@@ -84,12 +84,24 @@ function hydratePhotos(scope){
   const els = (scope || document).querySelectorAll('img[data-urls], img[data-keyword]');
   if(!els.length) return;
   if('IntersectionObserver' in window){
+    // Observe each img's visible container, not the img itself -- the img is
+    // `display:none` until a photo loads, so it has no layout box and would
+    // never be reported as intersecting anything.
+    const targetToImg = new WeakMap();
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
-        if(entry.isIntersecting){ startPhotoLoad(entry.target); io.unobserve(entry.target); }
+        if(entry.isIntersecting){
+          const img = targetToImg.get(entry.target);
+          if(img) startPhotoLoad(img);
+          io.unobserve(entry.target);
+        }
       });
     }, {rootMargin: '200px'});
-    els.forEach(img=> io.observe(img));
+    els.forEach(img=>{
+      const container = img.closest('.card-art, .detail-animal-wrap') || img.parentElement;
+      targetToImg.set(container, img);
+      io.observe(container);
+    });
   } else {
     els.forEach(startPhotoLoad);
   }
