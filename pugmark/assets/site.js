@@ -63,15 +63,32 @@ function speciesIcon(famousFor){
   return 'leaf';
 }
 
+function photoCandidates(p, icon){
+  return [...(PARK_IMAGES[p.id] || []), ...(SPECIES_IMAGES[icon] || [])];
+}
+/* Structural facts only (seating, typical use) -- deliberately no fee figures,
+   see the Safari & Costs zone-note for why. */
+const VEHICLE_INFO = {
+  gypsy: {
+    seats: 'Seats up to 6',
+    text: 'The most common way into core zones — open, nimble on narrow tracks, and generally the better choice for close, unobstructed sightings.',
+  },
+  canter: {
+    seats: 'Seats roughly 16–20',
+    text: 'A larger shared vehicle, mainly used in buffer zones or during high-demand periods. Cheaper per person, but a bigger group and less maneuverable.',
+  },
+};
 function parkCardHTML(p, i){
   const zoneLine = p.detailed
     ? `<div class="card-loc" style="opacity:.7">${p.zones.filter(z=>z[1]==='core').length} core zone${p.zones.filter(z=>z[1]==='core').length===1?'':'s'} · ${p.zones.filter(z=>z[1]==='buffer').length} buffer zone${p.zones.filter(z=>z[1]==='buffer').length===1?'':'s'}</div>`
     : '';
+  const icon = speciesIcon(p.famousFor);
   return `
     <a class="card reveal" href="park.html?id=${encodeURIComponent(p.id)}">
       <div class="card-art" style="background:${cardArtGradient(p)}">
+        <img class="card-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${photoCandidates(p, icon).join(',')}">
         <div class="card-badge">${stateAbbrev(p.state)}</div>
-        <svg class="card-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${speciesIcon(p.famousFor)}"/></svg>
+        <svg class="card-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       </div>
       <div class="card-body">
         <h3>${p.name}</h3>
@@ -168,6 +185,7 @@ function reobserveReveals(){
   if(featuredGrid){
     const featured = featuredIds.map(id => ALL_PARKS.find(p=>p.id===id)).filter(Boolean);
     featuredGrid.innerHTML = featured.map((p,i)=>parkCardHTML(p,i)).join('');
+    hydratePhotos(featuredGrid);
   }
 
   // Story preview — first three
@@ -221,6 +239,7 @@ function reobserveReveals(){
     grid.innerHTML = list.map((p,i)=>parkCardHTML(p,i)).join('');
     resultCount.textContent = `${list.length} of ${ALL_PARKS.length} parks shown`;
     reobserveReveals();
+    hydratePhotos(grid);
   }
   function applyFilters(){
     const q = searchInput.value.trim().toLowerCase();
@@ -327,11 +346,15 @@ function reobserveReveals(){
       <div class="related-strip">${sameState.map(x=>`<a href="park.html?id=${encodeURIComponent(x.id)}"><svg class="paw" style="width:12px;height:12px"><use href="#icon-${speciesIcon(x.famousFor)}"/></svg> ${x.name} →</a>`).join('')}</div>
     ` : '';
 
+  const heroPhotoUrls = photoCandidates(park, icon);
   root.innerHTML = `
     <section class="detail-hero" style="background:linear-gradient(180deg, ${HABITAT_PALE[theme]} 0%, var(--bg) 100%)">
       <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
-        <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
+        <div class="detail-animal-wrap">
+          <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
+          <img class="detail-animal-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${heroPhotoUrls.join(',')}">
+        </div>
         <div>
           <span class="badge mono">${park.state}</span>
           <h1>${park.name}</h1>
@@ -353,10 +376,14 @@ function reobserveReveals(){
       <p class="desc">${narrative}</p>
       <a class="btn btn-dark reach-link" href="getting-there.html?park=${encodeURIComponent(park.id)}"><svg class="paw"><use href="#pawIcon"/></svg> How to reach ${park.name} →</a>
       <div class="section-label"><svg class="paw"><use href="#pawIcon"/></svg> Safari &amp; Costs <span class="rule"></span></div>
-      <div class="route-fact-row">
-        <div class="route-fact"><div class="k">Gypsy (open 4x4)</div><div class="v">Seats up to 6</div></div>
-        <div class="route-fact"><div class="k">Canter (shared, open)</div><div class="v">Seats roughly 16–20</div></div>
+      <div class="vehicle-picker">
+        <label for="vehicleSelect-${park.id}" class="route-label">Vehicle type</label>
+        <select id="vehicleSelect-${park.id}" class="vehicle-select">
+          <option value="gypsy">Gypsy (open 4x4)</option>
+          <option value="canter">Canter (shared, open)</option>
+        </select>
       </div>
+      <div id="vehicleInfo-${park.id}"></div>
       <div class="simple-note">Most parks run two safari slots a day — a dawn drive and a late-afternoon drive, each roughly 3–3.5 hours. Exact gate times shift with sunrise and sunset across the year, so confirm the current slot times when you book.</div>
       <div class="zone-note">Park entry fee, guide fee, and vehicle fee (Gypsy or Canter) are set by the ${park.state} Forest Department and vary by zone, season, and Indian/foreign-national status — they're revised periodically, so we're not quoting figures here that could go stale. ${park.portal ? `Check current rates and book directly at the <a href="${park.portal}" target="_blank" rel="noopener">official booking portal</a>.` : `Check current rates directly with the ${park.state} Forest Department or the park's official booking counter.`}</div>
       <div style="height:20px"></div>
@@ -370,6 +397,20 @@ function reobserveReveals(){
   if(park.detailed){
     document.getElementById('checkBtn').addEventListener('click', ()=>checkAvailability(park));
   }
+
+  const vehicleSelect = document.getElementById(`vehicleSelect-${park.id}`);
+  const vehicleInfoEl = document.getElementById(`vehicleInfo-${park.id}`);
+  function renderVehicleInfo(){
+    const v = VEHICLE_INFO[vehicleSelect.value];
+    const label = vehicleSelect.options[vehicleSelect.selectedIndex].text;
+    vehicleInfoEl.innerHTML = `
+      <div class="route-fact-row"><div class="route-fact" style="flex:1 1 100%"><div class="k">${label}</div><div class="v">${v.seats}</div></div></div>
+      <div class="simple-note">${v.text}</div>`;
+  }
+  vehicleSelect.addEventListener('change', renderVehicleInfo);
+  renderVehicleInfo();
+
+  hydratePhotos(root);
 })();
 
 /* ================= AVAILABILITY ESTIMATE (park detail page) ================= */
@@ -490,12 +531,16 @@ function checkAvailability(park){
   const icon = linkedPark ? speciesIcon(linkedPark.famousFor) : 'leaf';
 
   const more = STORIES.filter(s => s.id !== story.id).slice(0,3);
+  const storyPhotoUrls = linkedPark ? photoCandidates(linkedPark, icon) : (SPECIES_IMAGES[icon] || []);
 
   root.innerHTML = `
     <section class="detail-hero">
       <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
-        <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
+        <div class="detail-animal-wrap">
+          <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
+          <img class="detail-animal-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${storyPhotoUrls.join(',')}">
+        </div>
         <div>
           <span class="badge mono">${story.state}</span>
           <h1>${story.title}</h1>
@@ -515,6 +560,7 @@ function checkAvailability(park){
     </section>`;
 
   reobserveReveals();
+  hydratePhotos(root);
 })();
 
 /* ================= GETTING THERE PAGE ================= */
