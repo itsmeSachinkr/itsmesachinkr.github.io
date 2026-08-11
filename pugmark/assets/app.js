@@ -12,7 +12,7 @@
    Either way, the illustration underneath is only replaced once an image
    actually finishes loading, so a bad guess or an offline visitor never
    shows a broken image — the existing art just stays put. */
-const COMMONS_CACHE_PREFIX = 'pugmark_commons_v1_';
+const COMMONS_CACHE_PREFIX = 'pugmark_commons_v2_';
 const COMMONS_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 function readCommonsCache(keyword){
@@ -27,24 +27,28 @@ function readCommonsCache(keyword){
 function writeCommonsCache(keyword, value){
   try{ localStorage.setItem(COMMONS_CACHE_PREFIX + keyword, JSON.stringify({ts:Date.now(), value})); } catch(e){ /* storage disabled/full — skip caching */ }
 }
+/* Uses Wikipedia's "pageimages" API (not a raw Commons file search) --
+   this is the standard, widely-documented way third-party sites pull a
+   representative photo for a topic: search English Wikipedia for the
+   keyword, then ask for that article's own lead/infobox image thumbnail.
+   Far more reliable than guessing a Commons file name, since almost every
+   species/park article that exists at all has a curated lead image. */
 async function searchCommonsImage(keyword){
   const cached = readCommonsCache(keyword);
   if(cached !== undefined) return cached;
   let result = null;
   try{
-    const api = 'https://commons.wikimedia.org/w/api.php?action=query&generator=search'
-      + '&gsrnamespace=6&gsrlimit=1&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=640&format=json&origin=*'
-      + '&gsrsearch=' + encodeURIComponent('filetype:bitmap ' + keyword);
+    const api = 'https://en.wikipedia.org/w/api.php?action=query&generator=search'
+      + '&gsrnamespace=0&gsrlimit=1&prop=pageimages&piprop=thumbnail&pithumbsize=640&format=json&origin=*'
+      + '&gsrsearch=' + encodeURIComponent(keyword);
     const res = await fetch(api);
     if(res.ok){
       const data = await res.json();
       const pages = data && data.query && data.query.pages;
       const page = pages && Object.values(pages)[0];
-      const info = page && page.imageinfo && page.imageinfo[0];
-      if(info && (info.thumburl || info.url)){
-        const artistHtml = info.extmetadata && info.extmetadata.Artist && info.extmetadata.Artist.value;
-        const credit = artistHtml ? artistHtml.replace(/<[^>]+>/g, '').trim() : '';
-        result = { url: info.thumburl || info.url, credit };
+      const thumb = page && page.thumbnail;
+      if(thumb && thumb.source){
+        result = { url: thumb.source, credit: 'Wikipedia' };
       }
     }
   } catch(e){ /* offline, blocked, or a malformed API response — fall through with no result */ }
@@ -67,7 +71,7 @@ function startPhotoLoad(img){
       img.src = result.url;
       if(result.credit){
         const creditEl = container.querySelector('.photo-credit');
-        if(creditEl) creditEl.textContent = `Photo: ${result.credit} · Wikimedia Commons`;
+        if(creditEl) creditEl.textContent = `Photo via ${result.credit}`;
       }
     });
   }
