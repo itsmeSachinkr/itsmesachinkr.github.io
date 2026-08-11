@@ -101,6 +101,15 @@ const SPECIES_IMAGES = {
   primate: ['https://commons.wikimedia.org/wiki/Special:FilePath/Macaca_silenus.jpg', 'https://commons.wikimedia.org/wiki/Special:FilePath/Macaca_silenus.JPG', 'https://commons.wikimedia.org/wiki/Special:FilePath/Lion-tailed_Macaque.jpg', 'https://commons.wikimedia.org/wiki/Special:FilePath/Lion-tailed_Macaque.JPG'], // Lion-tailed Macaque
   crocodile: ['https://commons.wikimedia.org/wiki/Special:FilePath/Crocodylus_palustris.jpg', 'https://commons.wikimedia.org/wiki/Special:FilePath/Crocodylus_palustris.JPG', 'https://commons.wikimedia.org/wiki/Special:FilePath/Mugger_Crocodile.jpg', 'https://commons.wikimedia.org/wiki/Special:FilePath/Mugger_Crocodile.JPG'], // Mugger Crocodile
 };
+// Search terms (from the same workbook's "Search Keyword" column) used as a live
+// fallback: if every guessed URL above 404s, app.js asks the Wikimedia Commons
+// search API for a real, currently-existing image at page-load time (in the
+// visitor's own browser, not this dev environment) instead of another guess.
+const SPECIES_KEYWORDS = {
+  tiger: 'Bengal tiger', lion: 'Asiatic lion Gir', leopard: 'Indian leopard', snowleopard: 'Snow leopard',
+  rhino: 'Indian rhinoceros Kaziranga', elephant: 'Indian elephant', deer: 'Chital spotted deer',
+  bird: 'Indian peafowl peacock', primate: 'Lion-tailed macaque', crocodile: 'Mugger crocodile',
+};
 const PARK_IMAGES = {
   'corbett': ['https://commons.wikimedia.org/wiki/Special:FilePath/Jim_Corbett_National_Park.jpg', 'https://commons.wikimedia.org/wiki/Special:FilePath/Jim_Corbett_National_Park.JPG', 'https://commons.wikimedia.org/wiki/Special:FilePath/Jim_Corbett.jpg', 'https://commons.wikimedia.org/wiki/Special:FilePath/Jim_Corbett.JPG'],
   'kaziranga': ['https://commons.wikimedia.org/wiki/Special:FilePath/Kaziranga_National_Park.jpg', 'https://commons.wikimedia.org/wiki/Special:FilePath/Kaziranga_National_Park.JPG', 'https://commons.wikimedia.org/wiki/Special:FilePath/Kaziranga.jpg', 'https://commons.wikimedia.org/wiki/Special:FilePath/Kaziranga.JPG'],

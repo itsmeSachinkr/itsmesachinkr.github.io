@@ -86,9 +86,10 @@ function parkCardHTML(p, i){
   return `
     <a class="card reveal" href="park.html?id=${encodeURIComponent(p.id)}">
       <div class="card-art" style="background:${cardArtGradient(p)}">
-        <img class="card-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${photoCandidates(p, icon).join(',')}">
+        <img class="card-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${photoCandidates(p, icon).join(',')}" data-keyword="${p.name} India">
         <div class="card-badge">${stateAbbrev(p.state)}</div>
         <svg class="card-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
+        <div class="photo-credit"></div>
       </div>
       <div class="card-body">
         <h3>${p.name}</h3>
@@ -353,7 +354,7 @@ function reobserveReveals(){
       <div class="wrap detail-hero-row">
         <div class="detail-animal-wrap">
           <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
-          <img class="detail-animal-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${heroPhotoUrls.join(',')}">
+          <img class="detail-animal-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${heroPhotoUrls.join(',')}" data-keyword="${park.name} India">
         </div>
         <div>
           <span class="badge mono">${park.state}</span>
@@ -539,7 +540,7 @@ function checkAvailability(park){
       <div class="wrap detail-hero-row">
         <div class="detail-animal-wrap">
           <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
-          <img class="detail-animal-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${storyPhotoUrls.join(',')}">
+          <img class="detail-animal-photo" alt="" aria-hidden="true" loading="lazy" data-urls="${storyPhotoUrls.join(',')}" data-keyword="${linkedPark ? linkedPark.name + ' India' : (SPECIES_KEYWORDS[icon] || '')}">
         </div>
         <div>
           <span class="badge mono">${story.state}</span>

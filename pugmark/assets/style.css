@@ -152,6 +152,7 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .card-art.has-photo .card-photo{display:block;}
 .card-art.has-photo .card-animal{display:none;}
 .card-art.has-photo::before{opacity:0;}
+.photo-credit{position:absolute; right:6px; bottom:4px; z-index:2; font-family:'IBM Plex Mono', monospace; font-size:0.6rem; color:rgba(255,255,255,0.75); text-shadow:0 1px 2px rgba(0,0,0,.6); pointer-events:none;}
 /* Always-on dappled-light texture, layered above the habitat gradient (which is
    set inline per-card) so it can't be clobbered by the inline background rule. */
 .card-art::before{content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
