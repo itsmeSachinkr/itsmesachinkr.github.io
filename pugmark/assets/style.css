@@ -86,28 +86,40 @@ header.site.menu-open .nav-toggle .icon-x{display:block;}
 }
 
 /* ---------- Hero ---------- */
-.hero-band{background:linear-gradient(180deg, var(--moss-pale) 0%, var(--bg) 100%); position:relative; overflow:hidden; border-bottom:1px solid var(--paper-line);}
+.hero-band{background:linear-gradient(180deg, var(--moss-pale) 0%, var(--bg) 100%); position:relative; overflow:hidden; border-bottom:1px solid var(--paper-line); transition:border-color .5s ease;}
 .hero{position:relative; z-index:2; padding:64px 0 72px;}
-.hero .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--ochre-deep); margin-bottom:18px; display:flex; align-items:center; gap:10px;}
-.hero .eyebrow .rule{height:1px; width:38px; background:var(--ochre-deep); display:inline-block;}
-.hero h1{color:var(--canopy-deep); font-size:clamp(2.2rem, 5vw, 3.6rem); line-height:1.08; max-width:19ch; font-weight:600;}
-.hero h1 em{font-style:italic; color:var(--ochre-deep);}
-.hero p.lead{margin-top:22px; max-width:56ch; color:var(--bark); font-size:1.08rem;}
+.hero .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--ochre-deep); margin-bottom:18px; display:flex; align-items:center; gap:10px; transition:color .5s ease;}
+.hero .eyebrow .rule{height:1px; width:38px; background:var(--ochre-deep); display:inline-block; transition:background .5s ease;}
+.hero h1{color:var(--canopy-deep); font-size:clamp(2.2rem, 5vw, 3.6rem); line-height:1.08; max-width:19ch; font-weight:600; transition:color .5s ease;}
+.hero h1 em{font-style:italic; color:var(--ochre-deep); transition:color .5s ease;}
+.hero p.lead{margin-top:22px; max-width:56ch; color:var(--bark); font-size:1.08rem; transition:color .5s ease;}
 .hero .btn-row{display:flex; gap:14px; margin-top:32px; flex-wrap:wrap;}
 .hero .stats{display:flex; gap:16px; margin-top:44px; flex-wrap:wrap;}
 .hero .stats div{background:var(--surface); border:1px solid var(--paper-line); border-radius:6px; padding:16px 22px; box-shadow:var(--shadow-card);}
 .hero .stats .num{font-family:'Fraunces',serif; font-size:1.9rem; color:var(--canopy-deep); font-weight:600;}
 .hero .stats .lbl{font-family:'IBM Plex Mono', monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--moss);}
-.hero-art-wrap{position:absolute; right:0; top:0; bottom:0; width:46%; pointer-events:none; z-index:1; overflow:hidden;}
-.hero-art{position:absolute; right:-20px; top:50%; transform:translateY(-50%); width:380px; height:380px; color:var(--moss-light); opacity:0.55; animation:float 6s ease-in-out infinite; transition:opacity .35s ease;}
-.hero-art-leaf{position:absolute; right:260px; top:20%; width:110px; height:110px; color:var(--ochre); opacity:0.5; animation:float 5s ease-in-out infinite; animation-delay:.6s; transition:opacity .35s ease;}
-/* Real photo of a random park's famous wildlife, hidden until app.js's
-   loader confirms it actually loaded -- until then the floating icons above still show. */
-.hero-photo{position:absolute; right:24px; top:50%; transform:translateY(-50%); width:320px; height:320px; border-radius:20px; object-fit:cover; box-shadow:var(--shadow-soft); opacity:0; transition:opacity .5s ease;}
-.hero-art-wrap.has-photo .hero-photo{opacity:1;}
-.hero-art-wrap.has-photo .hero-art, .hero-art-wrap.has-photo .hero-art-leaf{opacity:0;}
-.hero-art-wrap .photo-credit{right:24px; bottom:8px; top:auto;}
-@media (max-width:980px){ .hero-art-wrap{display:none;} }
+.hero-art-wrap{position:absolute; right:0; top:0; bottom:0; width:46%; pointer-events:none; z-index:1; overflow:hidden; transition:opacity .4s ease;}
+.hero-art{position:absolute; right:-20px; top:50%; transform:translateY(-50%); width:380px; height:380px; color:var(--moss-light); opacity:0.55; animation:float 6s ease-in-out infinite;}
+.hero-art-leaf{position:absolute; right:260px; top:20%; width:110px; height:110px; color:var(--ochre); opacity:0.5; animation:float 5s ease-in-out infinite; animation-delay:.6s;}
+/* Full-bleed real photo of a random park's famous wildlife, hidden until
+   app.js's loader confirms it actually loaded -- until then the plain
+   gradient background and floating icons above still show. */
+.hero-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0; transition:opacity .6s ease;}
+.hero-band.has-photo{border-bottom-color:transparent;}
+.hero-band.has-photo .hero-photo{opacity:1;}
+.hero-band.has-photo .hero-art-wrap{opacity:0;}
+/* Scrim: strong behind the text (left) so it stays readable over any photo,
+   fading out toward the right so the photo itself still shows through. */
+.hero-band::after{content:''; position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; transition:opacity .6s ease;
+  background:linear-gradient(100deg, rgba(18,38,27,.94) 0%, rgba(18,38,27,.82) 35%, rgba(18,38,27,.4) 65%, rgba(18,38,27,.08) 100%);}
+.hero-band.has-photo::after{opacity:1;}
+.hero-band.has-photo .eyebrow{color:var(--ochre);}
+.hero-band.has-photo .eyebrow .rule{background:var(--ochre);}
+.hero-band.has-photo h1{color:#fff;}
+.hero-band.has-photo h1 em{color:var(--ochre);}
+.hero-band.has-photo p.lead{color:rgba(255,255,255,.85);}
+.hero-band .photo-credit{right:16px; bottom:12px; z-index:2;}
+@media (max-width:980px){ .hero-art-wrap{display:none;} .hero-band::after{background:linear-gradient(180deg, rgba(18,38,27,.88) 0%, rgba(18,38,27,.55) 60%, rgba(18,38,27,.3) 100%);} }
 @media (prefers-reduced-motion: reduce){ .hero-art, .hero-art-leaf{animation:none;} }
 
 /* Small page hero (non-home pages) */
