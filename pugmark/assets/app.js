@@ -2,16 +2,15 @@
 /* Runs on every page: mobile nav, scroll reveal, back-to-top, active link, footer year. */
 
 /* ---- Best-effort real photo loader ----
-   Tier 1: pattern-guessed Wikimedia Commons URLs (data.js SPECIES_IMAGES /
-   PARK_IMAGES) — free, instant, but unverified; many 404.
-   Tier 2: if every guess 404s and the element carries a data-keyword, ask
-   the Wikimedia Commons search API (from the visitor's own browser, with a
-   localStorage cache) for a real, currently-existing photo instead of
-   another guess — this is the "search the API" approach Commons itself
-   documents for third-party sites, rather than raw file-name hotlinking.
-   Either way, the illustration underneath is only replaced once an image
-   actually finishes loading, so a bad guess or an offline visitor never
-   shows a broken image — the existing art just stays put. */
+   Asks the Wikipedia search API (from the visitor's own browser, with a
+   localStorage cache) for a real, currently-existing photo of the park (or
+   failing that, the wildlife it's famous for). An earlier version also
+   tried a list of pattern-guessed Commons file names first -- dropped
+   after it proved to have a ~0% hit rate in practice, so it was pure
+   wasted latency (and extra unnecessary requests to Wikimedia) sitting in
+   front of the one path that actually works. The visible <img> only ever
+   has its src set once, to a confirmed-working URL, so a slow/offline
+   visitor just keeps seeing the illustration -- never a broken image. */
 const COMMONS_CACHE_PREFIX = 'pugmark_commons_v2_';
 const COMMONS_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -56,41 +55,32 @@ async function searchCommonsImage(keyword){
   return result;
 }
 
-function startPhotoLoad(img){
+async function startPhotoLoad(img){
   if(img.dataset.hydrated) return;
   img.dataset.hydrated = '1';
-  const urls = (img.dataset.urls || '').split(',').filter(Boolean);
   // Keywords are "||"-separated and tried in order — normally the park itself
   // first, then the specific wildlife it's famous for, so a park with no
   // Wikipedia photo of its own still gets a real photo of its famous animal.
   const keywords = (img.dataset.keyword || '').split('||').map(s=>s.trim()).filter(Boolean);
-  const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art') || img.parentElement;
-  let i = 0;
-  img.addEventListener('load', ()=> container.classList.add('has-photo'));
-  async function trySearchFallback(){
-    for(const kw of keywords){
-      const result = await searchCommonsImage(kw);
-      if(result && result.url){
-        img.src = result.url;
-        if(result.credit){
-          const creditEl = container.querySelector('.photo-credit');
-          if(creditEl) creditEl.textContent = `Photo via ${result.credit}`;
-        }
-        return;
+  const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art, .hero-art-wrap') || img.parentElement;
+
+  for(const kw of keywords){
+    const result = await searchCommonsImage(kw);
+    if(result && result.url){
+      img.src = result.url;
+      container.classList.add('has-photo');
+      if(result.credit){
+        const creditEl = container.querySelector('.photo-credit');
+        if(creditEl) creditEl.textContent = `Photo via ${result.credit}`;
       }
+      return;
     }
   }
-  function tryNext(){
-    if(i >= urls.length){ trySearchFallback(); return; }
-    img.src = urls[i++];
-  }
-  img.addEventListener('error', tryNext);
-  tryNext();
 }
 /* Deferred until each image is about to scroll into view, so a 67-card grid
    doesn't fire dozens of simultaneous Commons API searches on page load. */
 function hydratePhotos(scope){
-  const els = (scope || document).querySelectorAll('img[data-urls], img[data-keyword]');
+  const els = (scope || document).querySelectorAll('img[data-keyword]');
   if(!els.length) return;
   if('IntersectionObserver' in window){
     // Observe each img's visible container, not the img itself -- the img is
@@ -107,7 +97,7 @@ function hydratePhotos(scope){
       });
     }, {rootMargin: '200px'});
     els.forEach(img=>{
-      const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art') || img.parentElement;
+      const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art, .hero-art-wrap') || img.parentElement;
       targetToImg.set(container, img);
       io.observe(container);
     });

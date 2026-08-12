@@ -99,8 +99,14 @@ header.site.menu-open .nav-toggle .icon-x{display:block;}
 .hero .stats .num{font-family:'Fraunces',serif; font-size:1.9rem; color:var(--canopy-deep); font-weight:600;}
 .hero .stats .lbl{font-family:'IBM Plex Mono', monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--moss);}
 .hero-art-wrap{position:absolute; right:0; top:0; bottom:0; width:46%; pointer-events:none; z-index:1; overflow:hidden;}
-.hero-art{position:absolute; right:-20px; top:50%; transform:translateY(-50%); width:380px; height:380px; color:var(--moss-light); opacity:0.55; animation:float 6s ease-in-out infinite;}
-.hero-art-leaf{position:absolute; right:260px; top:20%; width:110px; height:110px; color:var(--ochre); opacity:0.5; animation:float 5s ease-in-out infinite; animation-delay:.6s;}
+.hero-art{position:absolute; right:-20px; top:50%; transform:translateY(-50%); width:380px; height:380px; color:var(--moss-light); opacity:0.55; animation:float 6s ease-in-out infinite; transition:opacity .35s ease;}
+.hero-art-leaf{position:absolute; right:260px; top:20%; width:110px; height:110px; color:var(--ochre); opacity:0.5; animation:float 5s ease-in-out infinite; animation-delay:.6s; transition:opacity .35s ease;}
+/* Real photo of a random park's famous wildlife, hidden until app.js's
+   loader confirms it actually loaded -- until then the floating icons above still show. */
+.hero-photo{position:absolute; right:24px; top:50%; transform:translateY(-50%); width:320px; height:320px; border-radius:20px; object-fit:cover; box-shadow:var(--shadow-soft); opacity:0; transition:opacity .5s ease;}
+.hero-art-wrap.has-photo .hero-photo{opacity:1;}
+.hero-art-wrap.has-photo .hero-art, .hero-art-wrap.has-photo .hero-art-leaf{opacity:0;}
+.hero-art-wrap .photo-credit{right:24px; bottom:8px; top:auto;}
 @media (max-width:980px){ .hero-art-wrap{display:none;} }
 @media (prefers-reduced-motion: reduce){ .hero-art, .hero-art-leaf{animation:none;} }
 
@@ -148,9 +154,9 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .card-art{height:118px; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:0;}
 /* Real photo (see data.js PARK_IMAGES/SPECIES_IMAGES), hidden until app.js's
    loader confirms one of the candidate URLs actually loaded. */
-.card-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; display:none;}
-.card-art.has-photo .card-photo{display:block;}
-.card-art.has-photo .card-animal{display:none;}
+.card-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0; pointer-events:none; transition:opacity .35s ease;}
+.card-art.has-photo .card-photo{opacity:1;}
+.card-art.has-photo .card-animal{opacity:0;}
 .card-art.has-photo::before{opacity:0;}
 .photo-credit{position:absolute; right:6px; bottom:4px; z-index:2; font-family:'IBM Plex Mono', monospace; font-size:0.6rem; color:rgba(255,255,255,0.75); text-shadow:0 1px 2px rgba(0,0,0,.6); pointer-events:none;}
 /* Always-on dappled-light texture, layered above the habitat gradient (which is
@@ -164,7 +170,7 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
   opacity:0; transition:opacity .3s ease;}
 .card:hover .card-art::after{opacity:1;}
 .card-badge{position:absolute; top:12px; left:12px; z-index:3; font-family:'IBM Plex Mono', monospace; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.06em; background:rgba(18,38,27,0.82); color:var(--on-accent); padding:4px 9px; border-radius:4px; backdrop-filter:blur(3px);}
-.card-animal{position:absolute; right:-6px; bottom:-10px; width:90px; height:90px; color:rgba(255,255,255,0.92); pointer-events:none; z-index:2; transition:transform .25s ease; filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));}
+.card-animal{position:absolute; right:-6px; bottom:-10px; width:90px; height:90px; color:rgba(255,255,255,0.92); pointer-events:none; z-index:2; transition:transform .25s ease, opacity .3s ease; filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));}
 .card:hover .card-animal{transform:scale(1.08) translateY(-2px);}
 .card-body{padding:18px 20px 20px; display:flex; flex-direction:column; gap:9px; flex:1;}
 .card-body h3{font-size:1.18rem; line-height:1.18;}
@@ -185,10 +191,10 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .potd{background:var(--surface); border:1px solid var(--paper-line); border-radius:10px; padding:28px; display:grid; grid-template-columns:auto 140px 1fr auto; gap:24px; align-items:center; box-shadow:var(--shadow-card);}
 .potd .potd-badge{font-family:'IBM Plex Mono', monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--on-accent); background:var(--rust); padding:8px 12px; border-radius:4px; writing-mode:vertical-rl; text-orientation:mixed;}
 .potd-art{position:relative; width:140px; height:100px; border-radius:8px; overflow:hidden; background:linear-gradient(135deg, var(--moss), var(--canopy)); flex-shrink:0;}
-.potd-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none;}
-.potd-art.has-photo .potd-photo{display:block;}
-.potd-art.has-photo .potd-animal{display:none;}
-.potd-animal{position:absolute; inset:0; width:100%; height:100%; padding:22px; color:rgba(255,255,255,.85);}
+.potd-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; pointer-events:none; transition:opacity .35s ease;}
+.potd-art.has-photo .potd-photo{opacity:1;}
+.potd-art.has-photo .potd-animal{opacity:0;}
+.potd-animal{position:absolute; inset:0; width:100%; height:100%; padding:22px; color:rgba(255,255,255,.85); transition:opacity .3s ease;}
 .potd h3{font-size:1.4rem; margin-bottom:6px;}
 .potd .potd-loc{font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:var(--moss); text-transform:uppercase; margin-bottom:8px;}
 .potd p{font-size:0.94rem; color:var(--bark);}
@@ -199,12 +205,13 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 /* Full-bleed real photo banner (see data.js PARK_IMAGES/SPECIES_IMAGES),
    hidden until app.js's loader confirms one of the candidates actually
    loaded -- until then the plain habitat-color gradient above still shows. */
-.detail-hero-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; display:none;}
+.detail-hero-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0; pointer-events:none; transition:opacity .4s ease;}
 .detail-hero.has-photo{min-height:320px; display:flex; align-items:flex-end; padding-bottom:32px;}
-.detail-hero.has-photo .detail-hero-photo{display:block;}
+.detail-hero.has-photo .detail-hero-photo{opacity:1;}
 .detail-hero.has-photo .detail-animal-bg{display:none;}
-.detail-hero.has-photo::after{content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+.detail-hero::after{content:''; position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; transition:opacity .4s ease;
   background:linear-gradient(180deg, rgba(18,38,27,.12) 0%, rgba(18,38,27,.78) 100%);}
+.detail-hero.has-photo::after{opacity:1;}
 .detail-hero.has-photo .badge{background:rgba(255,255,255,.92); color:var(--canopy-deep); padding:4px 10px; border-radius:4px;}
 .detail-hero.has-photo h1{color:#fff;}
 .detail-hero.has-photo .loc{color:rgba(255,255,255,.88);}
@@ -212,12 +219,12 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 @media (max-width:640px){ .detail-hero.has-photo{min-height:220px;} }
 .detail-hero-row{display:flex; align-items:center; gap:26px; position:relative; z-index:2; width:100%;}
 .detail-animal-wrap{position:relative; width:118px; height:118px; flex-shrink:0; background:var(--surface); border:1px solid var(--paper-line); border-radius:50%; box-shadow:var(--shadow-soft); overflow:hidden; animation:float 5s ease-in-out infinite;}
-.detail-animal{width:100%; height:100%; display:block; color:var(--canopy); padding:22px;}
+.detail-animal{width:100%; height:100%; display:block; color:var(--canopy); padding:22px; transition:opacity .3s ease;}
 /* Real photo (see data.js PARK_IMAGES/SPECIES_IMAGES), hidden until app.js's
    loader confirms one of the candidate URLs actually loaded. */
-.detail-animal-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none;}
-.detail-animal-wrap.has-photo .detail-animal-photo{display:block;}
-.detail-animal-wrap.has-photo .detail-animal{display:none;}
+.detail-animal-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; pointer-events:none; transition:opacity .35s ease;}
+.detail-animal-wrap.has-photo .detail-animal-photo{opacity:1;}
+.detail-animal-wrap.has-photo .detail-animal{opacity:0;}
 .detail-animal-bg{position:absolute; right:-40px; top:-30px; width:280px; height:280px; color:var(--ochre); opacity:0.08; pointer-events:none; z-index:1;}
 @media (max-width:640px){ .detail-animal-wrap{width:80px; height:80px;} .detail-animal{padding:16px;} .detail-animal-bg{display:none;} }
 @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
