@@ -62,7 +62,7 @@ async function startPhotoLoad(img){
   // first, then the specific wildlife it's famous for, so a park with no
   // Wikipedia photo of its own still gets a real photo of its famous animal.
   const keywords = (img.dataset.keyword || '').split('||').map(s=>s.trim()).filter(Boolean);
-  const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art, .hero-art-wrap') || img.parentElement;
+  const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art, .hero-band') || img.parentElement;
 
   for(const kw of keywords){
     const result = await searchCommonsImage(kw);
@@ -97,7 +97,7 @@ function hydratePhotos(scope){
       });
     }, {rootMargin: '200px'});
     els.forEach(img=>{
-      const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art, .hero-art-wrap') || img.parentElement;
+      const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art, .hero-band') || img.parentElement;
       targetToImg.set(container, img);
       io.observe(container);
     });

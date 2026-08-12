@@ -175,7 +175,7 @@ function reobserveReveals(){
     const randomPark = ALL_PARKS[Math.floor(Math.random() * ALL_PARKS.length)];
     const heroIcon = speciesIcon(randomPark.famousFor);
     heroPhotoEl.setAttribute('data-keyword', photoKeyword(randomPark.name, heroIcon));
-    hydratePhotos(heroPhotoEl.closest('.hero-art-wrap'));
+    hydratePhotos(heroPhotoEl.closest('.hero-band'));
   }
 
   // Park of the day — deterministic by date, so it's the same all day for every visitor.
