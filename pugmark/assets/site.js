@@ -63,9 +63,6 @@ function speciesIcon(famousFor){
   return 'leaf';
 }
 
-function photoCandidates(p, icon){
-  return [...(PARK_IMAGES[p.id] || []), ...(SPECIES_IMAGES[icon] || [])];
-}
 /* Park-specific search first, then the wildlife it's famous for -- so a park
    with no photo of its own on Wikipedia still shows a real photo of its
    famous animal rather than falling all the way back to the illustration. */
@@ -92,7 +89,7 @@ function parkCardHTML(p, i){
   return `
     <a class="card reveal" href="park.html?id=${encodeURIComponent(p.id)}">
       <div class="card-art" style="background:${cardArtGradient(p)}">
-        <img class="card-photo" alt="" aria-hidden="true" data-urls="${photoCandidates(p, icon).join(',')}" data-keyword="${photoKeyword(p.name, icon)}">
+        <img class="card-photo" alt="" aria-hidden="true" data-keyword="${photoKeyword(p.name, icon)}">
         <div class="card-badge">${stateAbbrev(p.state)}</div>
         <svg class="card-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
         <div class="photo-credit"></div>
@@ -171,6 +168,16 @@ function reobserveReveals(){
   countUp(document.getElementById('statStates'), new Set(ALL_PARKS.map(p=>p.state)).size);
   countUp(document.getElementById('statStories'), STORIES.length);
 
+  // Hero photo — a different park's wildlife each time the page loads (not
+  // date-locked like Today's Pick below, which is deliberately the same all day).
+  const heroPhotoEl = document.getElementById('heroPhoto');
+  if(heroPhotoEl){
+    const randomPark = ALL_PARKS[Math.floor(Math.random() * ALL_PARKS.length)];
+    const heroIcon = speciesIcon(randomPark.famousFor);
+    heroPhotoEl.setAttribute('data-keyword', photoKeyword(randomPark.name, heroIcon));
+    hydratePhotos(heroPhotoEl.closest('.hero-art-wrap'));
+  }
+
   // Park of the day — deterministic by date, so it's the same all day for every visitor.
   const potdEl = document.getElementById('parkOfDay');
   if(potdEl){
@@ -180,7 +187,7 @@ function reobserveReveals(){
     potdEl.innerHTML = `
       <div class="potd-badge mono">Today's Pick</div>
       <div class="potd-art">
-        <img class="potd-photo" alt="" aria-hidden="true" data-urls="${photoCandidates(p, potdIcon).join(',')}" data-keyword="${photoKeyword(p.name, potdIcon)}">
+        <img class="potd-photo" alt="" aria-hidden="true" data-keyword="${photoKeyword(p.name, potdIcon)}">
         <svg class="potd-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${potdIcon}"/></svg>
       </div>
       <div>
@@ -359,16 +366,15 @@ function reobserveReveals(){
       <div class="related-strip">${sameState.map(x=>`<a href="park.html?id=${encodeURIComponent(x.id)}"><svg class="paw" style="width:12px;height:12px"><use href="#icon-${speciesIcon(x.famousFor)}"/></svg> ${x.name} →</a>`).join('')}</div>
     ` : '';
 
-  const heroPhotoUrls = photoCandidates(park, icon);
   const heroKeyword = photoKeyword(park.name, icon);
   root.innerHTML = `
     <section class="detail-hero" style="background:linear-gradient(180deg, ${HABITAT_PALE[theme]} 0%, var(--bg) 100%)">
-      <img class="detail-hero-photo" alt="" aria-hidden="true" data-urls="${heroPhotoUrls.join(',')}" data-keyword="${heroKeyword}">
+      <img class="detail-hero-photo" alt="" aria-hidden="true" data-keyword="${heroKeyword}">
       <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
         <div class="detail-animal-wrap">
           <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
-          <img class="detail-animal-photo" alt="" aria-hidden="true" data-urls="${heroPhotoUrls.join(',')}" data-keyword="${heroKeyword}">
+          <img class="detail-animal-photo" alt="" aria-hidden="true" data-keyword="${heroKeyword}">
         </div>
         <div>
           <span class="badge mono">${park.state}</span>
@@ -547,17 +553,16 @@ function checkAvailability(park){
   const icon = linkedPark ? speciesIcon(linkedPark.famousFor) : 'leaf';
 
   const more = STORIES.filter(s => s.id !== story.id).slice(0,3);
-  const storyPhotoUrls = linkedPark ? photoCandidates(linkedPark, icon) : (SPECIES_IMAGES[icon] || []);
   const storyKeyword = linkedPark ? photoKeyword(linkedPark.name, icon) : (SPECIES_KEYWORDS[icon] || '');
 
   root.innerHTML = `
     <section class="detail-hero">
-      <img class="detail-hero-photo" alt="" aria-hidden="true" data-urls="${storyPhotoUrls.join(',')}" data-keyword="${storyKeyword}">
+      <img class="detail-hero-photo" alt="" aria-hidden="true" data-keyword="${storyKeyword}">
       <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
         <div class="detail-animal-wrap">
           <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
-          <img class="detail-animal-photo" alt="" aria-hidden="true" data-urls="${storyPhotoUrls.join(',')}" data-keyword="${storyKeyword}">
+          <img class="detail-animal-photo" alt="" aria-hidden="true" data-keyword="${storyKeyword}">
         </div>
         <div>
           <span class="badge mono">${story.state}</span>
