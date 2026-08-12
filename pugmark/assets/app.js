@@ -60,20 +60,25 @@ function startPhotoLoad(img){
   if(img.dataset.hydrated) return;
   img.dataset.hydrated = '1';
   const urls = (img.dataset.urls || '').split(',').filter(Boolean);
-  const keyword = img.dataset.keyword || '';
-  const container = img.closest('.card-art, .detail-animal-wrap') || img.parentElement;
+  // Keywords are "||"-separated and tried in order — normally the park itself
+  // first, then the specific wildlife it's famous for, so a park with no
+  // Wikipedia photo of its own still gets a real photo of its famous animal.
+  const keywords = (img.dataset.keyword || '').split('||').map(s=>s.trim()).filter(Boolean);
+  const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art') || img.parentElement;
   let i = 0;
   img.addEventListener('load', ()=> container.classList.add('has-photo'));
-  function trySearchFallback(){
-    if(!keyword) return;
-    searchCommonsImage(keyword).then(result=>{
-      if(!result || !result.url) return;
-      img.src = result.url;
-      if(result.credit){
-        const creditEl = container.querySelector('.photo-credit');
-        if(creditEl) creditEl.textContent = `Photo via ${result.credit}`;
+  async function trySearchFallback(){
+    for(const kw of keywords){
+      const result = await searchCommonsImage(kw);
+      if(result && result.url){
+        img.src = result.url;
+        if(result.credit){
+          const creditEl = container.querySelector('.photo-credit');
+          if(creditEl) creditEl.textContent = `Photo via ${result.credit}`;
+        }
+        return;
       }
-    });
+    }
   }
   function tryNext(){
     if(i >= urls.length){ trySearchFallback(); return; }
@@ -102,7 +107,7 @@ function hydratePhotos(scope){
       });
     }, {rootMargin: '200px'});
     els.forEach(img=>{
-      const container = img.closest('.card-art, .detail-animal-wrap') || img.parentElement;
+      const container = img.closest('.card-art, .detail-animal-wrap, .detail-hero, .potd-art') || img.parentElement;
       targetToImg.set(container, img);
       io.observe(container);
     });

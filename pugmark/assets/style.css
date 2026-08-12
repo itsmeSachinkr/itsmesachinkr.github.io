@@ -182,16 +182,35 @@ select.state-select{font-family:'IBM Plex Mono', monospace; font-size:0.8rem; pa
 .section-head-row{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;}
 
 /* ---------- Park-of-the-day ---------- */
-.potd{background:var(--surface); border:1px solid var(--paper-line); border-radius:10px; padding:28px; display:grid; grid-template-columns:auto 1fr auto; gap:24px; align-items:center; box-shadow:var(--shadow-card);}
+.potd{background:var(--surface); border:1px solid var(--paper-line); border-radius:10px; padding:28px; display:grid; grid-template-columns:auto 140px 1fr auto; gap:24px; align-items:center; box-shadow:var(--shadow-card);}
 .potd .potd-badge{font-family:'IBM Plex Mono', monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--on-accent); background:var(--rust); padding:8px 12px; border-radius:4px; writing-mode:vertical-rl; text-orientation:mixed;}
+.potd-art{position:relative; width:140px; height:100px; border-radius:8px; overflow:hidden; background:linear-gradient(135deg, var(--moss), var(--canopy)); flex-shrink:0;}
+.potd-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none;}
+.potd-art.has-photo .potd-photo{display:block;}
+.potd-art.has-photo .potd-animal{display:none;}
+.potd-animal{position:absolute; inset:0; width:100%; height:100%; padding:22px; color:rgba(255,255,255,.85);}
 .potd h3{font-size:1.4rem; margin-bottom:6px;}
 .potd .potd-loc{font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:var(--moss); text-transform:uppercase; margin-bottom:8px;}
 .potd p{font-size:0.94rem; color:var(--bark);}
-@media (max-width:640px){ .potd{grid-template-columns:1fr;} .potd .potd-badge{writing-mode:horizontal-tb; width:fit-content;} }
+@media (max-width:640px){ .potd{grid-template-columns:1fr;} .potd .potd-badge{writing-mode:horizontal-tb; width:fit-content;} .potd-art{width:100%; height:160px;} }
 
 /* ---------- Detail pages (park + story) ---------- */
 .detail-hero{background:linear-gradient(180deg, var(--moss-pale) 0%, var(--bg) 100%); padding:36px 0 36px; border-bottom:1px solid var(--paper-line); position:relative; overflow:hidden;}
-.detail-hero-row{display:flex; align-items:center; gap:26px; position:relative; z-index:2;}
+/* Full-bleed real photo banner (see data.js PARK_IMAGES/SPECIES_IMAGES),
+   hidden until app.js's loader confirms one of the candidates actually
+   loaded -- until then the plain habitat-color gradient above still shows. */
+.detail-hero-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; display:none;}
+.detail-hero.has-photo{min-height:320px; display:flex; align-items:flex-end; padding-bottom:32px;}
+.detail-hero.has-photo .detail-hero-photo{display:block;}
+.detail-hero.has-photo .detail-animal-bg{display:none;}
+.detail-hero.has-photo::after{content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(18,38,27,.12) 0%, rgba(18,38,27,.78) 100%);}
+.detail-hero.has-photo .badge{background:rgba(255,255,255,.92); color:var(--canopy-deep); padding:4px 10px; border-radius:4px;}
+.detail-hero.has-photo h1{color:#fff;}
+.detail-hero.has-photo .loc{color:rgba(255,255,255,.88);}
+.detail-hero .photo-credit{position:absolute; right:14px; bottom:12px; z-index:2;}
+@media (max-width:640px){ .detail-hero.has-photo{min-height:220px;} }
+.detail-hero-row{display:flex; align-items:center; gap:26px; position:relative; z-index:2; width:100%;}
 .detail-animal-wrap{position:relative; width:118px; height:118px; flex-shrink:0; background:var(--surface); border:1px solid var(--paper-line); border-radius:50%; box-shadow:var(--shadow-soft); overflow:hidden; animation:float 5s ease-in-out infinite;}
 .detail-animal{width:100%; height:100%; display:block; color:var(--canopy); padding:22px;}
 /* Real photo (see data.js PARK_IMAGES/SPECIES_IMAGES), hidden until app.js's

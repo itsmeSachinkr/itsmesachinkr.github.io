@@ -66,6 +66,12 @@ function speciesIcon(famousFor){
 function photoCandidates(p, icon){
   return [...(PARK_IMAGES[p.id] || []), ...(SPECIES_IMAGES[icon] || [])];
 }
+/* Park-specific search first, then the wildlife it's famous for -- so a park
+   with no photo of its own on Wikipedia still shows a real photo of its
+   famous animal rather than falling all the way back to the illustration. */
+function photoKeyword(parkName, icon){
+  return [`${parkName} India`, SPECIES_KEYWORDS[icon]].filter(Boolean).join('||');
+}
 /* Structural facts only (seating, typical use) -- deliberately no fee figures,
    see the Safari & Costs zone-note for why. */
 const VEHICLE_INFO = {
@@ -86,7 +92,7 @@ function parkCardHTML(p, i){
   return `
     <a class="card reveal" href="park.html?id=${encodeURIComponent(p.id)}">
       <div class="card-art" style="background:${cardArtGradient(p)}">
-        <img class="card-photo" alt="" aria-hidden="true" data-urls="${photoCandidates(p, icon).join(',')}" data-keyword="${p.name} India">
+        <img class="card-photo" alt="" aria-hidden="true" data-urls="${photoCandidates(p, icon).join(',')}" data-keyword="${photoKeyword(p.name, icon)}">
         <div class="card-badge">${stateAbbrev(p.state)}</div>
         <svg class="card-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
         <div class="photo-credit"></div>
@@ -170,14 +176,20 @@ function reobserveReveals(){
   if(potdEl){
     const idx = dayOfYear(new Date()) % ALL_PARKS.length;
     const p = ALL_PARKS[idx];
+    const potdIcon = speciesIcon(p.famousFor);
     potdEl.innerHTML = `
       <div class="potd-badge mono">Today's Pick</div>
+      <div class="potd-art">
+        <img class="potd-photo" alt="" aria-hidden="true" data-urls="${photoCandidates(p, potdIcon).join(',')}" data-keyword="${photoKeyword(p.name, potdIcon)}">
+        <svg class="potd-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${potdIcon}"/></svg>
+      </div>
       <div>
         <div class="potd-loc">${p.state}${p.district ? ' · ' + p.district : ''}</div>
         <h3>${p.name}</h3>
         <p>${p.famousFor} — ${p.note}</p>
       </div>
       <a class="btn btn-dark" href="park.html?id=${encodeURIComponent(p.id)}">View field notes →</a>`;
+    hydratePhotos(potdEl);
   }
 
   // Featured parks — a fixed curated set, falls back gracefully if an id is missing.
@@ -348,19 +360,22 @@ function reobserveReveals(){
     ` : '';
 
   const heroPhotoUrls = photoCandidates(park, icon);
+  const heroKeyword = photoKeyword(park.name, icon);
   root.innerHTML = `
     <section class="detail-hero" style="background:linear-gradient(180deg, ${HABITAT_PALE[theme]} 0%, var(--bg) 100%)">
+      <img class="detail-hero-photo" alt="" aria-hidden="true" data-urls="${heroPhotoUrls.join(',')}" data-keyword="${heroKeyword}">
       <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
         <div class="detail-animal-wrap">
           <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
-          <img class="detail-animal-photo" alt="" aria-hidden="true" data-urls="${heroPhotoUrls.join(',')}" data-keyword="${park.name} India">
+          <img class="detail-animal-photo" alt="" aria-hidden="true" data-urls="${heroPhotoUrls.join(',')}" data-keyword="${heroKeyword}">
         </div>
         <div>
           <span class="badge mono">${park.state}</span>
           <h1>${park.name}</h1>
           <div class="loc">${park.district ? park.district + ' · ' : ''}Nearest access: ${park.nearest}</div>
         </div>
+        <div class="photo-credit"></div>
       </div>
     </section>
     <section class="detail-body wrap">
@@ -533,20 +548,23 @@ function checkAvailability(park){
 
   const more = STORIES.filter(s => s.id !== story.id).slice(0,3);
   const storyPhotoUrls = linkedPark ? photoCandidates(linkedPark, icon) : (SPECIES_IMAGES[icon] || []);
+  const storyKeyword = linkedPark ? photoKeyword(linkedPark.name, icon) : (SPECIES_KEYWORDS[icon] || '');
 
   root.innerHTML = `
     <section class="detail-hero">
+      <img class="detail-hero-photo" alt="" aria-hidden="true" data-urls="${storyPhotoUrls.join(',')}" data-keyword="${storyKeyword}">
       <svg class="detail-animal-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
       <div class="wrap detail-hero-row">
         <div class="detail-animal-wrap">
           <svg class="detail-animal" viewBox="0 0 100 100" aria-hidden="true"><use href="#icon-${icon}"/></svg>
-          <img class="detail-animal-photo" alt="" aria-hidden="true" data-urls="${storyPhotoUrls.join(',')}" data-keyword="${linkedPark ? linkedPark.name + ' India' : (SPECIES_KEYWORDS[icon] || '')}">
+          <img class="detail-animal-photo" alt="" aria-hidden="true" data-urls="${storyPhotoUrls.join(',')}" data-keyword="${storyKeyword}">
         </div>
         <div>
           <span class="badge mono">${story.state}</span>
           <h1>${story.title}</h1>
           <div class="loc">${parkLink} · ${story.state}</div>
         </div>
+        <div class="photo-credit"></div>
       </div>
     </section>
     <section class="detail-body wrap story-body">
